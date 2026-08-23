@@ -1,0 +1,1652 @@
+/* ==========================================================================
+   Hoshii — brand foundations
+   Layout structure follows corgi.insure: announcement bar, pill nav,
+   full-bleed image hero with centred copy, logo strip underneath.
+   Palette, type and voice are Hoshii's own.
+   ========================================================================== */
+
+/* --- Satoshi ------------------------------------------------------------- */
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('assets/fonts/Satoshi-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('assets/fonts/Satoshi-Italic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('assets/fonts/Satoshi-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('assets/fonts/Satoshi-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('assets/fonts/Satoshi-BoldItalic.otf') format('opentype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('assets/fonts/Satoshi-Black.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('assets/fonts/Satoshi-BlackItalic.otf') format('opentype');
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* --- Tokens -------------------------------------------------------------- */
+
+:root {
+  /* Brand palette (Hoshii, Aug 2026) */
+  --green: #133021; /* Primary      */
+  --ink: #2a2320; /* Type         */
+  --bone: #f4f0e7; /* Sec. ground  */
+  --wash: #f0e7c0; /* Rare wash    */
+  --caption: #7e6f5c; /* Captions     */
+  --sage: #a4ac9b; /* Fills        */
+  --white: #ffffff;
+  --accent: #fd4b01; /* Accent (unlabelled on the palette sheet) */
+
+  --green-deep: #0b1c13;
+
+  /* Text on dark */
+  --on-dark: var(--bone);
+  --on-dark-dim: #c3ccbc;
+
+  /* Near-black that clears AA on the accent at small sizes, where white
+     (3.41:1) does not. Used for the announcement bar. */
+  --on-accent-sm: #1a1310;
+
+  /* Retro-OS chrome. Warm greys sampled off the brand renders — the true
+     Win95 #c0c0c0 goes blue against the green. */
+  --chrome-face: #cfc7b8;
+  --chrome-light: #ece7dc;
+  --chrome-shadow: #8b8474;
+  --chrome-dark: #4f4b44;
+
+  --font: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui,
+    sans-serif;
+
+  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+  --shell: 78rem;
+
+  /* Thin column rules, after Corgi. Deliberately the same width as
+     .pitch__panel: the rules land exactly on the slab's edges, so they read as
+     the column the slab is set in — visible in the space above and below it,
+     hidden behind the slab itself. Keep the two values in step. */
+  --guide-col: 94rem;
+  --rule: rgba(42, 35, 32, 0.1);
+  --pill: 999px;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* --- Reset --------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bone);
+  color: var(--ink);
+  font-family: var(--font);
+  font-weight: 400;
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.0625rem);
+  line-height: 1.55;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* An inline SVG with no width/height attribute resolves `width: auto` to
+   100% of its container, not to its viewBox ratio. Cap it. */
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+h1,
+p {
+  margin: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* --- Announcement bar ---------------------------------------------------- */
+
+.announce {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.125rem;
+  padding: 0.375rem 2.5rem;
+  background: var(--accent);
+  color: var(--on-accent-sm);
+  text-align: center;
+}
+
+.announce__text {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.announce__link {
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+  white-space: nowrap;
+}
+
+.announce__close {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  translate: 0 -50%;
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--pill);
+  background: transparent;
+  color: inherit;
+  font-size: 1.125rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 160ms var(--ease), background-color 160ms var(--ease);
+}
+
+.announce__close:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* --- Title bar — the window chrome IS the site nav ----------------------- */
+
+.titlebar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--green);
+  /* Three sides of the window frame. .hero carries the other two, so the two
+     elements read as one continuous window. */
+  border: 3px solid var(--chrome-face);
+  border-bottom: 0;
+}
+
+.titlebar__inner {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.625rem, 2vw, 1.5rem);
+  width: 100%;
+  height: 4rem;
+  /* Asymmetric: the lockup needs air off the frame edge, while the window
+     controls stay tucked into the corner the way OS chrome does. */
+  padding-inline: clamp(1rem, 2vw, 1.75rem) 0.625rem;
+}
+
+/* Mark and wordmark are one lockup: a tight internal gap, so the pairing
+   reads as a single logo rather than two title-bar items sharing the bar's
+   wider gap. */
+.brand {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+/* The mark keeps its square tile, as it ships in Logos/Frame 11 (1).png —
+   the glyph sits at ~68% of the box height, centred. Vector versions live at
+   assets/logo/mark-tile.svg (boxed) and mark.svg (glyph only). Set a touch
+   taller than the wordmark, which makes the pair sit level optically. */
+.brand__mark {
+  flex: 0 0 auto;
+  height: 1.5rem;
+  width: auto;
+  aspect-ratio: 1;
+}
+
+/* The white wordmark needs no inversion now that it sits on the green bar. */
+.brand__wordmark {
+  width: auto;
+  height: 1.25rem;
+}
+
+/* Toolbar, not a web nav: each item is a beveled chrome button, so the whole
+   bar reads as OS chrome rather than links painted on green. */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.nav__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  height: 1.875rem;
+  padding: 0 0.6875rem;
+  background: var(--chrome-face);
+  color: var(--ink);
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-light),
+    inset -1.5px -1.5px 0 var(--chrome-shadow);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 140ms var(--ease);
+}
+
+.nav__btn:hover {
+  background: var(--chrome-light);
+}
+
+/* Pressed-in on click, like a real toolbar button. */
+.nav__btn:active {
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-shadow),
+    inset -1.5px -1.5px 0 var(--chrome-light);
+}
+
+/* Signals the use-case submenu. The menu itself is not built yet. */
+.nav__caret {
+  width: 0;
+  height: 0;
+  border-inline: 3.5px solid transparent;
+  border-top: 4px solid currentColor;
+}
+
+.titlebar__actions {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+  margin-inline-start: auto;
+}
+
+
+/* Beveled control: window buttons, Start, and the title-bar CTA. Chrome gets
+   OS styling; content inside the screen gets the modern pill. */
+.chip,
+.btn-os,
+.hero__start {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--chrome-face);
+  color: var(--ink);
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-light),
+    inset -1.5px -1.5px 0 var(--chrome-shadow);
+}
+
+.chip {
+  width: 1.125rem;
+  height: 1rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.btn-os {
+  height: 2rem;
+  padding: 0 0.875rem;
+  border: 0;
+  font: 700 0.9375rem/1 var(--font);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: filter 160ms var(--ease);
+}
+
+.btn-os--accent {
+  background: var(--accent);
+  /* White is 3.41:1 on the accent — fine for the 19px hero pill, not for
+     15px. Near-black clears AA at this size. */
+  color: var(--on-accent-sm);
+  box-shadow:
+    inset 1.5px 1.5px 0 rgba(255, 255, 255, 0.45),
+    inset -1.5px -1.5px 0 rgba(0, 0, 0, 0.28);
+}
+
+.btn-os--accent:hover {
+  filter: brightness(1.08);
+}
+
+/* Hero size. Near-black on the accent clears AA at any size, so this can grow
+   without the contrast problem the white-on-accent pill had. */
+.btn-os--lg {
+  height: 2.875rem;
+  padding: 0 1.5rem;
+  font-size: 1rem;
+}
+
+.btn-os:active {
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-shadow),
+    inset -1.5px -1.5px 0 var(--chrome-light);
+}
+
+/* --- Mobile menu --------------------------------------------------------- */
+
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 2rem;
+  height: 2rem;
+  padding: 0 0.375rem;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.menu-toggle__bar {
+  display: block;
+  height: 2px;
+  background: var(--bone);
+  transition: transform 200ms var(--ease);
+}
+
+.menu-toggle[aria-expanded='true'] .menu-toggle__bar:first-child {
+  transform: translateY(3.5px) rotate(45deg);
+}
+
+.menu-toggle[aria-expanded='true'] .menu-toggle__bar:last-child {
+  transform: translateY(-3.5px) rotate(-45deg);
+}
+
+/* Styled as an OS menu rather than a web drawer, to stay inside the frame. */
+.mobile-nav {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0.5rem 0.5rem;
+  padding: 0.25rem;
+  background: var(--chrome-face);
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-light),
+    inset -1.5px -1.5px 0 var(--chrome-shadow);
+}
+
+.mobile-nav[hidden] {
+  display: none;
+}
+
+.mobile-nav__link {
+  padding: 0.625rem 0.75rem;
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.mobile-nav__link:hover {
+  background: var(--green);
+  color: var(--bone);
+}
+
+/* Six toolbar buttons need more room than the old four links did. */
+@media (max-width: 72em) {
+  .nav {
+    display: none;
+  }
+  .menu-toggle {
+    display: flex;
+  }
+}
+
+@media (min-width: 72.0625em) {
+  .mobile-nav {
+    display: none;
+  }
+}
+
+/* --- Hero — the window's client area and taskbar ------------------------- */
+
+/* The frame is built in CSS, not taken from the render, which is what lets
+   the hero be sized to the fold: the photo is cropped frameless
+   (assets/img/photo-workspace.png) and cover-fills whatever height is left.
+   Carries the frame's remaining three sides; .titlebar carries the top. */
+.hero {
+  display: flex;
+  flex-direction: column;
+  background: var(--chrome-face);
+  border: 3px solid var(--chrome-face);
+  border-top: 0;
+}
+
+/* --- Screen --- */
+
+.hero__screen {
+  position: relative;
+  isolation: isolate;
+  flex: 1 1 auto;
+  /* Copy sits at the foot of the frame, not dead centre: the photo's subjects
+     are in the upper half, and a centred block lands straight on their faces.
+     Reads as the thing they are leaning in to look at.
+     Photo and scrim are absolute so neither can size this box — as grid
+     children their height:100% resolved against the intrinsic ratio and
+     overflowed the row, which pushed the CTA behind the taskbar. */
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--green-deep);
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-shadow),
+    inset -1.5px -1.5px 0 var(--chrome-light);
+}
+
+.hero__photo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  /* Headroom above the subjects. Pinning the bottom (50% 100%) cut the tops
+     of their heads off once the screen went wider than ~2.3:1, which also
+     magnified the photo's fisheye distortion into something that read as a
+     broken image. */
+  object-position: 50% 45%;
+  filter: brightness(1.06) saturate(1.05);
+}
+
+.hero__screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  /* Near-neutral rather than brand green: a green wash flattened the photo's
+     own colour. Just enough weight at the foot to carry the type, clearing
+     entirely over the faces. */
+  background: linear-gradient(
+    to top,
+    rgba(7, 11, 9, 0.9) 0%,
+    rgba(7, 11, 9, 0.76) 16%,
+    rgba(7, 11, 9, 0.46) 38%,
+    rgba(7, 11, 9, 0.16) 60%,
+    rgba(7, 11, 9, 0) 80%
+  );
+}
+
+/* The radial plate that used to sit here is gone: with the scrim above doing
+   the work in one pass, a second gradient on top of it read as a blotch over
+   the subjects. */
+
+.hero__inner {
+  position: relative;
+  isolation: isolate;
+  z-index: 2;
+  width: 100%;
+  /* Sized so the headline's authored line breaks are the only breaks at the
+     max font size — re-check when the headline copy changes. */
+  max-width: 50rem;
+  padding: clamp(1.5rem, 4vw, 2.5rem) var(--gutter) clamp(1.25rem, 2.5vw, 1.75rem);
+  text-align: center;
+}
+
+/* --- Taskbar --- */
+
+.hero__taskbar {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  height: 2.75rem;
+  margin-top: 3px;
+  padding: 0 0.375rem;
+  color: var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  user-select: none;
+}
+
+.hero__start {
+  gap: 0.375rem;
+  height: 1.875rem;
+  padding: 0 0.75rem;
+  font-weight: 700;
+}
+
+/* Taskbar task button, and the second route to the demo. */
+.hero__task {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4375rem;
+  height: 1.875rem;
+  padding: 0 0.75rem;
+  margin-inline-start: 0.375rem;
+  background: var(--chrome-face);
+  color: var(--ink);
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-light),
+    inset -1.5px -1.5px 0 var(--chrome-shadow);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 140ms var(--ease);
+}
+
+.hero__task:hover {
+  background: var(--chrome-light);
+}
+
+.hero__task:active {
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-shadow),
+    inset -1.5px -1.5px 0 var(--chrome-light);
+}
+
+/* Start and the task buttons sit left; the tray is pushed to the right. */
+.hero__tray {
+  margin-inline-start: auto;
+}
+
+.hero__start-glyph {
+  width: 0.875rem;
+  height: 0.875rem;
+  background:
+    linear-gradient(var(--accent) 0 0) 0 0 / 45% 45% no-repeat,
+    linear-gradient(var(--wash) 0 0) 100% 0 / 45% 45% no-repeat,
+    linear-gradient(var(--sage) 0 0) 0 100% / 45% 45% no-repeat,
+    linear-gradient(var(--green) 0 0) 100% 100% / 45% 45% no-repeat;
+}
+
+.hero__tray {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 1.875rem;
+  padding: 0 0.625rem;
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-shadow),
+    inset -1.5px -1.5px 0 var(--chrome-light);
+}
+
+.hero__clock {
+  font-variant-numeric: tabular-nums;
+}
+
+/* The screen holds a ratio rather than whatever height the fold leaves over.
+   Sizing it to `100svh - reserve` meant a 720px-tall laptop produced a 2.86:1
+   screen — a 218px crop that took the tops of the subjects' heads off. With
+   `object-fit: cover` the width sets how big they are and the ratio only sets
+   how much is cropped, so holding the ratio holds the framing at every
+   viewport height. Chrome above and below comes to ~145px, so a 2.25:1 screen
+   still lands inside a 720px fold with the client row showing under it.
+
+   Portrait viewports get a tall crop instead: 2.25:1 at 375px wide is a 167px
+   letterbox with nowhere for the copy to go. */
+.hero__screen {
+  aspect-ratio: 4 / 5;
+  min-height: 22rem;
+}
+
+@media (min-width: 46em) {
+  .hero__screen {
+    /* Preferred framing. */
+    aspect-ratio: 2.25;
+
+    /* Never taller than the fold allows, so the client row is always visible
+       on the first screen. --fold-reserve is everything that is not this box,
+       measured at 1920x1080: announcement bar 34 + title bar 67 + taskbar and
+       the frame's three borders 50 + client row 112 = 263, rounded up for
+       slack. Keep it in step with those four. A fixed ratio cannot do this
+       job: at 2.25 the strip fell 27px past the fold on a 1920x1080 screen,
+       and picking a flatter fixed ratio to fix that breaks 1600x900 instead. */
+    --fold-reserve: 16.5rem;
+    max-height: calc(100svh - var(--fold-reserve));
+
+    /* ...but never so short that the crop eats the subjects. This floors the
+       screen at 1/2.7 of its width, which is the bound the earlier
+       `100svh - reserve` sizing lacked — that hit 2.86:1 on a 720px-tall
+       laptop and cut the tops of their heads off. min-height beats max-height
+       in CSS, which is what makes this a hard floor rather than a preference.
+       Keyed to 100vw because this box spans the full width bar its borders. */
+    min-height: max(20rem, calc((100vw - 6px) / 2.7));
+  }
+}
+
+.hero__title {
+  font-size: clamp(1.75rem, 1rem + 2.2vw, 2.625rem);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  color: var(--bone);
+  text-wrap: balance;
+}
+
+/* Corgi sets the memorable half of the headline in an italic accent face.
+   Satoshi is the only brand typeface, so the shift is italic + accent
+   colour rather than a serif. */
+.hero__title em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.hero__sub {
+  margin: clamp(0.75rem, 1.4vw, 1rem) auto 0;
+  max-width: 33rem;
+  color: rgba(244, 240, 231, 0.88);
+  font-size: clamp(0.9375rem, 0.9rem + 0.25vw, 1.0625rem);
+  line-height: 1.5;
+  text-wrap: pretty;
+  /* Photo behind the copy is uneven; a tight shadow holds the small text
+     legible over the busiest part of it without looking like a glow. */
+  text-shadow: 0 1px 3px rgba(7, 11, 9, 0.6), 0 2px 14px rgba(7, 11, 9, 0.7);
+}
+
+.hero__title {
+  text-shadow: 0 1px 2px rgba(7, 11, 9, 0.45), 0 2px 20px rgba(7, 11, 9, 0.55);
+}
+
+.hero__inner .btn-os {
+  margin-top: clamp(1.125rem, 2.2vw, 1.625rem);
+}
+
+/* The authored line breaks in the headline and subhead are art direction for
+   wide screens; below that, let the text wrap naturally. */
+@media (max-width: 46em) {
+  .hero__title br,
+  .hero__sub br {
+    display: none;
+  }
+}
+
+/* --- Pitch band ---------------------------------------------------------- */
+
+/* The rules bracket the slab itself, top and bottom.
+   Bottom: no bottom padding, so the band ends exactly where the slab ends and
+   the hairline .quote carries lands on that edge.
+   Top: the band's own border-top would draw at the band boundary, which left
+   the line floating above the slab with bone between them — bound at the foot
+   but open at the head. So the border is dropped and the line is painted as a
+   background instead, offset by exactly the top padding to sit on the slab's
+   top edge. A background can be positioned; a border cannot, and ::before and
+   ::after are both already spent on the column rules.
+   The bone gap above the slab is preserved, it just sits outside the bracket.
+
+   Both overrides below are written as .pitch.guides rather than .pitch: the
+   .guides block lives further down the stylesheet, so at equal specificity it
+   won on source order and these were silently ignored. */
+.pitch {
+  --band-pad: clamp(2rem, 5vw, 4rem);
+  padding: var(--band-pad) var(--gutter) 0;
+  background-color: var(--bone);
+  background-image: linear-gradient(var(--rule), var(--rule));
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  background-position: 0 var(--band-pad);
+}
+
+.pitch.guides {
+  border-top: 0;
+}
+
+/* The column rules deliberately run the full band, not just the slab's height.
+   Clipped to the slab they were invisible — they sit on its edges, and it is
+   opaque. Running the full band puts a short stub in the bone gap above, which
+   meets the slab's top rule at a corner and is the only place the column is
+   actually legible in this band. */
+
+.pitch__panel {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+  width: 100%;
+  /* Wider than --shell: this band reads as a full-width slab, after Corgi.
+     At 88rem it stopped growing at 1408px, which on a 1920 screen left it at
+     73% of the viewport — noticeably narrower than the reference. Kept in step
+     with --guide-col. */
+  max-width: 94rem;
+  margin-inline: auto;
+  /* Block padding trimmed to keep the slab flat — it is a wide band, not a
+     card. Most of its height comes from the art column, which is why those
+     two windows run side by side above 56em rather than stacked. */
+  padding: clamp(1.5rem, 3vw, 2.5rem) clamp(2rem, 4vw, 3.75rem);
+  /* Warm near-black rather than pure: the product renders are lit on black,
+     so they sit into this panel instead of showing a seam. */
+  background: #1c1a17;
+  border-radius: clamp(1.25rem, 2.5vw, 2rem);
+  overflow: hidden;
+}
+
+/* Sized down from the original short pitch: this copy is ~230 characters, and
+   at the old size it ran to nine highlighted lines that swamped the art. */
+.pitch__text {
+  max-width: 46ch;
+  font-size: clamp(1.1875rem, 0.9rem + 1.35vw, 1.875rem);
+  font-weight: 500;
+  line-height: 1.34;
+  letter-spacing: -0.015em;
+}
+
+/* Marker highlight, after Corgi. clone keeps the padding on every wrapped
+   line instead of only the first and last. */
+.mark {
+  display: inline;
+  padding: 0.1em 0.18em;
+  background: var(--accent);
+  color: var(--white);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* In flow rather than absolutely positioned, which is what keeps them from
+   overlapping at any column width. Absolute placement only avoids a collision
+   at the one size it was tuned for.
+   Stacked is the narrow-screen case, where the art column is the full panel
+   width; side by side above 56em, because two stacked windows are what made
+   the slab tall. */
+.pitch__art {
+  display: flex;
+  flex-direction: column;
+  /* Generous, because rotation is not accounted for in layout: a 2.5deg turn
+     on a 440px-wide window pushes its corner ~19px past the box the gap is
+     measured from, which ate almost all of a 20px gap at single-column
+     widths. */
+  gap: clamp(1.5rem, 3.5vw, 2.5rem);
+}
+
+/* Both renders are cropped tight to the window (dialog-*.png). The previous
+   pair relied on `mix-blend-mode: lighten` to drop their black grounds, and
+   that had two costs: the Learning render's white glow came through as a bright
+   rectangle sitting on the panel, and wherever the two overlapped they blended
+   into each other — the progress bar ghosted through the front window's body.
+   With the crop, the leftover black margin is a few pixels against a near-black
+   panel, so plain opaque stacking is cleaner. The shadow is done here rather
+   than baked into the file, so it stays crisp at any size. */
+/* No `max-width: none` here. It was carried over from when these were
+   absolutely positioned, and as `.pitch__art img` (0-1-1) it outranked the
+   px ceilings on `.pitch__art-back` / `-front` (0-1-0) and silently discarded
+   them. The global `img { max-width: 100% }` it was there to beat never
+   applies to a width set in percent of the same box. */
+.pitch__art img {
+  filter: drop-shadow(0 12px 26px rgba(0, 0, 0, 0.5));
+}
+
+/* Sized well under the column so they read as illustration beside the claim,
+   not as the subject of the band. Staggered right then left, with a degree or
+   two of rotation, so the pair still has some life without colliding.
+   The px ceilings matter: the percentages are of the art column, so widening
+   the slab would otherwise scale these straight back up to the size they were
+   before being cut down. */
+.pitch__art-back {
+  align-self: flex-end;
+  width: 62%;
+  max-width: 20rem;
+  rotate: -2.5deg;
+}
+
+.pitch__art-front {
+  align-self: flex-start;
+  width: 54%;
+  max-width: 17.5rem;
+  rotate: 2deg;
+}
+
+@media (min-width: 56em) {
+  .pitch__panel {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 3vw, 3.5rem);
+  }
+
+  /* Side by side once there is a column to do it in: stacked, the two windows
+     set the slab's height at ~450px, which read as a card rather than a band.
+     In a row the art is one window tall and the copy becomes the taller of the
+     two sides again. Offset vertically so the pair still steps rather than
+     sitting on one line. */
+  .pitch__art {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1rem, 2vw, 1.5rem);
+  }
+
+  .pitch__art-back {
+    align-self: flex-start;
+    width: 48%;
+  }
+
+  .pitch__art-front {
+    align-self: flex-end;
+    width: 44%;
+  }
+}
+
+/* --- Logo strip ---------------------------------------------------------- */
+
+/* Sits inside the first view, so its height is budgeted — see --fold-reserve.
+   No side padding: the marquee runs edge to edge and fades out via a mask. */
+.proof {
+  padding-block: clamp(1.5rem, 2.5vw, 2rem);
+  background: var(--bone);
+}
+
+/* Marquee. The track is duplicated in JS and the belt slides exactly -50%,
+   so the seam lands where the copy begins and the loop is invisible. */
+.proof__viewport {
+  width: 100%;
+  overflow: hidden;
+  /* Fades the logos out at both edges instead of letting them clip hard. */
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 5%,
+    #000 95%,
+    transparent 100%
+  );
+}
+
+.proof__belt {
+  display: flex;
+  width: max-content;
+}
+
+.proof__track {
+  display: flex;
+  align-items: center;
+  gap: clamp(2.5rem, 5vw, 5rem);
+  margin: 0;
+  padding: 0 clamp(1.25rem, 2.5vw, 2.5rem);
+  list-style: none;
+}
+
+/* Duration is set inline in JS from the belt width, so speed stays constant
+   however many copies are needed to cover the viewport. */
+.proof--rolling .proof__belt {
+  animation: proof-scroll 45s linear infinite;
+}
+
+.proof--rolling .proof__belt:hover {
+  animation-play-state: paused;
+}
+
+@keyframes proof-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* With the belt parked at translateX(0) the first logo sits inside the edge
+   fade and vanishes, so reduced motion gets a plain centred row instead:
+   no mask, no clone. */
+@media (prefers-reduced-motion: reduce) {
+  .proof--rolling .proof__belt {
+    animation: none;
+    width: 100%;
+  }
+  .proof__viewport {
+    mask-image: none;
+  }
+  .proof__track {
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    row-gap: 1.5rem;
+  }
+  .proof__track[aria-hidden='true'] {
+    display: none;
+  }
+}
+
+/* All logos render as one flat black ink, after Corgi. brightness(0) zeroes
+   RGB while preserving alpha, so it silhouettes anything with transparency.
+   Schuetzengarten, Staempfli and Marinello shipped as opaque files, so their
+   backgrounds are knocked out into *-mono.png first — Schuetzengarten's white
+   lettering was reversed out of a red box and Marinello's out of a yellow
+   badge, both of which flatten to a solid black blob otherwise. */
+.proof__logo {
+  width: auto;
+  object-fit: contain;
+  filter: brightness(0);
+  opacity: 0.72;
+  transition: opacity 200ms var(--ease);
+}
+
+.proof__track li:hover .proof__logo {
+  opacity: 1;
+}
+
+/* Heights are tuned per logo, not shared: the set runs from a 1:1 lockup to a
+   15:1 wordmark, so one max-height would leave the wide ones hairline-thin and
+   the square ones oversized. Matched on lettering size, not bounding box. */
+.proof__logo--egger {
+  height: 2.75rem;
+}
+.proof__logo--schuetzengarten {
+  height: 2.25rem;
+}
+.proof__logo--staempfli {
+  height: 1.75rem;
+}
+.proof__logo--marinello {
+  /* Its ink fills only ~48% of a square canvas, so it needs more box height
+     than the others to match their lettering size. */
+  height: 3rem;
+}
+.proof__logo--safruits {
+  height: 0.875rem;
+}
+.proof__logo--kellermann {
+  height: 1.25rem;
+}
+
+
+/* --- Guide lines --------------------------------------------------------- */
+
+/* Thin rules marking the content column, plus a hairline where bands meet —
+   the layout scaffolding Corgi leaves visible. One pair per band, so the
+   inset can differ from section to section. Applied to the bone bands only:
+   the hero is a window with its own 3px frame, and a rule crossing that
+   frame reads as a mistake rather than as structure. */
+.guides {
+  position: relative;
+  border-top: 1px solid var(--rule);
+}
+
+.guides::before,
+.guides::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 0;
+  width: 1px;
+  background: var(--rule);
+  pointer-events: none;
+}
+
+.guides::before {
+  left: max(var(--gutter), calc(50% - var(--guide-col) / 2));
+}
+
+.guides::after {
+  right: max(var(--gutter), calc(50% - var(--guide-col) / 2));
+}
+
+/* Content clears the rules. */
+.guides > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* --- Testimonial --------------------------------------------------------- */
+
+/* A narrower guide column than the slab above, which is the whole point of
+   giving each band its own pair: the rules step inwards as the page goes down,
+   so the structure reads as deliberate rather than as one fixed frame. */
+.quote {
+  --guide-col: 68rem;
+  padding: clamp(3rem, 6vw, 5rem) var(--gutter);
+  background: var(--bone);
+}
+
+.quote__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+  /* The narrowest column on the page: a single quote wants to be a tight
+     block, and the contrast with the wide slab and sequence is the point. */
+  max-width: 60rem;
+  text-align: center;
+}
+
+.quote__text {
+  margin: 0;
+  /* Widened with the type size so the quote still breaks over four lines
+     rather than five. */
+  max-width: 36rem;
+  color: var(--ink);
+  font-size: clamp(1.5rem, 1rem + 1.9vw, 2.5rem);
+  font-weight: 500;
+  line-height: 1.26;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* Same italic-accent move as the headline. Held on one line: an accent phrase
+   split across a line break stops reading as one phrase. */
+.quote__text em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+/* The attribution is the one place the window chrome is allowed in this band —
+   it ties back to the hero frame without the retro styling reaching the copy. */
+.quote__card {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: clamp(1.75rem, 3.5vw, 2.5rem);
+  padding: 0.5rem 1rem 0.5rem 0.5rem;
+  background: var(--chrome-face);
+  text-align: left;
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-light),
+    inset -1.5px -1.5px 0 var(--chrome-shadow);
+}
+
+/* Sunken well, so the portrait reads as inset into the panel. */
+.quote__well {
+  flex: 0 0 auto;
+  width: 3rem;
+  height: 3rem;
+  padding: 2px;
+  background: var(--chrome-face);
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-shadow),
+    inset -1.5px -1.5px 0 var(--chrome-light);
+}
+
+.quote__portrait {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 40%;
+}
+
+.quote__who {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.quote__name {
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.quote__role {
+  color: #6d6154;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* --- How it works — the sequence ----------------------------------------- */
+
+/* Last band, so the narrowest guide column: the slab is 100rem, the quote
+   88rem, this 74rem. The content container matches it exactly, which puts the
+   column rules on the content's own left and right edges — the same trick the
+   slab uses, and what stops the rules reading as unrelated lines floating out
+   near the viewport edge.
+   Broad, close to the slab's 94rem: this is the section that carries the most
+   content. The dead space that made an earlier wide version look shoved left is
+   handled by where the space goes, not by shrinking the column — see the
+   space-between on .steps__body. */
+.steps {
+  --guide-col: 88rem;
+  padding: clamp(3rem, 6vw, 5rem) var(--gutter);
+  background: var(--bone);
+}
+
+/* The container spans the guide column so the rules mark its edges, but the
+   content is padded in from those edges rather than sitting on them — Corgi
+   leaves the same breathing room between rule and headline, and flush against
+   the line the type reads as if it has been clamped to it. The inset applies to
+   the rail and the panel as well, so headline, list and content share one left
+   edge set in from the rule. */
+.steps__inner {
+  margin: 0 auto;
+  max-width: 88rem;
+  padding-inline: clamp(1.5rem, 4vw, 4rem);
+}
+
+.steps__head {
+  max-width: 42rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.steps__title {
+  margin: 0;
+  font-size: clamp(1.5rem, 1rem + 1.6vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.16;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+/* Same italic-accent move as the hero headline: the half that carries the
+   repositioning is the half that gets the accent. */
+.steps__title em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.steps__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A rule between rows rather than around each one — the row separators are the
+   horizontal half of the same guide system. Ordered top to bottom because the
+   order is the argument: a grid or a set of tabs would imply these are
+   parallel options rather than a sequence. */
+.step {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.25rem, 3vw, 2rem);
+  align-items: center;
+  padding-block: clamp(1.75rem, 3.5vw, 2.75rem);
+  border-top: 1px solid var(--rule);
+}
+
+.step:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.step__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+  margin-bottom: 0.625rem;
+  color: var(--caption);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.step__num {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The conditional on the last step is doing strategic work — it is the reason
+   order processing is at the end rather than the top — so it is marked rather
+   than buried in the body copy. */
+.step__tag {
+  padding: 0.1875rem 0.5rem;
+  color: var(--accent);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  box-shadow: inset 0 0 0 1px currentColor;
+}
+
+.step__claim {
+  margin: 0;
+  max-width: 26ch;
+  font-size: clamp(1.25rem, 0.9rem + 1.1vw, 1.75rem);
+  font-weight: 500;
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.step__body {
+  margin: 0.625rem 0 0;
+  max-width: 42ch;
+  color: #5d5348;
+  font-size: 1rem;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.step__art {
+  display: flex;
+  justify-content: flex-start;
+}
+
+@media (min-width: 56em) {
+  .step {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 4vw, 4rem);
+  }
+
+  /* Constant side, not alternating: the pitch band already reads left-copy /
+     right-art, and five alternating rows turn a sequence into a zigzag. */
+  .step__art {
+    justify-content: flex-end;
+  }
+}
+
+/* --- Dialog, built in CSS ------------------------------------------------ */
+
+/* The same window as the renders in the explainer box, but as markup: the copy
+   stays editable, it is real text for search and selection, and it needs no
+   new render per step. Bevels are two-tone — light top-left, shadow
+   bottom-right — which a single border cannot express. */
+.dlg {
+  width: 100%;
+  max-width: 24rem;
+  background: var(--chrome-face);
+  padding: 3px;
+  box-shadow:
+    inset 2px 2px 0 var(--chrome-light),
+    inset -2px -2px 0 var(--chrome-shadow),
+    0 12px 26px rgba(42, 35, 32, 0.14);
+}
+
+.dlg__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2rem;
+  padding: 0 0.25rem 0 0.5rem;
+  background: var(--green);
+}
+
+.dlg__title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--bone);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dlg__ctls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 0 0 auto;
+}
+
+.dlg__ctl {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.125rem;
+  background: var(--chrome-face);
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-light),
+    inset -1.5px -1.5px 0 var(--chrome-shadow);
+}
+
+.dlg__ctl i {
+  display: block;
+  background: var(--ink);
+}
+
+.dlg__ctl--min i {
+  width: 8px;
+  height: 2px;
+  margin-top: 5px;
+}
+
+.dlg__ctl--max i {
+  width: 9px;
+  height: 8px;
+  background: transparent;
+  border: 1.5px solid var(--ink);
+  border-top-width: 3px;
+}
+
+/* Drawn rather than shipped as a glyph, so it inherits the ink colour. */
+.dlg__ctl--close i {
+  position: relative;
+  width: 9px;
+  height: 9px;
+  background: transparent;
+}
+
+.dlg__ctl--close i::before,
+.dlg__ctl--close i::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1.5px;
+  background: var(--ink);
+}
+
+.dlg__ctl--close i::before {
+  rotate: 45deg;
+}
+
+.dlg__ctl--close i::after {
+  rotate: -45deg;
+}
+
+.dlg__body {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  padding: 1rem 1rem 0.875rem;
+}
+
+.dlg__icon {
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+
+.dlg__icon svg {
+  display: block;
+}
+
+.dlg__line {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  text-wrap: pretty;
+}
+
+.dlg__line + .dlg__line {
+  margin-top: 0.125rem;
+}
+
+.dlg__meter {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-top: 0.75rem;
+}
+
+/* Sunken well, the inverse bevel of the frame. */
+.dlg__well {
+  flex: 1 1 auto;
+  height: 1.125rem;
+  padding: 2px;
+  background: var(--chrome-face);
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-shadow),
+    inset -1.5px -1.5px 0 var(--chrome-light);
+}
+
+.dlg__fill {
+  display: block;
+  height: 100%;
+  background: var(--green);
+  animation: dlg-fill 1100ms var(--ease) both;
+}
+
+@keyframes dlg-fill {
+  from {
+    width: 0%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dlg__fill {
+    animation: none;
+  }
+}
+
+.dlg__pct {
+  flex: 0 0 auto;
+  color: var(--ink);
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.dlg__foot {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.625rem 1rem 0.875rem;
+  border-top: 1px solid var(--chrome-shadow);
+}
+
+.dlg__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2rem;
+  padding: 0 0.875rem;
+  background: var(--chrome-face);
+  color: var(--ink);
+  font-size: 0.875rem;
+  font-weight: 700;
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-light),
+    inset -1.5px -1.5px 0 var(--chrome-shadow);
+}
+
+/* The dotted inner ring is the Win95 default-button tell. */
+.dlg__btn > span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0 0.125rem;
+  outline: 1px dotted rgba(42, 35, 32, 0.55);
+  outline-offset: -3px;
+}
+
+/* --- Sequence as tabs (progressive enhancement) --------------------------- */
+
+/* Five stacked rows ran to ~1290px of scroll. Collapsed to a rail of step
+   labels beside a single panel — after Granola — the same content sits in one
+   screen. The tab layout only engages once JS has added .steps--tabs and built
+   the rail; without JS the rows stay stacked, which reads fine and keeps all
+   five in the markup for search. */
+
+.steps__tag-row {
+  margin: 0.625rem 0 0;
+}
+
+@media (min-width: 56em) {
+  .steps--tabs .steps__body {
+    display: grid;
+    /* Capped panel plus space-between: the rail stays on the left inset, the
+       panel keeps a sane measure, and the slack lands in the gap between them
+       instead of as dead space to the right of the content. */
+    grid-template-columns: minmax(9rem, 12rem) minmax(0, 46rem);
+    justify-content: space-between;
+    gap: clamp(2rem, 3.5vw, 3rem);
+    align-items: start;
+  }
+}
+
+/* Rail. Hairline under every item, the active one weighted in ink — the
+   difference is weight and colour, not a highlight block. */
+.steps__rail {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: clamp(1.75rem, 3vw, 0rem);
+}
+
+.steps__tab {
+  display: flex;
+  align-items: baseline;
+  gap: 0.625rem;
+  width: 100%;
+  padding: 0.875rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  background: none;
+  color: var(--caption);
+  font: 500 1rem/1.3 var(--font);
+  text-align: left;
+  cursor: pointer;
+  transition: color 140ms var(--ease);
+}
+
+.steps__tab:hover {
+  color: var(--ink);
+}
+
+.steps__tab[aria-selected='true'] {
+  color: var(--ink);
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: calc(0.875rem - 1px);
+}
+
+.steps__tab-num {
+  color: var(--caption);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+}
+
+.steps__tab[aria-selected='true'] .steps__tab-num {
+  color: var(--accent);
+}
+
+/* All panels share one grid cell, so the container is as tall as the tallest
+   and switching tabs cannot make the page jump. Inactive panels are hidden
+   with visibility rather than display, which keeps that height and still takes
+   them out of the accessibility tree. */
+.steps--tabs .steps__list {
+  display: grid;
+}
+
+.steps--tabs .step {
+  grid-area: 1 / 1;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1.25rem, 2.5vw, 1.75rem);
+  padding-block: 0;
+  border: 0;
+  align-items: start;
+}
+
+.steps--tabs .step:last-child {
+  border-bottom: 0;
+}
+
+.steps--tabs .step--inactive {
+  visibility: hidden;
+}
+
+/* The rail already names the step, so the in-panel label would say it twice. */
+.steps--tabs .step__meta {
+  display: none;
+}
+
+.steps--tabs .step__claim {
+  max-width: 30ch;
+  font-size: clamp(1.5rem, 1.05rem + 1.5vw, 2.25rem);
+}
+
+.steps--tabs .step__body {
+  max-width: 46ch;
+  font-size: 1.0625rem;
+}
+
+.steps--tabs .step__art {
+  justify-content: flex-start;
+}
+
+.steps--tabs .dlg {
+  max-width: 40rem;
+}
+
+/* The window is large here, so its own text can come up a step with it. */
+.steps--tabs .dlg__line {
+  font-size: 1rem;
+}
+
+/* --- Sequence: scroll-driven progression ---------------------------------- */
+
+/* The rail is also a scroll position. The panel sticks while a tall track
+   scrolls past behind it, and the active step is derived from how far through
+   that track you are — so the sequence advances as you read rather than only
+   when clicked. Clicking a rail item scrolls to that step's slice, which keeps
+   the two in agreement instead of letting a click fight the scroll handler.
+   --steps-slice is the scroll distance allotted per step; the track is that
+   times the number of steps, set from JS. */
+.steps--tabs .steps__track {
+  --steps-slice: 58vh;
+  height: calc(var(--steps-count, 5) * var(--steps-slice));
+}
+
+.steps--tabs .steps__stage {
+  position: sticky;
+  /* Clears the sticky title bar. */
+  top: 5.5rem;
+}
+
+/* Inside the pinned stage the heading is close company for the panel, so it
+   needs less room beneath it than it did as a section header. */
+.steps--tabs .steps__head {
+  margin-bottom: clamp(1.5rem, 2.5vw, 2rem);
+}
+
+@media (max-width: 55.999em) {
+  /* No pinning on small screens: a sticky panel plus a rail above it eats the
+     whole viewport, and the track would be pure dead scroll. */
+  .steps--tabs .steps__track {
+    height: auto;
+  }
+
+  .steps--tabs .steps__stage {
+    position: static;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .steps--tabs .steps__track {
+    --steps-slice: 42vh;
+  }
+}

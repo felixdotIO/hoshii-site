@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2596 2596" role="img" aria-label="Hoshii">
+  <!-- Vector of Logos/Frame 11 (1).png, which ships as an opaque 2596px tile
+       with no alpha. Glyph geometry: bar 673,428 1259x413 · legs at 857/1380,
+       y 1033, 403x1151. Tile and glyph colours are brand tokens rather than
+       the source's white/near-black. -->
+  <rect width="2596" height="2596" fill="#f4f0e7" />
+  <g fill="#133021">
+    <rect x="673" y="428" width="1259" height="413" />
+    <rect x="857" y="1033" width="403" height="1151" />
+    <rect x="1380" y="1033" width="402" height="1151" />
+  </g>
+</svg>

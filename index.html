@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>
+      Hoshii &mdash; The multiplayer inbox that learns. And acts.
+    </title>
+    <meta
+      name="description"
+      content="The multiplayer inbox that learns. And acts. Hoshii is your team&rsquo;s proactive inbox that gets better every day &mdash; reply faster, reduce redundancies."
+    />
+    <link rel="stylesheet" href="styles.css?v=54" />
+  </head>
+  <body>
+    <!-- Announcement bar ------------------------------------------------- -->
+    <div class="announce">
+      <p class="announce__text">
+        Built in Zurich for the teams that keep goods moving.
+        <a class="announce__link" href="#story">Read our story &rarr;</a>
+      </p>
+      <button class="announce__close" type="button" aria-label="Dismiss">
+        &times;
+      </button>
+    </div>
+
+    <!-- Title bar — this is the site nav ---------------------------------- -->
+    <header class="titlebar">
+      <div class="titlebar__inner">
+        <a class="brand" href="/" aria-label="Hoshii &mdash; home">
+          <svg
+            class="brand__mark"
+            viewBox="0 0 2596 2596"
+            width="2596"
+            height="2596"
+            aria-hidden="true"
+          >
+            <rect width="2596" height="2596" fill="var(--bone)" />
+            <g fill="var(--green)">
+              <rect x="673" y="428" width="1259" height="413" />
+              <rect x="857" y="1033" width="403" height="1151" />
+              <rect x="1380" y="1033" width="402" height="1151" />
+            </g>
+          </svg>
+          <img
+            class="brand__wordmark"
+            src="assets/logo/wordmark-a.png"
+            alt="Hoshii"
+            width="1420"
+            height="425"
+          />
+        </a>
+
+        <nav class="nav" aria-label="Primary">
+          <a class="nav__btn" href="#product">Product</a>
+          <a class="nav__btn" href="#solutions"
+            >Solutions<span class="nav__caret" aria-hidden="true"></span
+          ></a>
+          <a class="nav__btn" href="#resources">Resources</a>
+          <a class="nav__btn" href="#partners">Become a partner</a>
+          <a class="nav__btn" href="#customers">Customer stories</a>
+          <a class="nav__btn" href="#pricing">Pricing</a>
+        </nav>
+
+        <div class="titlebar__actions">
+          <a class="btn-os btn-os--accent" href="#demo">Book a demo</a>
+
+          <button
+            class="menu-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="mobile-nav"
+            aria-label="Menu"
+          >
+            <span class="menu-toggle__bar"></span>
+            <span class="menu-toggle__bar"></span>
+          </button>
+        </div>
+      </div>
+
+      <nav class="mobile-nav" id="mobile-nav" aria-label="Primary" hidden>
+        <a class="mobile-nav__link" href="#product">Product</a>
+        <a class="mobile-nav__link" href="#solutions">Solutions</a>
+        <a class="mobile-nav__link" href="#resources">Resources</a>
+        <a class="mobile-nav__link" href="#partners">Become a partner</a>
+        <a class="mobile-nav__link" href="#customers">Customer stories</a>
+        <a class="mobile-nav__link" href="#pricing">Pricing</a>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Hero — the window's client area + taskbar ---------------------- -->
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero__screen">
+          <img
+            class="hero__photo"
+            src="assets/img/photo-team.png"
+            alt=""
+            width="1740"
+            height="904"
+            fetchpriority="high"
+          />
+
+          <div class="hero__inner">
+            <h1 class="hero__title" id="hero-title">
+              The multiplayer inbox<br />
+              that learns. <em>And acts.</em>
+            </h1>
+
+            <p class="hero__sub">
+              Hoshii is your team&rsquo;s proactive inbox that gets better every
+              day.<br />
+              Reply faster, reduce redundancies.
+            </p>
+
+            <a class="btn-os btn-os--accent btn-os--lg" href="#demo">Book a demo</a>
+          </div>
+        </div>
+
+        <div class="hero__taskbar">
+          <span class="hero__start" aria-hidden="true">
+            <span class="hero__start-glyph"></span>Start
+          </span>
+          <a class="hero__task" href="#demo">
+            <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
+              <path
+                d="M1.5 4.5h13v8h-13zM1.5 4.5 8 9l6.5-4.5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              />
+            </svg>
+            Inbox
+          </a>
+          <span class="hero__tray" aria-hidden="true">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none">
+              <path d="M1 6h2.5L7 3v10L3.5 10H1V6Z" fill="currentColor" />
+              <path
+                d="M10 5.5a3.5 3.5 0 0 1 0 5M12 3.5a6 6 0 0 1 0 9"
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linecap="round"
+              />
+            </svg>
+            <span class="hero__clock">9:30&nbsp;AM</span>
+          </span>
+        </div>
+      </section>
+
+      <!-- Logo strip ------------------------------------------------------ -->
+      <section class="proof" aria-label="Customers">
+        <div class="proof__viewport">
+          <div class="proof__belt">
+            <ul class="proof__track">
+              <li>
+                <img
+                  class="proof__logo proof__logo--egger"
+                  src="assets/clients/egger-gemuesebau.avif"
+                  alt="Egger Gem&uuml;sebau Wertb&uuml;hl"
+                  width="600"
+                  height="400"
+                  loading="lazy"
+                />
+              </li>
+              <li>
+                <img
+                  class="proof__logo proof__logo--schuetzengarten"
+                  src="assets/clients/schuetzengarten-mono.png"
+                  alt="Sch&uuml;tzengarten"
+                  width="900"
+                  height="409"
+                  loading="lazy"
+                />
+              </li>
+              <li>
+                <img
+                  class="proof__logo proof__logo--staempfli"
+                  src="assets/clients/staempfli-medical-mono.png"
+                  alt="St&auml;mpfli Medical"
+                  width="576"
+                  height="258"
+                  loading="lazy"
+                />
+              </li>
+              <li>
+                <img
+                  class="proof__logo proof__logo--marinello"
+                  src="assets/clients/marinello-mono.png"
+                  alt="Marinello"
+                  width="160"
+                  height="160"
+                  loading="lazy"
+                />
+              </li>
+              <li>
+                <img
+                  class="proof__logo proof__logo--safruits"
+                  src="assets/clients/safruits.avif"
+                  alt="AG f&uuml;r Fruchthandel &mdash; safruits"
+                  width="355"
+                  height="23"
+                  loading="lazy"
+                />
+              </li>
+              <li>
+                <img
+                  class="proof__logo proof__logo--kellermann"
+                  src="assets/clients/kellermann.avif"
+                  alt="Kellermann"
+                  width="590"
+                  height="80"
+                  loading="lazy"
+                />
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pitch band ------------------------------------------------------ -->
+      <section class="pitch guides" aria-labelledby="pitch-text">
+        <div class="pitch__panel">
+          <p class="pitch__text" id="pitch-text">
+            <span class="mark"
+              >Hoshii is the AI&#8209;native inbox built to enable faster
+              communication with fewer errors in B2B operations teams. We
+              proactively suggest areas of improvement and take care of the
+              repetitive but necessary work in your day.</span
+            >
+          </p>
+
+          <div class="pitch__art" aria-hidden="true">
+            <img
+              class="pitch__art-back"
+              src="assets/img/dialog-learning.png"
+              alt=""
+              width="930"
+              height="491"
+              loading="lazy"
+            />
+            <img
+              class="pitch__art-front"
+              src="assets/img/dialog-noticed.png"
+              alt=""
+              width="1088"
+              height="532"
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- Testimonial ----------------------------------------------------- -->
+      <section class="quote guides" aria-labelledby="quote-text">
+        <figure class="quote__inner">
+          <blockquote class="quote__text" id="quote-text">
+            &ldquo;The 2 to 3 hours a day we used to process orders have been
+            <em>cut in half</em>. New joiners also have impact significantly
+            faster.&rdquo;
+          </blockquote>
+
+          <figcaption class="quote__card">
+            <span class="quote__well">
+              <img
+                class="quote__portrait"
+                src="assets/img/thomas-locher.jpg"
+                alt=""
+                width="288"
+                height="288"
+                loading="lazy"
+              />
+            </span>
+            <span class="quote__who">
+              <span class="quote__name">Thomas Locher</span>
+              <span class="quote__role">Head of Sales, Max Schwarz AG</span>
+            </span>
+          </figcaption>
+        </figure>
+      </section>
+      <!-- How it works — the sequence, in order ---------------------------- -->
+      <section class="steps guides" aria-labelledby="steps-title">
+        <div class="steps__inner">
+          <header class="steps__head">
+            <h2 class="steps__title" id="steps-title">
+              Your team stops sorting and re-typing.
+              <em>It starts deciding.</em>
+            </h2>
+          </header>
+
+          <ol class="steps__list">
+            <li class="step" data-label="Connect">
+              <div class="step__copy">
+                <p class="step__meta">
+                  <span class="step__num">01</span> Connect
+                </p>
+                <h3 class="step__claim">Personal mail stays personal.</h3>
+                <p class="step__body">Shared mailboxes stay team-visible; personal ones stay private until you reassign, @mention, or opt a thread in. Connected in an afternoon, with sanctioned AI in place of shadow tools.</p>
+              </div>
+
+              <div class="step__art">
+                <div class="dlg">
+                  <div class="dlg__bar">
+                    <p class="dlg__title">Connected</p>
+                    <span class="dlg__ctls" aria-hidden="true">
+                      <span class="dlg__ctl dlg__ctl--min"><i></i></span>
+                      <span class="dlg__ctl dlg__ctl--max"><i></i></span>
+                      <span class="dlg__ctl dlg__ctl--close"><i></i></span>
+                    </span>
+                  </div>
+                  <div class="dlg__body">
+                    <span class="dlg__icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M2.5 8.5h13v9h-13z" fill="#f4f0e7" stroke="#2a2320" stroke-width="1.5" />
+                        <path d="M2.5 8.5 9 13l6.5-4.5" fill="none" stroke="#2a2320" stroke-width="1.5" />
+                        <path d="M8.5 4.5h13v9h-13z" fill="#a4ac9b" stroke="#2a2320" stroke-width="1.5" />
+                        <path d="M8.5 4.5 15 9l6.5-4.5" fill="none" stroke="#2a2320" stroke-width="1.5" />
+                      </svg>
+                    </span>
+                    <div>
+                      <p class="dlg__line">3 shared inboxes, 12 personal.</p>
+                      <p class="dlg__line">Personal mail: private by default.</p>
+                    </div>
+                  </div>
+                  <div class="dlg__foot">
+                    <span class="dlg__btn"><span>View permissions &gt;&gt;</span></span>
+                  </div>
+                </div>
+              </div>
+            </li>
+
+            <li class="step" data-label="Context">
+              <div class="step__copy">
+                <p class="step__meta">
+                  <span class="step__num">02</span> Context
+                </p>
+                <h3 class="step__claim">The facts arrive with the email.</h3>
+                <p class="step__body">Connect your systems once, read-only. The orchestration layer decides per email what to look up, so the fields are there before you open it. 1,300+ connectors, no rules to build.</p>
+              </div>
+
+              <div class="step__art">
+                <div class="dlg">
+                  <div class="dlg__bar">
+                    <p class="dlg__title">Context</p>
+                    <span class="dlg__ctls" aria-hidden="true">
+                      <span class="dlg__ctl dlg__ctl--min"><i></i></span>
+                      <span class="dlg__ctl dlg__ctl--max"><i></i></span>
+                      <span class="dlg__ctl dlg__ctl--close"><i></i></span>
+                    </span>
+                  </div>
+                  <div class="dlg__body">
+                    <span class="dlg__icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M4 2h10l4 4v9H4z" fill="#f4f0e7" stroke="#2a2320" stroke-width="1.5" />
+                        <g fill="#2a2320">
+                          <rect x="6" y="6" width="7" height="1.5" />
+                          <rect x="6" y="9" width="7" height="1.5" />
+                        </g>
+                        <circle cx="14" cy="14" r="4.5" fill="#a4ac9b" stroke="#2a2320" stroke-width="1.5" />
+                        <path d="M17.5 17.5 21 21" stroke="#2a2320" stroke-width="2.5" stroke-linecap="square" />
+                      </svg>
+                    </span>
+                    <div>
+                      <p class="dlg__line">Looked up: customer, open order, stock.</p>
+                      <p class="dlg__line">Ready before you opened it.</p>
+                    </div>
+                  </div>
+                  <div class="dlg__foot">
+                    <span class="dlg__btn"><span>Open task &gt;&gt;</span></span>
+                  </div>
+                </div>
+              </div>
+            </li>
+
+            <li class="step" data-label="Drafts">
+              <div class="step__copy">
+                <p class="step__meta">
+                  <span class="step__num">03</span> Drafts
+                </p>
+                <h3 class="step__claim">A reply is already written. It never sends itself.</h3>
+                <p class="step__body">Every reply is drafted for review, never sent on its own. Your corrections come back on send and sharpen the next draft.</p>
+              </div>
+
+              <div class="step__art">
+                <div class="dlg">
+                  <div class="dlg__bar">
+                    <p class="dlg__title">Draft ready</p>
+                    <span class="dlg__ctls" aria-hidden="true">
+                      <span class="dlg__ctl dlg__ctl--min"><i></i></span>
+                      <span class="dlg__ctl dlg__ctl--max"><i></i></span>
+                      <span class="dlg__ctl dlg__ctl--close"><i></i></span>
+                    </span>
+                  </div>
+                  <div class="dlg__body">
+                    <span class="dlg__icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" width="24" height="24">
+                        <g fill="#2a2320">
+                          <rect x="9" y="4" width="12" height="2" />
+                          <rect x="9" y="11" width="12" height="2" />
+                          <rect x="9" y="18" width="12" height="2" />
+                        </g>
+                        <path d="M1.5 4.8 3.4 6.6 6.6 3.2M1.5 11.8l1.9 1.8 3.2-3.4" fill="none" stroke="#2a2320" stroke-width="1.8" />
+                      </svg>
+                    </span>
+                    <div>
+                      <p class="dlg__line">Reply drafted for your review.</p>
+                      <p class="dlg__line">14 corrections learned this month.</p>
+                    </div>
+                  </div>
+                  <div class="dlg__foot">
+                    <span class="dlg__btn"><span>Review &amp; send &gt;&gt;</span></span>
+                  </div>
+                </div>
+              </div>
+            </li>
+
+            <li class="step" data-label="Follow-ups">
+              <div class="step__copy">
+                <p class="step__meta">
+                  <span class="step__num">04</span> Follow-ups
+                </p>
+                <h3 class="step__claim">It starts the work you would have forgotten.</h3>
+                <p class="step__body">A quote with no reply comes back as a drafted follow-up. Missing details and delivery chases, too. It opens the thread; you approve.</p>
+              </div>
+
+              <div class="step__art">
+                <div class="dlg">
+                  <div class="dlg__bar">
+                    <p class="dlg__title">Follow-up due</p>
+                    <span class="dlg__ctls" aria-hidden="true">
+                      <span class="dlg__ctl dlg__ctl--min"><i></i></span>
+                      <span class="dlg__ctl dlg__ctl--max"><i></i></span>
+                      <span class="dlg__ctl dlg__ctl--close"><i></i></span>
+                    </span>
+                  </div>
+                  <div class="dlg__body">
+                    <span class="dlg__icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" width="24" height="24">
+                        <circle cx="12" cy="12" r="9" fill="#a4ac9b" stroke="#2a2320" stroke-width="1.5" />
+                        <path d="M12 6.5V12l4 2.2" fill="none" stroke="#2a2320" stroke-width="1.8" stroke-linecap="square" />
+                      </svg>
+                    </span>
+                    <div>
+                      <p class="dlg__line">Quote sent 4 days ago. No reply.</p>
+                      <p class="dlg__line">Follow-up drafted.</p>
+                    </div>
+                  </div>
+                  <div class="dlg__foot">
+                    <span class="dlg__btn"><span>Approve &gt;&gt;</span></span>
+                  </div>
+                </div>
+              </div>
+            </li>
+
+            <li class="step step--gated" data-label="Handoff">
+              <div class="step__copy">
+                <p class="step__meta">
+                  <span class="step__num">05</span> Handoff
+                </p>
+                <h3 class="step__claim">Approved orders land in your ERP.</h3>
+                <p class="step__tag-row">
+                  <span class="step__tag">Phase two, on your numbers</span>
+                </p>
+                <p class="step__body">Any inbound format becomes a validated record, booked through a certified write path. You set the gates; they widen as the touchless rate earns it.</p>
+              </div>
+
+              <div class="step__art">
+                <div class="dlg">
+                  <div class="dlg__bar">
+                    <p class="dlg__title">Posted</p>
+                    <span class="dlg__ctls" aria-hidden="true">
+                      <span class="dlg__ctl dlg__ctl--min"><i></i></span>
+                      <span class="dlg__ctl dlg__ctl--max"><i></i></span>
+                      <span class="dlg__ctl dlg__ctl--close"><i></i></span>
+                    </span>
+                  </div>
+                  <div class="dlg__body">
+                    <span class="dlg__icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M3.5 10.5h17v10h-17z" fill="#f4f0e7" stroke="#2a2320" stroke-width="1.5" />
+                        <path d="M12 2v6.5M12 8.5 8.5 5M12 8.5 15.5 5" fill="none" stroke="#2a2320" stroke-width="1.8" />
+                        <rect x="7" y="14" width="10" height="2" fill="#a4ac9b" />
+                      </svg>
+                    </span>
+                    <div>
+                      <p class="dlg__line">Order posted to ERP.</p>
+                      <p class="dlg__line">Confirmation sent.</p>
+                    </div>
+                  </div>
+                  <div class="dlg__foot">
+                    <span class="dlg__btn"><span>Open in ERP &gt;&gt;</span></span>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+    </main>
+
+    <script>
+      document
+        .querySelector('.announce__close')
+        .addEventListener('click', (e) => e.currentTarget.parentElement.remove());
+
+      // Clone the logo track until the belt is wide enough that half of it
+      // still covers the viewport — two copies alone leave a gap on wide
+      // screens, which is the white space that scrolls past. The count is
+      // kept even so the -50% shift lands exactly on a repeat and the loop
+      // is seamless. Done in JS so the strip degrades to a static row.
+      const belt = document.querySelector('.proof__belt');
+      const track = document.querySelector('.proof__track');
+
+      function fillBelt() {
+        if (!belt || !track) return;
+        belt.querySelectorAll('.proof__track[aria-hidden]').forEach((n) => n.remove());
+        const one = track.getBoundingClientRect().width;
+        if (!one) return;
+        // half the belt must be at least a full viewport wide
+        let copies = Math.max(2, Math.ceil((window.innerWidth * 2) / one));
+        if (copies % 2) copies += 1;
+        for (let i = 1; i < copies; i++) {
+          const clone = track.cloneNode(true);
+          clone.setAttribute('aria-hidden', 'true');
+          belt.appendChild(clone);
+        }
+        document.querySelector('.proof').classList.add('proof--rolling');
+        // Duration scales with width so the speed stays constant.
+        belt.style.animationDuration = Math.round((one * copies) / 60) + 's';
+      }
+
+      if (belt && track) {
+        // Logos are lazy-loaded, so measure once they have real dimensions.
+        if (document.readyState === 'complete') fillBelt();
+        else window.addEventListener('load', fillBelt);
+        let t;
+        window.addEventListener('resize', () => {
+          clearTimeout(t);
+          t = setTimeout(fillBelt, 200);
+        });
+      }
+
+
+      // Sequence → tabs. Five stacked rows are a long scroll, so with JS the
+      // rows collapse into a rail of step labels beside one panel. The rail is
+      // built here rather than shipped in the markup on purpose: with no JS
+      // there is nothing to switch panels, so the stacked rows stay as they
+      // are and every step is still in the document.
+      const seq = document.querySelector('.steps');
+      const seqSteps = seq ? [...seq.querySelectorAll('.step')] : [];
+
+      if (seq && seqSteps.length > 1) {
+        const list = seq.querySelector('.steps__list');
+        const body = document.createElement('div');
+        body.className = 'steps__body';
+        list.parentNode.insertBefore(body, list);
+
+        const rail = document.createElement('div');
+        rail.className = 'steps__rail';
+        rail.setAttribute('role', 'tablist');
+        rail.setAttribute('aria-orientation', 'vertical');
+        body.appendChild(rail);
+        body.appendChild(list);
+
+        const tabs = seqSteps.map((step, i) => {
+          const n = String(i + 1).padStart(2, '0');
+          step.id = 'seq-panel-' + n;
+          step.setAttribute('role', 'tabpanel');
+          step.setAttribute('aria-labelledby', 'seq-tab-' + n);
+
+          const tab = document.createElement('button');
+          tab.type = 'button';
+          tab.className = 'steps__tab';
+          tab.id = 'seq-tab-' + n;
+          tab.setAttribute('role', 'tab');
+          tab.setAttribute('aria-controls', step.id);
+          tab.innerHTML =
+            '<span class="steps__tab-num">' + n + '</span>' +
+            '<span>' + (step.dataset.label || 'Step ' + n) + '</span>';
+          rail.appendChild(tab);
+          return tab;
+        });
+
+        function select(i, focus) {
+          if (i === current && !focus) return;
+          current = i;
+          tabs.forEach((tab, j) => {
+            const on = i === j;
+            tab.setAttribute('aria-selected', String(on));
+            // Roving tabindex: only the selected tab is in the tab order, so
+            // the rail is one stop and the arrows move within it.
+            tab.tabIndex = on ? 0 : -1;
+            seqSteps[j].classList.toggle('step--inactive', !on);
+          });
+          if (focus) tabs[i].focus();
+        }
+
+        tabs.forEach((tab, i) => {
+          tab.addEventListener('click', () => goTo(i));
+          tab.addEventListener('keydown', (e) => {
+            const last = tabs.length - 1;
+            let next = null;
+            if (e.key === 'ArrowDown' || e.key === 'ArrowRight') next = i === last ? 0 : i + 1;
+            else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') next = i === 0 ? last : i - 1;
+            else if (e.key === 'Home') next = 0;
+            else if (e.key === 'End') next = last;
+            if (next !== null) {
+              e.preventDefault();
+              goTo(next, true);
+            }
+          });
+        });
+
+        // Scroll drives the progression. The panel is sticky inside a taller
+        // track, so "how far through the track" maps onto "which step".
+        const track = document.createElement('div');
+        track.className = 'steps__track';
+        body.parentNode.insertBefore(track, body);
+
+        // The heading goes inside the pinned area with the rail and panel, so
+        // it does not scroll away while you are still stepping through.
+        const stage = document.createElement('div');
+        stage.className = 'steps__stage';
+        const head = seq.querySelector('.steps__head');
+        if (head) stage.appendChild(head);
+        stage.appendChild(body);
+        track.appendChild(stage);
+        seq.style.setProperty('--steps-count', String(tabs.length));
+
+        let current = -1;
+
+        function stickyTop() {
+          return parseFloat(getComputedStyle(stage).top) || 0;
+        }
+
+        // Distance the panel stays pinned for. Guarded against zero so the
+        // division below cannot produce NaN before layout settles.
+        function span() {
+          return Math.max(1, track.offsetHeight - stage.offsetHeight);
+        }
+
+        function fromScroll() {
+          // Static panel below 56em: leave the active step alone and let the
+          // rail be a plain control.
+          if (getComputedStyle(stage).position !== 'sticky') return;
+          const progressed = stickyTop() - track.getBoundingClientRect().top;
+          const p = Math.min(Math.max(progressed / span(), 0), 0.9999);
+          select(Math.floor(p * tabs.length));
+        }
+
+        function goTo(i, focus) {
+          if (getComputedStyle(stage).position !== 'sticky') {
+            select(i, focus);
+            return;
+          }
+          // Aim at the middle of the step's slice, so a click does not land on
+          // a boundary where the next scroll tick flips to a neighbour.
+          const top =
+            track.getBoundingClientRect().top +
+            window.scrollY -
+            stickyTop() +
+            ((i + 0.5) / tabs.length) * span();
+          const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          window.scrollTo({ top: Math.round(top), behavior: reduce ? 'auto' : 'smooth' });
+          select(i, focus);
+        }
+
+        seq.classList.add('steps--tabs');
+        select(0);
+
+        let ticking = false;
+        window.addEventListener(
+          'scroll',
+          () => {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(() => {
+              fromScroll();
+              ticking = false;
+            });
+          },
+          { passive: true }
+        );
+        window.addEventListener('resize', fromScroll);
+        fromScroll();
+      }
+
+      const toggle = document.querySelector('.menu-toggle');
+      const mobileNav = document.querySelector('.mobile-nav');
+      toggle.addEventListener('click', () => {
+        const open = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', String(!open));
+        mobileNav.hidden = open;
+      });
+    </script>
+  </body>
+</html>

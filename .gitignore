@@ -1,0 +1,7 @@
+.DS_Store
+*.log
+
+# Scratch preview pages served alongside the build while iterating.
+_*.html
+_*.jpg
+_*.png
