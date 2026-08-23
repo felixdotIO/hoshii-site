@@ -986,6 +986,81 @@ p {
 }
 
 
+/* --- Closing call to action ----------------------------------------------- */
+
+/* The page's full stop. Centred, unlike everything above it, because that is
+   what says "this is the end" without needing a rule or a label. Same green and
+   the same window frame as the chat band, with a bone section between them so
+   the two never touch. */
+.closer {
+  padding: clamp(3.5rem, 8vw, 7rem) var(--gutter);
+  background: var(--green);
+  color: var(--on-dark);
+  border: 3px solid var(--chrome-face);
+  text-align: center;
+}
+
+.closer__inner {
+  margin: 0 auto;
+  max-width: 64rem;
+  padding-inline: clamp(1.25rem, 3vw, 2rem);
+}
+
+/* The same white app tile the comparison card and the chat band use, so the
+   page signs off with the object rather than with the wordmark that is already
+   sitting in the title bar. */
+.closer__mark {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  aspect-ratio: 1;
+  margin: 0 auto clamp(1.5rem, 3vw, 2.125rem);
+  border-radius: 26%;
+  background: var(--white);
+  color: var(--ink);
+  box-shadow:
+    inset 0 0 0 1px rgba(42, 35, 32, 0.09),
+    0 1rem 2rem rgba(4, 12, 8, 0.32);
+}
+
+.closer__mark svg {
+  width: 38%;
+}
+
+/* The statement wraps as it likes; the accent clause always takes its own row,
+   so the band reads as claim over payoff rather than as one long paragraph. */
+.closer__title em {
+  display: block;
+}
+
+.closer__title {
+  margin: 0;
+  font-size: clamp(1.5rem, 0.95rem + 1.9vw, 2.375rem);
+  font-weight: 500;
+  line-height: 1.14;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.closer__title em {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.closer__lead {
+  margin: clamp(1rem, 2vw, 1.5rem) auto 0;
+  max-width: 62ch;
+  color: var(--on-dark-dim);
+  font-size: clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.closer__cta {
+  margin-top: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+
 /* --- Guide lines --------------------------------------------------------- */
 
 /* Thin rules marking the content column, plus a hairline where bands meet —
@@ -1022,6 +1097,140 @@ p {
 .guides > * {
   position: relative;
   z-index: 1;
+}
+
+/* --- Who it is for -------------------------------------------------------- */
+
+/* Six roles, six symptoms. The job of this band is recognition: the visitor
+   should find their own day described in one of the cards and stop reading the
+   others. Card idiom matches the comparison band so the two read as one system. */
+.roles {
+  --guide-col: 88rem;
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gutter);
+  background: var(--bone);
+}
+
+.roles__inner {
+  margin: 0 auto;
+  max-width: 88rem;
+  padding-inline: clamp(1.5rem, 4vw, 4rem);
+}
+
+.roles__head {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: end;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+/* The CTA moves beside the copy only when there is room for it to sit on the
+   baseline of the lead rather than under a wrapped headline. */
+@media (min-width: 56em) {
+  .roles__head {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+
+.roles__title {
+  margin: 0;
+  max-width: 22ch;
+  font-size: clamp(1.875rem, 1rem + 2.8vw, 3.25rem);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.roles__title em {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.roles__lead {
+  margin: clamp(0.875rem, 1.6vw, 1.25rem) 0 0;
+  max-width: 46ch;
+  color: var(--caption);
+  font-size: clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.roles__cta {
+  justify-self: start;
+}
+
+/* Three across, two rows. auto-fit gave four on a wide screen, which leaves the
+   second row ragged; six items want an even grid. */
+.roles__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(0.875rem, 1.8vw, 1.25rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 40em) {
+  .roles__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64em) {
+  .roles__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.role {
+  padding: clamp(1.375rem, 2.4vw, 1.875rem);
+  background: var(--white);
+  border-radius: clamp(1rem, 2vw, 1.375rem);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+/* A pixel icon on a small tile rather than the bullet dot: same desktop
+   language as the sequence, and it tells the reader whose card this is before
+   they read a word. */
+.role__tile {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-bottom: clamp(1.5rem, 3.5vw, 2.25rem);
+  border-radius: 1rem;
+  background: linear-gradient(158deg, #fdfcf9 0%, #f3f0e7 100%);
+  box-shadow: inset 0 0 0 1px rgba(42, 35, 32, 0.08);
+}
+
+.role__ico {
+  display: block;
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+.role__ico .vox {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 1px 3px rgba(42, 35, 32, 0.22));
+}
+
+.role__name {
+  margin: 0 0 0.375rem;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.role__text {
+  margin: 0;
+  color: #5d5348;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  text-wrap: pretty;
 }
 
 /* --- Testimonial --------------------------------------------------------- */
@@ -1262,6 +1471,15 @@ p {
 
 }
 
+/* The voxel sprite: every cube icon defined once in <defs> and pulled in with
+   <use>. Inlining 46 copies would have meant roughly 8,000 extra path nodes. */
+.voxsprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
 /* --- Three scenes per step ------------------------------------------------ */
 
 /* Each claim is carried by three small pictures rather than one box of text:
@@ -1318,7 +1536,9 @@ p {
   filter: drop-shadow(0 3px 6px rgba(42, 35, 32, 0.22));
 }
 
-.mini__ico .pix {
+.mini__ico .pix,
+.mini__ico .vox {
+  display: block;
   width: 100%;
   height: 100%;
   filter: none;
@@ -1763,6 +1983,168 @@ p {
   }
 }
 
+/* --- Hoshii Chat band ----------------------------------------------------- */
+
+/* A full-bleed green band after the sequence: it breaks a long run of bone and
+   gives the chat its own moment rather than a third of a step. Copy left, one
+   product surface right, after Granola's feature bands. */
+/* The window frame off the title bar, not the hairline guides: 3px of chrome
+   face all the way round, so the band reads as another pane of the same OS
+   rather than as one more content column. */
+.chatband {
+  padding: clamp(3.5rem, 7vw, 6rem) var(--gutter);
+  background: var(--green);
+  color: var(--on-dark);
+  border: 3px solid var(--chrome-face);
+}
+
+.chatband__inner {
+  display: grid;
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  margin: 0 auto;
+  max-width: 88rem;
+  padding-inline: clamp(1.5rem, 4vw, 4rem);
+}
+
+@media (min-width: 56em) {
+  .chatband__inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  }
+}
+
+.chatband__eyebrow {
+  margin: 0 0 clamp(0.75rem, 1.6vw, 1.125rem);
+  color: var(--sage);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.chatband__title {
+  margin: 0;
+  max-width: 17ch;
+  font-size: clamp(1.875rem, 1rem + 3.1vw, 3.25rem);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.chatband__title em {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.chatband__lead {
+  margin: clamp(1rem, 2vw, 1.5rem) 0 0;
+  max-width: 46ch;
+  color: var(--on-dark-dim);
+  font-size: clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+/* The one lit object on the band. */
+.chatband__card {
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  background: var(--white);
+  border-radius: clamp(1.25rem, 2.5vw, 1.75rem);
+  box-shadow:
+    inset 0 0 0 1px rgba(42, 35, 32, 0.06),
+    0 1.5rem 3rem rgba(4, 12, 8, 0.28);
+}
+
+.chatband__q {
+  margin: 0 0 clamp(1.25rem, 2.5vw, 1.875rem);
+  color: var(--ink);
+  font-size: clamp(1.125rem, 0.95rem + 0.7vw, 1.5rem);
+  font-weight: 500;
+  line-height: 1.28;
+  letter-spacing: -0.02em;
+  text-wrap: pretty;
+}
+
+/* The sources the answer is drawn from: the point of the card is that it is
+   your data, not a general-purpose chatbot. */
+/* The caret only exists while the question is being typed, and keeps blinking
+   afterwards the way a focused field does. */
+.is-typing .chatband__q::after {
+  content: '';
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 0.1em;
+  background: var(--accent);
+  vertical-align: -0.13em;
+  animation: chat-caret 1.05s steps(1) infinite;
+}
+
+@keyframes chat-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Sources land once the question is finished, which is the order it happens in
+   the product. */
+.is-typing .chatband__chips {
+  opacity: 0;
+}
+
+.is-typed .chatband__chips {
+  opacity: 1;
+  transition: opacity 420ms var(--ease);
+}
+
+.chatband__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.chatband__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4375rem 0.75rem 0.4375rem 0.4375rem;
+  border-radius: 0.625rem;
+  background: #f2efe7;
+  color: #5d5348;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.chatband__chip-ico {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+}
+
+.chatband__chip-ico .pix,
+.chatband__tool .pix {
+  width: 100%;
+  height: 100%;
+  filter: none;
+}
+
+.chatband__tools {
+  display: flex;
+  gap: 0.875rem;
+  margin: clamp(1.25rem, 2.5vw, 1.75rem) 0 0;
+}
+
+.chatband__tool {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  opacity: 0.45;
+}
+
 /* --- What changes: the pile against the flow ------------------------------ */
 
 /* The argument is the picture, not the words. On the left the work is a line
@@ -2056,8 +2438,13 @@ p {
   stroke: rgba(47, 145, 71, 0.9);
   stroke-width: 1.6;
   stroke-linecap: round;
-  stroke-dasharray: 7 100;
-  stroke-dashoffset: 107;
+  /* The gap has to be far longer than the path, not equal to it. At `7 100`
+     the pattern period (107) was barely longer than the normalised path (100),
+     so a second dash from the next repeat sat on the wire while the first was
+     still leaving, and the loop restarted with a visible jump. `7 400` means
+     only ever one dash is on the path. */
+  stroke-dasharray: 7 400;
+  stroke-dashoffset: 7;
   animation: flow-run 3.8s linear infinite;
   animation-delay: var(--d, 0s);
 }
@@ -2066,12 +2453,14 @@ p {
   stroke: rgba(253, 75, 1, 0.95);
 }
 
+/* 7 puts the dash just before the start, -107 just past the end, so it crosses
+   the whole wire exactly once. */
 @keyframes flow-run {
   from {
-    stroke-dashoffset: 107;
+    stroke-dashoffset: 7;
   }
   to {
-    stroke-dashoffset: -7;
+    stroke-dashoffset: -107;
   }
 }
 
@@ -2088,22 +2477,32 @@ p {
   text-align: center;
 }
 
-/* The icons are 16 x 16 pixel art rather than line glyphs: the retro-OS
-   chrome is the brand's hook, and desktop icons are the one place it can sit
-   on a product surface without leaking into the type. Drawn as one rect per
-   run of pixels, so they stay square at any card width. */
+/* Voxel rather than flat here: the same 16 x 16 maps, but every cell drawn as a
+   cube with the art kept upright as the front face and extruded back. Laying
+   the art flat as the top of a slab is the classic voxel move and it is what
+   the reference does, but it only survives on solid silhouettes; outline art
+   like ours turns into an unreadable tray. Non-square now, so height is free. */
 .flow__glyph {
-  display: grid;
-  place-items: center;
-  width: 14.5cqw;
-  height: 14.5cqw;
+  display: block;
+  width: 16cqw;
   margin-inline: auto;
 }
 
-.pix {
+.flow__glyph .vox {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.pix,
+.flow__glyph .vox {
   width: 100%;
   height: 100%;
   filter: drop-shadow(0 0.7cqw 1.2cqw rgba(42, 35, 32, 0.26));
+}
+
+.flow__glyph .vox {
+  height: auto;
 }
 
 /* Positions match the wire endpoints in the 400 × 260 viewBox above: inputs on
