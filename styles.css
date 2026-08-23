@@ -1131,9 +1131,15 @@ p {
   }
 }
 
+/* Claim then reach: the accent clause takes its own row so the both/and lands
+   as two beats rather than one long sentence. */
+.roles__title em {
+  display: block;
+}
+
 .roles__title {
   margin: 0;
-  max-width: 22ch;
+  max-width: 26ch;
   font-size: clamp(1.875rem, 1rem + 2.8vw, 3.25rem);
   font-weight: 500;
   line-height: 1.06;
