@@ -447,8 +447,12 @@ p {
 
 /* No photo and no window any more. The right half is the argument: the same
    five emails, with and without Hoshii, on a switch. */
+/* No padding of its own: the picture has to start right under the title bar,
+   so the copy column carries all the inset and the picture column carries
+   none. Height is capped so the client strip is always on the first screen —
+   --fold-reserve is the announcement bar, the title bar and that strip. */
 .hero {
-  padding: clamp(2.5rem, 6vw, 5.5rem) var(--gutter) clamp(3rem, 6vw, 5.5rem);
+  --fold-reserve: 13.5rem;
   background: var(--bone);
 }
 
@@ -456,30 +460,34 @@ p {
   display: grid;
   gap: clamp(2.5rem, 5vw, 4.5rem);
   align-items: center;
-  margin: 0 auto;
-  max-width: 88rem;
-  padding-inline: clamp(0.5rem, 3vw, 2rem);
+  padding: clamp(2rem, 5vw, 3.5rem) var(--gutter) clamp(2.5rem, 5vw, 4rem);
 }
 
 @media (min-width: 64em) {
   .hero__grid {
-    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     /* The rule is the gap, so it has to close. */
     gap: 0;
     align-items: stretch;
+    padding: 0;
+    height: clamp(28rem, calc(100svh - var(--fold-reserve)), 46rem);
   }
 
+  /* The copy keeps the site's content inset so it lines up with every band
+     below it; the picture keeps none and runs to the edge. */
   .hero__copy {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding-right: clamp(2rem, 4vw, 4rem);
+    align-items: flex-start;
+    padding: 2rem clamp(2rem, 4vw, 4rem) 2rem
+      calc(max(var(--gutter), (100vw - 88rem) / 2) + clamp(1.5rem, 4vw, 4rem));
+    /* One hairline: the split is stated, not implied. */
+    border-right: 1px solid var(--rule);
   }
 
-  /* One hairline, full height of the band: the split is stated, not implied. */
   .hero__demo {
-    border-left: 1px solid var(--rule);
-    padding-left: clamp(2rem, 4vw, 4rem);
+    padding: 0;
   }
 }
 
@@ -509,13 +517,20 @@ p {
 
 /* --- The switch --- */
 
+/* On the picture, not above it: frosted so it reads over either photograph. */
 .hero__switch {
+  position: absolute;
+  z-index: 2;
+  left: clamp(0.875rem, 2vw, 1.5rem);
+  bottom: clamp(0.875rem, 2vw, 1.5rem);
   display: inline-flex;
   gap: 0.25rem;
-  margin-bottom: 0.875rem;
   padding: 0.25rem;
   border-radius: var(--pill);
-  background: rgba(38, 24, 20, 0.06);
+  background: rgba(28, 18, 14, 0.42);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  backdrop-filter: blur(14px) saturate(1.3);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
 }
 
 .hero__opt {
@@ -523,16 +538,19 @@ p {
   border: 0;
   border-radius: var(--pill);
   background: transparent;
-  color: var(--caption);
+  color: rgba(255, 255, 255, 0.72);
   font: 600 0.875rem/1 var(--font);
   cursor: pointer;
   transition: background-color 180ms var(--ease), color 180ms var(--ease);
 }
 
+.hero__opt:hover {
+  color: #fff;
+}
+
 .hero__opt[aria-pressed='true'] {
   background: var(--white);
   color: var(--ink);
-  box-shadow: 0 1px 2px rgba(38, 24, 20, 0.14);
 }
 
 /* --- The two photographs --- */
@@ -542,12 +560,17 @@ p {
 .hero__shots {
   position: relative;
   margin: 0;
-  /* Square, not the source's portrait: it keeps the hero from running very
-     tall, and the crop it costs is sky and stacked boxes, not the table. */
-  aspect-ratio: 1;
-  border-radius: clamp(0.5rem, 1vw, 0.75rem);
+  aspect-ratio: 4 / 3;
   background: #efeeec;
   overflow: hidden;
+}
+
+@media (min-width: 64em) {
+  .hero__shots {
+    /* Fills the column, top to bottom, edge to edge. */
+    aspect-ratio: auto;
+    height: 100%;
+  }
 }
 
 .hero__shot {
