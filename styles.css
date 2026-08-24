@@ -60,38 +60,32 @@
 /* --- Tokens -------------------------------------------------------------- */
 
 :root {
-  /* LAB PALETTE — brown primary, brass accent, no OS chrome.
-     Token names keep the --green/--chrome shape so the rest of the sheet is
-     untouched; only the values changed. */
-  --green: #3b241f; /* Primary (brown) */
-  --ink: #1f1310; /* Type         */
-  --bone: #fcfcfb; /* Sec. ground (crisp white) */
-  --wash: #f1efec; /* Rare wash    */
-  --caption: #857065; /* Captions     */
-  --sage: #c4b7b0; /* Fills        */
+  /* Brand palette (Hoshii, Aug 2026) */
+  --green: #133021; /* Primary      */
+  --ink: #2a2320; /* Type         */
+  --bone: #f4f0e7; /* Sec. ground  */
+  --wash: #f0e7c0; /* Rare wash    */
+  --caption: #7e6f5c; /* Captions     */
+  --sage: #a4ac9b; /* Fills        */
   --white: #ffffff;
-  /* Deep rust. Chosen by measurement: of the non-blue candidates it is the
-     only one that clears both grounds on a single value — 4.57:1 on white,
-     3.07:1 on the espresso bands — so the accent is one token again rather
-     than a light/dark pair. */
-  --accent: #c44e2c;
+  --accent: #fd4b01; /* Accent (unlabelled on the palette sheet) */
 
-  --green-deep: #24140f;
+  --green-deep: #0b1c13;
 
   /* Text on dark */
   --on-dark: var(--bone);
-  --on-dark-dim: #d6c4ba;
+  --on-dark-dim: #c3ccbc;
 
   /* Near-black that clears AA on the accent at small sizes, where white
      (3.41:1) does not. Used for the announcement bar. */
-  --on-accent-sm: #1b2b3a;
+  --on-accent-sm: #1a1310;
 
-  /* Neutrals. The OS chrome is gone; these are now plain surface and rule
-     values so the rest of the sheet keeps working. */
-  --chrome-face: #ffffff;
-  --chrome-light: #faf8f3;
-  --chrome-shadow: rgba(38, 24, 20, 0.15);
-  --chrome-dark: #63514a;
+  /* Retro-OS chrome. Warm greys sampled off the brand renders — the true
+     Win95 #c0c0c0 goes blue against the green. */
+  --chrome-face: #cfc7b8;
+  --chrome-light: #ece7dc;
+  --chrome-shadow: #8b8474;
+  --chrome-dark: #4f4b44;
 
   --font: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui,
     sans-serif;
@@ -104,7 +98,7 @@
      the column the slab is set in — visible in the space above and below it,
      hidden behind the slab itself. Keep the two values in step. */
   --guide-col: 94rem;
-  --rule: rgba(38, 24, 20, 0.12);
+  --rule: rgba(42, 35, 32, 0.1);
   --pill: 999px;
 
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -225,6 +219,10 @@ p {
   top: 0;
   z-index: 50;
   background: var(--green);
+  /* Three sides of the window frame. .hero carries the other two, so the two
+     elements read as one continuous window. */
+  border: 3px solid var(--chrome-face);
+  border-bottom: 0;
 }
 
 .titlebar__inner {
@@ -276,20 +274,29 @@ p {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  height: 2rem;
-  padding: 0 0.5rem;
-  border-radius: 0.375rem;
-  background: transparent;
-  color: var(--on-dark-dim);
-  font-size: 0.9375rem;
+  height: 1.875rem;
+  padding: 0 0.6875rem;
+  background: var(--chrome-face);
+  color: var(--ink);
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-light),
+    inset -1.5px -1.5px 0 var(--chrome-shadow);
+  font-size: 0.875rem;
   font-weight: 500;
   text-decoration: none;
   white-space: nowrap;
-  transition: color 160ms var(--ease);
+  transition: background-color 140ms var(--ease);
 }
 
 .nav__btn:hover {
-  color: var(--bone);
+  background: var(--chrome-light);
+}
+
+/* Pressed-in on click, like a real toolbar button. */
+.nav__btn:active {
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-shadow),
+    inset -1.5px -1.5px 0 var(--chrome-light);
 }
 
 /* Signals the use-case submenu. The menu itself is not built yet. */
@@ -308,12 +315,19 @@ p {
 }
 
 
-/* One control, no bevels: a solid pill in the primary brown. Strictness comes
-   from the shape being the same everywhere, not from ornament. */
-.btn-os {
+/* Beveled control: window buttons, Start, and the title-bar CTA. Chrome gets
+   OS styling; content inside the screen gets the modern pill. */
+.chip,
+.btn-os,
+.hero__start {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  background: var(--chrome-face);
+  color: var(--ink);
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-light),
+    inset -1.5px -1.5px 0 var(--chrome-shadow);
 }
 
 .chip {
@@ -325,86 +339,40 @@ p {
 }
 
 .btn-os {
-  height: 2.625rem;
+  height: 2.375rem;
   padding: 0 1.125rem;
-  gap: 0.75rem;
   border: 0;
-  border-radius: var(--pill);
-  font: 600 0.9375rem/1 var(--font);
-  letter-spacing: -0.005em;
+  font: 700 1rem/1 var(--font);
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
-  transition: background-color 180ms var(--ease), transform 180ms var(--ease);
+  transition: filter 160ms var(--ease);
 }
 
 .btn-os--accent {
-  background: var(--green);
-  color: var(--bone);
+  background: var(--accent);
+  color: var(--white);
+  box-shadow:
+    inset 1.5px 1.5px 0 rgba(255, 255, 255, 0.45),
+    inset -1.5px -1.5px 0 rgba(0, 0, 0, 0.28);
 }
 
 .btn-os--accent:hover {
-  background: #55362e;
-}
-
-.btn-os--accent:active {
-  transform: translateY(1px);
-}
-
-/* The arrow rides in its own disc, inverted out of the pill. */
-.btn-os__go {
-  display: grid;
-  place-items: center;
-  width: 1.625rem;
-  height: 1.625rem;
-  margin-right: -0.5rem;
-  border-radius: 50%;
-  background: var(--bone);
-  color: var(--green);
-}
-
-.btn-os__go svg {
-  width: 0.875rem;
-  height: 0.875rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.titlebar .btn-os__go,
-.closer .btn-os__go {
-  background: var(--green);
-  color: var(--bone);
-}
-
-.btn-os--lg .btn-os__go {
-  width: 1.875rem;
-  height: 1.875rem;
-}
-
-/* Inverted on the dark grounds, so the CTA is always the highest-contrast
-   object in its band rather than brown on brown. */
-.titlebar .btn-os--accent,
-.closer .btn-os--accent {
-  background: var(--bone);
-  color: var(--green);
-}
-
-.titlebar .btn-os--accent:hover,
-.closer .btn-os--accent:hover {
-  background: var(--white);
+  filter: brightness(1.08);
 }
 
 /* Hero size. */
 .btn-os--lg {
-  height: 3.25rem;
+  height: 3rem;
   padding: 0 1.625rem;
   font-size: 1.0625rem;
 }
 
-
+.btn-os:active {
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-shadow),
+    inset -1.5px -1.5px 0 var(--chrome-light);
+}
 
 /* --- Mobile menu --------------------------------------------------------- */
 
@@ -481,63 +449,227 @@ p {
   }
 }
 
-/* --- Hero — copy left, the product right --------------------------------- */
+/* --- Hero — the window's client area and taskbar ------------------------- */
 
-/* No photo and no window any more. The right half is the argument: the same
-   five emails, with and without Hoshii, on a switch. */
-/* No padding of its own: the picture has to start right under the title bar,
-   so the copy column carries all the inset and the picture column carries
-   none. Height is capped so the client strip is always on the first screen —
-   --fold-reserve is the announcement bar, the title bar and that strip. */
+/* The frame is built in CSS, not taken from the render, which is what lets
+   the hero be sized to the fold: the photo is cropped frameless
+   (assets/img/photo-workspace.png) and cover-fills whatever height is left.
+   Carries the frame's remaining three sides; .titlebar carries the top. */
 .hero {
-  --fold-reserve: 13.5rem;
-  background: var(--bone);
+  display: flex;
+  flex-direction: column;
+  background: var(--chrome-face);
+  border: 3px solid var(--chrome-face);
+  border-top: 0;
 }
 
-.hero__grid {
-  display: grid;
-  gap: clamp(2.5rem, 5vw, 4.5rem);
+/* --- Screen --- */
+
+.hero__screen {
+  position: relative;
+  isolation: isolate;
+  flex: 1 1 auto;
+  /* Copy sits at the foot of the frame, not dead centre: the photo's subjects
+     are in the upper half, and a centred block lands straight on their faces.
+     Reads as the thing they are leaning in to look at.
+     Photo and scrim are absolute so neither can size this box — as grid
+     children their height:100% resolved against the intrinsic ratio and
+     overflowed the row, which pushed the CTA behind the taskbar. */
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--green-deep);
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-shadow),
+    inset -1.5px -1.5px 0 var(--chrome-light);
+}
+
+.hero__photo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  /* Headroom above the subjects. Pinning the bottom (50% 100%) cut the tops
+     of their heads off once the screen went wider than ~2.3:1, which also
+     magnified the photo's fisheye distortion into something that read as a
+     broken image. */
+  object-position: 50% 45%;
+  filter: brightness(1.06) saturate(1.05);
+}
+
+.hero__screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  /* Near-neutral rather than brand green: a green wash flattened the photo's
+     own colour. Just enough weight at the foot to carry the type, clearing
+     entirely over the faces. */
+  background: linear-gradient(
+    to top,
+    rgba(7, 11, 9, 0.9) 0%,
+    rgba(7, 11, 9, 0.76) 16%,
+    rgba(7, 11, 9, 0.46) 38%,
+    rgba(7, 11, 9, 0.16) 60%,
+    rgba(7, 11, 9, 0) 80%
+  );
+}
+
+/* The radial plate that used to sit here is gone: with the scrim above doing
+   the work in one pass, a second gradient on top of it read as a blotch over
+   the subjects. */
+
+.hero__inner {
+  position: relative;
+  isolation: isolate;
+  z-index: 2;
+  width: 100%;
+  /* Sized so the headline's authored line breaks are the only breaks at the
+     max font size — re-check when the headline copy changes. */
+  max-width: 50rem;
+  padding: clamp(1.5rem, 4vw, 2.5rem) var(--gutter) clamp(1.25rem, 2.5vw, 1.75rem);
+  text-align: center;
+}
+
+/* --- Taskbar --- */
+
+.hero__taskbar {
+  display: flex;
   align-items: center;
-  padding: clamp(2rem, 5vw, 3.5rem) var(--gutter) clamp(2.5rem, 5vw, 4rem);
+  flex: 0 0 auto;
+  height: 2.75rem;
+  margin-top: 3px;
+  padding: 0 0.375rem;
+  color: var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  user-select: none;
 }
 
-@media (min-width: 64em) {
-  .hero__grid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    /* The rule is the gap, so it has to close. */
-    gap: 0;
-    align-items: stretch;
-    padding: 0;
-    height: clamp(28rem, calc(100svh - var(--fold-reserve)), 46rem);
-  }
+.hero__start {
+  gap: 0.375rem;
+  height: 1.875rem;
+  padding: 0 0.75rem;
+  font-weight: 700;
+}
 
-  /* The copy keeps the site's content inset so it lines up with every band
-     below it; the picture keeps none and runs to the edge. */
-  .hero__copy {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 2rem clamp(2rem, 4vw, 4rem) 2rem
-      calc(max(var(--gutter), (100vw - 88rem) / 2) + clamp(1.5rem, 4vw, 4rem));
-    /* One hairline: the split is stated, not implied. */
-    border-right: 1px solid var(--rule);
-  }
+/* Taskbar task button, and the second route to the demo. */
+.hero__task {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4375rem;
+  height: 1.875rem;
+  padding: 0 0.75rem;
+  margin-inline-start: 0.375rem;
+  background: var(--chrome-face);
+  color: var(--ink);
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-light),
+    inset -1.5px -1.5px 0 var(--chrome-shadow);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 140ms var(--ease);
+}
 
-  .hero__demo {
-    padding: 0;
+.hero__task:hover {
+  background: var(--chrome-light);
+}
+
+.hero__task:active {
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-shadow),
+    inset -1.5px -1.5px 0 var(--chrome-light);
+}
+
+/* Start and the task buttons sit left; the tray is pushed to the right. */
+.hero__tray {
+  margin-inline-start: auto;
+}
+
+.hero__start-glyph {
+  width: 0.875rem;
+  height: 0.875rem;
+  background:
+    linear-gradient(var(--accent) 0 0) 0 0 / 45% 45% no-repeat,
+    linear-gradient(var(--wash) 0 0) 100% 0 / 45% 45% no-repeat,
+    linear-gradient(var(--sage) 0 0) 0 100% / 45% 45% no-repeat,
+    linear-gradient(var(--green) 0 0) 100% 100% / 45% 45% no-repeat;
+}
+
+.hero__tray {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 1.875rem;
+  padding: 0 0.625rem;
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-shadow),
+    inset -1.5px -1.5px 0 var(--chrome-light);
+}
+
+.hero__clock {
+  font-variant-numeric: tabular-nums;
+}
+
+/* The screen holds a ratio rather than whatever height the fold leaves over.
+   Sizing it to `100svh - reserve` meant a 720px-tall laptop produced a 2.86:1
+   screen — a 218px crop that took the tops of the subjects' heads off. With
+   `object-fit: cover` the width sets how big they are and the ratio only sets
+   how much is cropped, so holding the ratio holds the framing at every
+   viewport height. Chrome above and below comes to ~145px, so a 2.25:1 screen
+   still lands inside a 720px fold with the client row showing under it.
+
+   Portrait viewports get a tall crop instead: 2.25:1 at 375px wide is a 167px
+   letterbox with nowhere for the copy to go. */
+.hero__screen {
+  aspect-ratio: 4 / 5;
+  min-height: 22rem;
+}
+
+@media (min-width: 46em) {
+  .hero__screen {
+    /* Preferred framing. */
+    aspect-ratio: 2.25;
+
+    /* Never taller than the fold allows, so the client row is always visible
+       on the first screen. --fold-reserve is everything that is not this box,
+       measured at 1920x1080: announcement bar 34 + title bar 67 + taskbar and
+       the frame's three borders 50 + client row 112 = 263, rounded up for
+       slack. Keep it in step with those four. A fixed ratio cannot do this
+       job: at 2.25 the strip fell 27px past the fold on a 1920x1080 screen,
+       and picking a flatter fixed ratio to fix that breaks 1600x900 instead. */
+    --fold-reserve: 16.5rem;
+    max-height: calc(100svh - var(--fold-reserve));
+
+    /* ...but never so short that the crop eats the subjects. This floors the
+       screen at 1/2.7 of its width, which is the bound the earlier
+       `100svh - reserve` sizing lacked — that hit 2.86:1 on a 720px-tall
+       laptop and cut the tops of their heads off. min-height beats max-height
+       in CSS, which is what makes this a hard floor rather than a preference.
+       Keyed to 100vw because this box spans the full width bar its borders. */
+    min-height: max(20rem, calc((100vw - 6px) / 2.7));
   }
 }
 
 .hero__title {
-  margin: 0;
-  font-size: clamp(2.125rem, 1.1rem + 3.1vw, 3.25rem);
+  font-size: clamp(1.75rem, 1rem + 2.2vw, 2.625rem);
   font-weight: 500;
-  line-height: 1.04;
-  letter-spacing: -0.035em;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  color: var(--bone);
   text-wrap: balance;
 }
 
+/* Corgi sets the memorable half of the headline in an italic accent face.
+   Satoshi is the only brand typeface, so the shift is italic + accent
+   colour rather than a serif. */
 .hero__title em {
   font-style: normal;
   font-weight: 500;
@@ -545,207 +677,33 @@ p {
 }
 
 .hero__sub {
-  margin: clamp(1.125rem, 2vw, 1.625rem) 0 clamp(1.75rem, 3vw, 2.5rem);
-  max-width: 38ch;
-  color: var(--caption);
-  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  margin: clamp(0.75rem, 1.4vw, 1rem) auto 0;
+  max-width: 33rem;
+  color: rgba(244, 240, 231, 0.88);
+  font-size: clamp(0.9375rem, 0.9rem + 0.25vw, 1.0625rem);
   line-height: 1.5;
   text-wrap: pretty;
+  /* Photo behind the copy is uneven; a tight shadow holds the small text
+     legible over the busiest part of it without looking like a glow. */
+  text-shadow: 0 1px 3px rgba(7, 11, 9, 0.6), 0 2px 14px rgba(7, 11, 9, 0.7);
 }
 
-/* --- The switch --- */
-
-/* The picture column is the containing block for the switch. */
-.hero__demo {
-  position: relative;
+.hero__title {
+  text-shadow: 0 1px 2px rgba(7, 11, 9, 0.45), 0 2px 20px rgba(7, 11, 9, 0.55);
 }
 
-/* The switch: two labels in the white margin and two dots sitting on the seam.
-   The divider hairline is the track — nothing extra is drawn for it, and the
-   active dot carves a bone ring out of the line. No rotated type, no lozenge:
-   the rotated labels are what made the first attempt feel clunky. */
-.hero__switch {
-  position: absolute;
-  z-index: 3;
-  left: clamp(0.875rem, 2vw, 1.25rem);
-  bottom: clamp(0.875rem, 2vw, 1.25rem);
-  display: flex;
-  gap: 0.25rem;
-  padding: 0.3125rem;
-  border-radius: var(--pill);
-  background: rgba(28, 18, 14, 0.42);
-  -webkit-backdrop-filter: blur(14px) saturate(1.3);
-  backdrop-filter: blur(14px) saturate(1.3);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+.hero__inner .btn-os {
+  margin-top: clamp(1.125rem, 2.2vw, 1.625rem);
 }
 
-.hero__opt {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.4375rem 0.9375rem;
-  border: 0;
-  border-radius: var(--pill);
-  background: transparent;
-  color: rgba(255, 255, 255, 0.74);
-  font: 600 0.875rem/1 var(--font);
-  cursor: pointer;
-  transition: background-color 200ms var(--ease), color 200ms var(--ease);
-}
-
-.hero__opt:hover {
-  color: #fff;
-}
-
-.hero__opt[aria-pressed='true'] {
-  background: var(--bone);
-  color: var(--ink);
-}
-
-/* Once there is a seam, the control moves off the photograph entirely and
-   lives in the white margin, hanging its dots on the rule. */
-@media (min-width: 64em) {
-  .hero__switch {
-    /* Low on the seam rather than centred: centred put it level with the
-       sub-copy and the two read as one cramped block. */
-    left: 0;
-    top: auto;
-    bottom: clamp(2.5rem, 6vw, 4.5rem);
-    translate: -100% 0;
-    --sw-row: 1.25rem;
-    --sw-gap: 1.5rem;
-    --sw-travel: calc(var(--sw-row) + var(--sw-gap));
-    flex-direction: column;
-    align-items: flex-end;
-    gap: var(--sw-gap);
-    padding: 0;
-    border-radius: 0;
-    background: none;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    box-shadow: none;
-  }
-
-  .hero__opt {
-    height: var(--sw-row);
-    gap: 0.9375rem;
-    padding: 0 0.9375rem 0 0;
-    border-radius: 0;
-    color: var(--caption);
-    font-size: 0.9375rem;
-    font-weight: 500;
-    letter-spacing: -0.005em;
-    transition: color 200ms var(--ease);
-  }
-
-  .hero__opt:hover {
-    color: var(--ink);
-  }
-
-  .hero__opt {
-    position: relative;
-  }
-
-  .hero__opt[aria-pressed='true'] {
-    background: none;
-    color: var(--ink);
-    font-weight: 700;
-  }
-
-  /* Hovering the photograph reveals a hollow mark at the position you are not
-     on, so the other state announces itself before you go looking for it.
-     Absolutely placed, so it costs the row no layout. */
-  .hero__opt::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 50%;
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
-    background: var(--bone);
-    box-shadow: 0 0 0 0.3125rem var(--bone), inset 0 0 0 1.5px rgba(38, 24, 20, 0.42);
-    translate: 50% -50%;
-    opacity: 0;
-    transition: opacity 200ms var(--ease);
-  }
-
-  /* Always visible on the position you are not on: the pair of marks is what
-     tells you there are two states before you touch anything. */
-  .hero__opt[aria-pressed='false']::after {
-    opacity: 1;
-  }
-
-  /* One indicator that travels, rather than two dots that light up: the
-     movement is what makes it read as a single control. Row height and gap are
-     explicit so the travel distance is exact and can be transitioned — grid
-     placement cannot animate. */
-  .hero__switch::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 0.375rem;
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
-    background: var(--green);
-    /* The ring cuts the rule around it — this is the carve. */
-    box-shadow: 0 0 0 0.3125rem var(--bone);
-    translate: 50% 0;
-    transition: translate 340ms var(--ease);
-  }
-
-  .hero__switch[data-active='hoshii']::after {
-    translate: 50% var(--sw-travel);
+/* The authored line breaks in the headline and subhead are art direction for
+   wide screens; below that, let the text wrap naturally. */
+@media (max-width: 46em) {
+  .hero__title br,
+  .hero__sub br {
+    display: none;
   }
 }
-
-/* --- The two photographs --- */
-
-/* Same table, same four people: one buried in paper, one clear. The switch
-   cross-fades between them, which is the whole argument in one gesture. */
-.hero__shots {
-  position: relative;
-  margin: 0;
-  aspect-ratio: 4 / 3;
-  background: #efeeec;
-  overflow: hidden;
-}
-
-@media (min-width: 64em) {
-  .hero__shots {
-    /* Fills the column, top to bottom, edge to edge. */
-    aspect-ratio: auto;
-    height: 100%;
-  }
-}
-
-.hero__shot {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /* The truck is in the top of both frames and the sources are portrait in a
-     landscape-ish column, so cover crops hard top and bottom. 25% keeps the
-     loading bay in shot; much lower and the table starts losing people. */
-  object-position: 50% 25%;
-  transition: opacity 460ms var(--ease);
-}
-
-.hero__shot--clear {
-  opacity: 0;
-}
-
-.hero__shots[data-show='hoshii'] .hero__shot--clear {
-  opacity: 1;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero__shot {
-    transition: none;
-  }
-}
-
 
 /* --- Pitch band ---------------------------------------------------------- */
 
@@ -800,9 +758,9 @@ p {
      card. Most of its height comes from the art column, which is why those
      two windows run side by side above 56em rather than stacked. */
   padding: clamp(1.5rem, 3vw, 2.5rem) clamp(2rem, 4vw, 3.75rem);
-  /* Warm near-black in the brown family, a shade under the title bar so the
-     two dark surfaces read as related rather than identical. */
-  background: #24170f;
+  /* Warm near-black rather than pure: the product renders are lit on black,
+     so they sit into this panel instead of showing a seam. */
+  background: #1c1a17;
   border-radius: clamp(1.25rem, 2.5vw, 2rem);
   overflow: hidden;
 }
@@ -834,10 +792,6 @@ p {
    width; side by side above 56em, because two stacked windows are what made
    the slab tall. */
 .pitch__art {
-  display: none;
-}
-
-.pitch__art--was {
   display: flex;
   flex-direction: column;
   /* Generous, because rotation is not accounted for in layout: a 2.5deg turn
@@ -896,10 +850,6 @@ p {
      two sides again. Offset vertically so the pair still steps rather than
      sitting on one line. */
   .pitch__art {
-  display: none;
-}
-
-.pitch__art--was {
     flex-direction: row;
     align-items: center;
     justify-content: center;
@@ -1046,6 +996,7 @@ p {
   padding: clamp(3.5rem, 8vw, 7rem) var(--gutter);
   background: var(--green);
   color: var(--on-dark);
+  border: 3px solid var(--chrome-face);
   text-align: center;
 }
 
@@ -1091,6 +1042,12 @@ p {
   text-wrap: balance;
 }
 
+.closer__title em {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--accent);
+}
+
 .closer__lead {
   margin: clamp(1rem, 2vw, 1.5rem) auto 0;
   max-width: 62ch;
@@ -1102,99 +1059,6 @@ p {
 
 .closer__cta {
   margin-top: clamp(1.75rem, 3.5vw, 2.5rem);
-}
-
-/* --- Footer ---------------------------------------------------------------- */
-
-/* Light and quiet, under the dark closing band: two dark surfaces in a row
-   would read as one. A single hairline separates them. */
-.foot {
-  padding: clamp(3rem, 5vw, 4.5rem) var(--gutter) clamp(1.75rem, 3vw, 2.5rem);
-  background: var(--bone);
-  border-top: 1px solid var(--rule);
-}
-
-.foot__inner,
-.foot__base {
-  margin: 0 auto;
-  max-width: 88rem;
-  padding-inline: clamp(1.5rem, 4vw, 4rem);
-}
-
-.foot__inner {
-  display: grid;
-  gap: clamp(2.25rem, 4vw, 3.5rem);
-}
-
-@media (min-width: 56em) {
-  .foot__inner {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-    align-items: start;
-  }
-}
-
-.brand--foot .brand__mark {
-  height: 1.625rem;
-  border-radius: 0.25rem;
-}
-
-.brand--foot .brand__wordmark {
-  height: 1.375rem;
-}
-
-.foot__line {
-  margin: clamp(0.875rem, 1.6vw, 1.125rem) 0 0;
-  max-width: 34ch;
-  color: var(--caption);
-  font-size: 0.9375rem;
-  line-height: 1.55;
-  text-wrap: pretty;
-}
-
-.foot__nav {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
-  gap: clamp(1.75rem, 3vw, 2.5rem);
-}
-
-.foot__col {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.6875rem;
-}
-
-.foot__head {
-  margin: 0 0 0.1875rem;
-  color: var(--ink);
-  font-size: 0.8125rem;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0.02em;
-}
-
-.foot__link {
-  color: var(--caption);
-  font-size: 0.9375rem;
-  line-height: 1.2;
-  text-decoration: none;
-  transition: color 160ms var(--ease);
-}
-
-.foot__link:hover {
-  color: var(--ink);
-}
-
-.foot__base {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 0.5rem 1.5rem;
-  margin-top: clamp(2.5rem, 4vw, 3.5rem);
-  padding-top: clamp(1.25rem, 2vw, 1.75rem);
-  border-top: 1px solid var(--rule);
-  color: var(--caption);
-  font-size: 0.8125rem;
 }
 
 /* --- Guide lines --------------------------------------------------------- */
@@ -1338,19 +1202,25 @@ p {
 .role__tile {
   display: grid;
   place-items: center;
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 3.5rem;
+  height: 3.5rem;
   margin-bottom: clamp(1.5rem, 3.5vw, 2.25rem);
-  border-radius: 0.75rem;
-  background: var(--bone);
-  box-shadow: inset 0 0 0 1px rgba(38, 24, 20, 0.10);
+  border-radius: 1rem;
+  background: linear-gradient(158deg, #fdfcf9 0%, #f3f0e7 100%);
+  box-shadow: inset 0 0 0 1px rgba(42, 35, 32, 0.08);
 }
 
 .role__ico {
   display: block;
-  width: 1.5rem;
-  height: 1.5rem;
-  color: var(--green);
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+.role__ico .vox {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 1px 3px rgba(42, 35, 32, 0.22));
 }
 
 .role__name {
@@ -1363,7 +1233,7 @@ p {
 
 .role__text {
   margin: 0;
-  color: #574b45;
+  color: #5d5348;
   font-size: 0.9375rem;
   line-height: 1.55;
   text-wrap: pretty;
@@ -1404,41 +1274,47 @@ p {
   text-wrap: balance;
 }
 
-/* Held on one line: an accent phrase split across a line break stops reading
-   as one phrase. */
+/* Same italic-accent move as the headline. Held on one line: an accent phrase
+   split across a line break stops reading as one phrase. */
 .quote__text em {
-  font-style: normal;
+  font-style: italic;
   font-weight: 500;
   color: var(--accent);
   white-space: nowrap;
 }
 
-/* No panel and no bevels: portrait, name and role sitting on the ground. */
+/* The attribution is the one place the window chrome is allowed in this band —
+   it ties back to the hero frame without the retro styling reaching the copy. */
 .quote__card {
   display: inline-flex;
   align-items: center;
-  gap: 0.875rem;
+  gap: 0.75rem;
   margin-top: clamp(1.75rem, 3.5vw, 2.5rem);
+  padding: 0.5rem 1rem 0.5rem 0.5rem;
+  background: var(--chrome-face);
   text-align: left;
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-light),
+    inset -1.5px -1.5px 0 var(--chrome-shadow);
 }
 
+/* Sunken well, so the portrait reads as inset into the panel. */
 .quote__well {
   flex: 0 0 auto;
   width: 3rem;
   height: 3rem;
-  border-radius: 50%;
-  overflow: hidden;
-  box-shadow: inset 0 0 0 1px rgba(38, 24, 20, 0.1);
+  padding: 2px;
+  background: var(--chrome-face);
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-shadow),
+    inset -1.5px -1.5px 0 var(--chrome-light);
 }
 
 .quote__portrait {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* The truck is in the top of both frames and the sources are portrait in a
-     landscape-ish column, so cover crops hard top and bottom. 25% keeps the
-     loading bay in shot; much lower and the table starts losing people. */
-  object-position: 50% 25%;
+  object-position: 50% 40%;
 }
 
 .quote__who {
@@ -1563,7 +1439,7 @@ p {
   padding: 0.3125rem 0.6875rem;
   border-radius: 999px;
   background: var(--accent);
-  color: var(--on-accent-sm);
+  color: var(--white);
   font-size: 0.8125rem;
   font-weight: 700;
   line-height: 1;
@@ -1583,7 +1459,7 @@ p {
 .step__body {
   margin: 0.625rem 0 0;
   max-width: 42ch;
-  color: #574b45;
+  color: #5d5348;
   font-size: 1rem;
   line-height: 1.55;
   text-wrap: pretty;
@@ -1603,31 +1479,11 @@ p {
 
 /* The voxel sprite: every cube icon defined once in <defs> and pulled in with
    <use>. Inlining 46 copies would have meant roughly 8,000 extra path nodes. */
-/* One stroke weight across every icon on the page. Geometry does the work;
-   nothing is filled, nothing is beveled. */
-.iconsprite {
+.voxsprite {
   position: absolute;
   width: 0;
   height: 0;
   overflow: hidden;
-}
-
-.vox {
-  display: block;
-  width: 100%;
-  height: 100%;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.25;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-/* Small icons need a touch more weight or they disappear. */
-.role__ico .vox,
-.chatband__chip-ico .vox,
-.chatband__tool .vox {
-  stroke-width: 1.6;
 }
 
 /* --- Three scenes per step ------------------------------------------------ */
@@ -1657,13 +1513,24 @@ p {
   aspect-ratio: 5 / 4;
   margin-bottom: 0.875rem;
   border-radius: clamp(0.75rem, 1.6vw, 1.125rem);
-  background: #f7f7f6;
-  box-shadow: inset 0 0 0 1px rgba(38, 24, 20, 0.08);
+  background: linear-gradient(158deg, #fefdfa 0%, #f4f1e8 48%, #e9e5d9 100%);
+  box-shadow: inset 0 0 0 1px rgba(42, 35, 32, 0.07);
   overflow: hidden;
 }
 
-/* Flat, not bloomed. The soft colour washes were a leftover from the frosted
-   look and read as fog in a scheme this strict. */
+/* One dominant bloom, positioned and tinted per scene so fifteen plates do not
+   read as one repeated swatch. */
+.mini__scene::before {
+  content: '';
+  position: absolute;
+  inset: -16%;
+  z-index: -2;
+  background: radial-gradient(
+    52% 66% at var(--bx, 24%) var(--by, 78%),
+    var(--bloom, rgba(74, 118, 82, 0.42)),
+    transparent 66%
+  );
+}
 
 .mini__ico {
   position: absolute;
@@ -1671,10 +1538,16 @@ p {
   top: var(--y);
   display: block;
   width: var(--s);
-  aspect-ratio: 1;
   translate: -50% -50%;
-  color: var(--green);
-  filter: blur(var(--b, 0px));
+  filter: drop-shadow(0 3px 6px rgba(42, 35, 32, 0.22));
+}
+
+.mini__ico .pix,
+.mini__ico .vox {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: none;
 }
 
 /* Hairlines from the one thing to the several, or the several to the one. */
@@ -1733,7 +1606,7 @@ p {
 
 .mini__text {
   margin: 0;
-  color: #574b45;
+  color: #5d5348;
   font-size: 0.9375rem;
   line-height: 1.5;
   text-wrap: pretty;
@@ -1879,16 +1752,17 @@ p {
 /* Sunken well, the inverse bevel of the frame. */
 .dlg__well {
   flex: 1 1 auto;
-  height: 0.5rem;
-  border-radius: var(--pill);
-  background: rgba(38, 24, 20, 0.13);
-  overflow: hidden;
+  height: 1.125rem;
+  padding: 2px;
+  background: var(--chrome-face);
+  box-shadow:
+    inset 1.5px 1.5px 0 var(--chrome-shadow),
+    inset -1.5px -1.5px 0 var(--chrome-light);
 }
 
 .dlg__fill {
   display: block;
   height: 100%;
-  border-radius: var(--pill);
   background: var(--green);
   animation: dlg-fill 1100ms var(--ease) both;
 }
@@ -2052,7 +1926,7 @@ p {
   padding: 0.3125rem 0.6875rem;
   border-radius: 999px;
   background: var(--accent);
-  color: var(--on-accent-sm);
+  color: var(--white);
   font-size: 0.8125rem;
   font-weight: 700;
   line-height: 1;
@@ -2127,6 +2001,7 @@ p {
   padding: clamp(3.5rem, 7vw, 6rem) var(--gutter);
   background: var(--green);
   color: var(--on-dark);
+  border: 3px solid var(--chrome-face);
 }
 
 .chatband__inner {
@@ -2163,8 +2038,7 @@ p {
   text-wrap: balance;
 }
 
-.chatband__title em,
-.closer__title em {
+.chatband__title em {
   font-style: normal;
   font-weight: 500;
   color: var(--accent);
@@ -2245,7 +2119,7 @@ p {
   padding: 0.4375rem 0.75rem 0.4375rem 0.4375rem;
   border-radius: 0.625rem;
   background: #f2efe7;
-  color: #574b45;
+  color: #5d5348;
   font-size: 0.875rem;
   font-weight: 500;
   line-height: 1;
@@ -2257,9 +2131,11 @@ p {
   height: 1rem;
 }
 
-.chatband__chip-ico,
-.chatband__tool {
-  color: var(--green);
+.chatband__chip-ico .pix,
+.chatband__tool .pix {
+  width: 100%;
+  height: 100%;
+  filter: none;
 }
 
 .chatband__tools {
@@ -2349,7 +2225,7 @@ p {
 }
 
 .shift__art--today {
-  background: #f0efed;
+  background: #e6e3d8;
 }
 
 /* The same frosted room as the step scenes. The hourglass is drawn as two
@@ -2357,7 +2233,7 @@ p {
    at the waist is a shape, and layered gradients could only approximate it. */
 .shift__art--flow {
   isolation: isolate;
-  background: linear-gradient(158deg, #ffffff 0%, #fbfbfa 46%, #f3f3f1 100%);
+  background: linear-gradient(158deg, #fefdfa 0%, #f6f3ea 46%, #eeeadd 100%);
   box-shadow: inset 0 0 0 1px rgba(42, 35, 32, 0.06);
 }
 
@@ -2367,8 +2243,8 @@ p {
   inset: -12%;
   z-index: -2;
   background:
-    radial-gradient(42% 66% at 4% 50%, rgba(59, 36, 31, 0.30), transparent 68%),
-    radial-gradient(42% 66% at 96% 50%, rgba(150, 179, 211, 0.42), transparent 68%),
+    radial-gradient(42% 66% at 4% 50%, rgba(74, 118, 82, 0.4), transparent 68%),
+    radial-gradient(42% 66% at 96% 50%, rgba(253, 96, 20, 0.32), transparent 68%),
     radial-gradient(30% 40% at 50% 50%, rgba(255, 255, 255, 0.85), transparent 72%);
 }
 
@@ -2392,7 +2268,7 @@ p {
   margin: 0 0 0.375rem;
   padding-inline: 0.375rem;
   max-width: 46ch;
-  color: #574b45;
+  color: #5d5348;
   font-size: 0.9375rem;
   line-height: 1.55;
   text-wrap: pretty;
@@ -2454,9 +2330,9 @@ p {
   position: relative;
   padding: 1.9cqw 3.4cqw;
   border-radius: 999px;
-  background: #f3e6e1;
-  box-shadow: inset 0 0 0 1px rgba(140, 74, 58, 0.34);
-  color: #8c4a3a;
+  background: #fbe8e5;
+  box-shadow: inset 0 0 0 1px rgba(196, 78, 66, 0.42);
+  color: #b8483c;
   font-size: max(0.6875rem, 3.4cqw);
   font-weight: 500;
   line-height: 1;
@@ -2471,13 +2347,13 @@ p {
   left: 100%;
   top: 50%;
   width: 3.4cqw;
-  border-top: 1px dashed rgba(140, 74, 58, 0.4);
+  border-top: 1px dashed rgba(196, 78, 66, 0.5);
 }
 
 .today__note {
   margin: 3.6cqw 0 0;
   padding-inline: 6cqw;
-  color: #a09a94;
+  color: #a1927c;
   font-size: max(0.6875rem, 3.2cqw);
   line-height: 1;
 }
@@ -2500,7 +2376,7 @@ p {
   position: absolute;
   inset: 0;
   border-radius: 1cqw;
-  background: #ffffff;
+  background: #f6f3ec;
   box-shadow: inset 0 0 0 1px rgba(126, 111, 92, 0.18);
 }
 
@@ -2525,7 +2401,7 @@ p {
 
 .today__sheet-title {
   margin: 0 0 1.4cqw;
-  color: #b0aca7;
+  color: #b3a693;
   font-size: max(0.6875rem, 3.4cqw);
   font-weight: 500;
   line-height: 1;
@@ -2535,7 +2411,7 @@ p {
   width: var(--w);
   height: 1.9cqw;
   border-radius: 999px;
-  background: #e8e7e4;
+  background: #ded7c8;
 }
 
 /* --- With Hoshii: everything converges ------------------------------------ */
@@ -2565,7 +2441,7 @@ p {
    reads as "in, decided, out". */
 .flow__pulses path {
   fill: none;
-  stroke: rgba(59, 36, 31, 0.85);
+  stroke: rgba(47, 145, 71, 0.9);
   stroke-width: 1.6;
   stroke-linecap: round;
   /* The gap has to be far longer than the path, not equal to it. At `7 100`
@@ -2580,7 +2456,7 @@ p {
 }
 
 .flow__pulses path:nth-child(n + 4) {
-  stroke: rgba(64, 101, 140, 0.95);
+  stroke: rgba(253, 75, 1, 0.95);
 }
 
 /* 7 puts the dash just before the start, -107 just past the end, so it crosses
@@ -2613,22 +2489,26 @@ p {
    the reference does, but it only survives on solid silhouettes; outline art
    like ours turns into an unreadable tray. Non-square now, so height is free. */
 .flow__glyph {
-  display: grid;
-  place-items: center;
-  width: 13cqw;
-  height: 13cqw;
+  display: block;
+  width: 16cqw;
   margin-inline: auto;
-  border-radius: 3.6cqw;
-  background: var(--white);
-  color: var(--green);
-  box-shadow:
-    inset 0 0 0 1px rgba(38, 24, 20, 0.10),
-    0 1cqw 2.4cqw rgba(38, 24, 20, 0.13);
 }
 
 .flow__glyph .vox {
-  width: 56%;
-  height: 56%;
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.pix,
+.flow__glyph .vox {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0.7cqw 1.2cqw rgba(42, 35, 32, 0.26));
+}
+
+.flow__glyph .vox {
+  height: auto;
 }
 
 /* Positions match the wire endpoints in the 400 × 260 viewBox above: inputs on
