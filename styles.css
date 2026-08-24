@@ -70,7 +70,7 @@
   --caption: #857065; /* Captions     */
   --sage: #b8a394; /* Fills        */
   --white: #ffffff;
-  --accent: #a8763c; /* Accent (brass) */
+  --accent: #e2592c; /* Accent (vermillion) */
 
   --green-deep: #24140f;
 
@@ -80,7 +80,7 @@
 
   /* Near-black that clears AA on the accent at small sizes, where white
      (3.41:1) does not. Used for the announcement bar. */
-  --on-accent-sm: #ffffff;
+  --on-accent-sm: #2b1a10;
 
   /* Neutrals. The OS chrome is gone; these are now plain surface and rule
      values so the rest of the sheet keeps working. */
@@ -1337,7 +1337,7 @@ p {
   padding: 0.3125rem 0.6875rem;
   border-radius: 999px;
   background: var(--accent);
-  color: var(--white);
+  color: var(--on-accent-sm);
   font-size: 0.8125rem;
   font-weight: 700;
   line-height: 1;
@@ -1837,7 +1837,7 @@ p {
   padding: 0.3125rem 0.6875rem;
   border-radius: 999px;
   background: var(--accent);
-  color: var(--white);
+  color: var(--on-accent-sm);
   font-size: 0.8125rem;
   font-weight: 700;
   line-height: 1;
@@ -2152,7 +2152,7 @@ p {
   z-index: -2;
   background:
     radial-gradient(42% 66% at 4% 50%, rgba(59, 36, 31, 0.30), transparent 68%),
-    radial-gradient(42% 66% at 96% 50%, rgba(168, 118, 60, 0.36), transparent 68%),
+    radial-gradient(42% 66% at 96% 50%, rgba(226, 89, 44, 0.30), transparent 68%),
     radial-gradient(30% 40% at 50% 50%, rgba(255, 255, 255, 0.85), transparent 72%);
 }
 
@@ -2364,7 +2364,7 @@ p {
 }
 
 .flow__pulses path:nth-child(n + 4) {
-  stroke: rgba(168, 118, 60, 0.95);
+  stroke: rgba(226, 89, 44, 0.95);
 }
 
 /* 7 puts the dash just before the start, -107 just past the end, so it crosses
