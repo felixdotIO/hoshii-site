@@ -10,7 +10,7 @@
       name="description"
       content="The smart inbox that works for you. Hoshii is your team&rsquo;s proactive inbox that gets better every day. Reply faster, reduce manual work."
     />
-    <link rel="stylesheet" href="styles.css?v=209" />
+    <link rel="stylesheet" href="styles.css?v=211" />
   </head>
   <body>
     <svg class="iconsprite" aria-hidden="true" focusable="false">
@@ -137,63 +137,24 @@
               </button>
             </div>
 
-            <div class="inbox is-hoshii">
-              <p class="inbox__bar">
-                <span class="inbox__label">Team inbox</span>
-                <span class="inbox__count">5 new</span>
-              </p>
-              <ul class="inbox__list">
-              <li class="inbox__row">
-                <span class="inbox__dot" aria-hidden="true"></span>
-                <span class="inbox__who">Meier AG</span>
-                <span class="inbox__subj">Re: Bestellung 4417</span>
-                <span class="inbox__time">09:12</span>
-                <span class="inbox__meta">
-                  <span class="inbox__kind">Order</span>
-                  <span class="inbox__fact">Customer matched &middot; 42 in stock &middot; credit clear</span>
-                </span>
-              </li>
-              <li class="inbox__row">
-                <span class="inbox__dot" aria-hidden="true"></span>
-                <span class="inbox__who">Hans Brenner</span>
-                <span class="inbox__subj">AW: Wo bleibt die Lieferung?</span>
-                <span class="inbox__time">09:08</span>
-                <span class="inbox__meta">
-                  <span class="inbox__kind">Delivery</span>
-                  <span class="inbox__fact">Shipment 8821 &middot; leaves the depot today</span>
-                </span>
-              </li>
-              <li class="inbox__row">
-                <span class="inbox__dot" aria-hidden="true"></span>
-                <span class="inbox__who">info@</span>
-                <span class="inbox__subj">Preisanfrage, 200 Stk</span>
-                <span class="inbox__time">08:57</span>
-                <span class="inbox__meta">
-                  <span class="inbox__kind">Quote</span>
-                  <span class="inbox__fact">Price list 2026&#8209;Q3 &middot; last quote 11 Mar</span>
-                </span>
-              </li>
-              <li class="inbox__row">
-                <span class="inbox__dot" aria-hidden="true"></span>
-                <span class="inbox__who">K&uuml;ng GmbH</span>
-                <span class="inbox__subj">Rechnung Kopie</span>
-                <span class="inbox__time">08:41</span>
-                <span class="inbox__meta">
-                  <span class="inbox__kind">Invoice</span>
-                  <span class="inbox__fact">Invoice 20418 &middot; paid 4 Mar</span>
-                </span>
-              </li>
-              <li class="inbox__row">
-                <span class="inbox__dot" aria-hidden="true"></span>
-                <span class="inbox__who">Sabine Roth</span>
-                <span class="inbox__subj">Reklamation Charge 88</span>
-                <span class="inbox__time">08:22</span>
-                <span class="inbox__meta">
-                  <span class="inbox__kind">Complaint</span>
-                  <span class="inbox__fact">Batch 88 &middot; two open cases this month</span>
-                </span>
-              </li>
-              </ul>
+            <figure class="hero__shots is-hoshii">
+              <img
+                class="hero__shot hero__shot--paper"
+                src="assets/img/desk-paper.jpg"
+                alt="Four people at a table buried under stacks of paper orders."
+                width="1096"
+                height="1435"
+                fetchpriority="high"
+              />
+              <img
+                class="hero__shot hero__shot--clear"
+                src="assets/img/desk-clear.jpg"
+                alt="The same four people at the same table, now clear."
+                width="1122"
+                height="1402"
+                fetchpriority="high"
+              />
+            </figure>
             </div>
           </div>
         </div>
@@ -1221,7 +1182,7 @@
       // rather than removed, so the panel keeps its height and the rows above
       // never jump when you flip it.
       const heroOpts = [...document.querySelectorAll('.hero__opt')];
-      const heroInbox = document.querySelector('.inbox');
+      const heroInbox = document.querySelector('.hero__shots');
 
       if (heroOpts.length && heroInbox) {
         heroOpts.forEach((opt) => {
