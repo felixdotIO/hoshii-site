@@ -63,16 +63,16 @@
   /* LAB PALETTE — brown primary, brass accent, no OS chrome.
      Token names keep the --green/--chrome shape so the rest of the sheet is
      untouched; only the values changed. */
-  --green: #5e3023; /* Primary (brown) */
-  --ink: #241813; /* Type         */
+  --green: #3b241f; /* Primary (brown) */
+  --ink: #1f1310; /* Type         */
   --bone: #f4f0e7; /* Sec. ground  */
   --wash: #f0e7c0; /* Rare wash    */
-  --caption: #8a7266; /* Captions     */
+  --caption: #857065; /* Captions     */
   --sage: #b8a394; /* Fills        */
   --white: #ffffff;
   --accent: #a8763c; /* Accent (brass) */
 
-  --green-deep: #3a1b13;
+  --green-deep: #24140f;
 
   /* Text on dark */
   --on-dark: var(--bone);
@@ -86,8 +86,8 @@
      values so the rest of the sheet keeps working. */
   --chrome-face: #ffffff;
   --chrome-light: #faf8f3;
-  --chrome-shadow: rgba(46, 30, 24, 0.14);
-  --chrome-dark: #6f5b52;
+  --chrome-shadow: rgba(38, 24, 20, 0.15);
+  --chrome-dark: #63514a;
 
   --font: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui,
     sans-serif;
@@ -100,7 +100,7 @@
      the column the slab is set in — visible in the space above and below it,
      hidden behind the slab itself. Keep the two values in step. */
   --guide-col: 94rem;
-  --rule: rgba(46, 30, 24, 0.11);
+  --rule: rgba(38, 24, 20, 0.12);
   --pill: 999px;
 
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -339,7 +339,7 @@ p {
 }
 
 .btn-os--accent:hover {
-  background: #4a251b;
+  background: #55362e;
 }
 
 .btn-os--accent:active {
@@ -655,9 +655,9 @@ p {
      card. Most of its height comes from the art column, which is why those
      two windows run side by side above 56em rather than stacked. */
   padding: clamp(1.5rem, 3vw, 2.5rem) clamp(2rem, 4vw, 3.75rem);
-  /* Warm near-black rather than pure: the product renders are lit on black,
-     so they sit into this panel instead of showing a seam. */
-  background: #1c1a17;
+  /* Warm near-black in the brown family, a shade under the title bar so the
+     two dark surfaces read as related rather than identical. */
+  background: #24170f;
   border-radius: clamp(1.25rem, 2.5vw, 2rem);
   overflow: hidden;
 }
@@ -1111,7 +1111,7 @@ p {
   margin-bottom: clamp(1.5rem, 3.5vw, 2.25rem);
   border-radius: 0.75rem;
   background: var(--bone);
-  box-shadow: inset 0 0 0 1px rgba(46, 30, 24, 0.09);
+  box-shadow: inset 0 0 0 1px rgba(38, 24, 20, 0.10);
 }
 
 .role__ico {
@@ -1445,7 +1445,7 @@ p {
   z-index: -2;
   background: radial-gradient(
     52% 66% at var(--bx, 24%) var(--by, 78%),
-    var(--bloom, rgba(94, 48, 35, 0.30)),
+    var(--bloom, rgba(59, 36, 31, 0.32)),
     transparent 66%
   );
 }
@@ -1666,7 +1666,7 @@ p {
   flex: 1 1 auto;
   height: 0.5rem;
   border-radius: var(--pill);
-  background: rgba(46, 30, 24, 0.12);
+  background: rgba(38, 24, 20, 0.13);
   overflow: hidden;
 }
 
@@ -2151,7 +2151,7 @@ p {
   inset: -12%;
   z-index: -2;
   background:
-    radial-gradient(42% 66% at 4% 50%, rgba(94, 48, 35, 0.28), transparent 68%),
+    radial-gradient(42% 66% at 4% 50%, rgba(59, 36, 31, 0.30), transparent 68%),
     radial-gradient(42% 66% at 96% 50%, rgba(168, 118, 60, 0.36), transparent 68%),
     radial-gradient(30% 40% at 50% 50%, rgba(255, 255, 255, 0.85), transparent 72%);
 }
@@ -2349,7 +2349,7 @@ p {
    reads as "in, decided, out". */
 .flow__pulses path {
   fill: none;
-  stroke: rgba(94, 48, 35, 0.85);
+  stroke: rgba(59, 36, 31, 0.85);
   stroke-width: 1.6;
   stroke-linecap: round;
   /* The gap has to be far longer than the path, not equal to it. At `7 100`
@@ -2406,8 +2406,8 @@ p {
   background: var(--white);
   color: var(--green);
   box-shadow:
-    inset 0 0 0 1px rgba(46, 30, 24, 0.09),
-    0 1cqw 2.4cqw rgba(46, 30, 24, 0.12);
+    inset 0 0 0 1px rgba(38, 24, 20, 0.10),
+    0 1cqw 2.4cqw rgba(38, 24, 20, 0.13);
 }
 
 .flow__glyph .vox {
