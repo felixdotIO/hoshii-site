@@ -443,129 +443,39 @@ p {
   }
 }
 
-/* --- Hero — the window's client area and taskbar ------------------------- */
+/* --- Hero — copy left, the product right --------------------------------- */
 
-/* The frame is built in CSS, not taken from the render, which is what lets
-   the hero be sized to the fold: the photo is cropped frameless
-   (assets/img/photo-workspace.png) and cover-fills whatever height is left.
-   Carries the frame's remaining three sides; .titlebar carries the top. */
+/* No photo and no window any more. The right half is the argument: the same
+   five emails, with and without Hoshii, on a switch. */
 .hero {
-  display: flex;
-  flex-direction: column;
+  padding: clamp(2.5rem, 6vw, 5.5rem) var(--gutter) clamp(3rem, 6vw, 5.5rem);
   background: var(--bone);
 }
 
-/* --- Screen --- */
-
-.hero__screen {
-  position: relative;
-  isolation: isolate;
-  flex: 1 1 auto;
-  /* Copy sits at the foot of the frame, not dead centre: the photo's subjects
-     are in the upper half, and a centred block lands straight on their faces.
-     Reads as the thing they are leaning in to look at.
-     Photo and scrim are absolute so neither can size this box — as grid
-     children their height:100% resolved against the intrinsic ratio and
-     overflowed the row, which pushed the CTA behind the taskbar. */
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  overflow: hidden;
-  background: var(--green-deep);
+.hero__grid {
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  align-items: center;
+  margin: 0 auto;
+  max-width: 88rem;
+  padding-inline: clamp(0.5rem, 3vw, 2rem);
 }
 
-.hero__photo {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  object-fit: cover;
-  /* Headroom above the subjects. Pinning the bottom (50% 100%) cut the tops
-     of their heads off once the screen went wider than ~2.3:1, which also
-     magnified the photo's fisheye distortion into something that read as a
-     broken image. */
-  object-position: 50% 45%;
-  filter: brightness(1.06) saturate(1.05);
-}
-
-.hero__screen::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  /* Near-neutral rather than brand green: a green wash flattened the photo's
-     own colour. Just enough weight at the foot to carry the type, clearing
-     entirely over the faces. */
-  background: linear-gradient(
-    to top,
-    rgba(7, 11, 9, 0.9) 0%,
-    rgba(7, 11, 9, 0.76) 16%,
-    rgba(7, 11, 9, 0.46) 38%,
-    rgba(7, 11, 9, 0.16) 60%,
-    rgba(7, 11, 9, 0) 80%
-  );
-}
-
-/* The radial plate that used to sit here is gone: with the scrim above doing
-   the work in one pass, a second gradient on top of it read as a blotch over
-   the subjects. */
-
-.hero__inner {
-  position: relative;
-  isolation: isolate;
-  z-index: 2;
-  width: 100%;
-  /* Sized so the headline's authored line breaks are the only breaks at the
-     max font size — re-check when the headline copy changes. */
-  max-width: 50rem;
-  padding: clamp(1.5rem, 4vw, 2.5rem) var(--gutter) clamp(1.25rem, 2.5vw, 1.75rem);
-  text-align: center;
-}
-
-.hero__screen {
-  aspect-ratio: 4 / 5;
-  min-height: 22rem;
-}
-
-@media (min-width: 46em) {
-  .hero__screen {
-    /* Preferred framing. */
-    aspect-ratio: 2.25;
-
-    /* Never taller than the fold allows, so the client row is always visible
-       on the first screen. --fold-reserve is everything that is not this box,
-       measured at 1920x1080: announcement bar 34 + title bar 67 + taskbar and
-       the frame's three borders 50 + client row 112 = 263, rounded up for
-       slack. Keep it in step with those four. A fixed ratio cannot do this
-       job: at 2.25 the strip fell 27px past the fold on a 1920x1080 screen,
-       and picking a flatter fixed ratio to fix that breaks 1600x900 instead. */
-    --fold-reserve: 12.5rem;
-    max-height: calc(100svh - var(--fold-reserve));
-
-    /* ...but never so short that the crop eats the subjects. This floors the
-       screen at 1/2.7 of its width, which is the bound the earlier
-       `100svh - reserve` sizing lacked — that hit 2.86:1 on a 720px-tall
-       laptop and cut the tops of their heads off. min-height beats max-height
-       in CSS, which is what makes this a hard floor rather than a preference.
-       Keyed to 100vw because this box spans the full width bar its borders. */
-    min-height: max(20rem, calc(100vw / 2.7));
+@media (min-width: 64em) {
+  .hero__grid {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
   }
 }
 
 .hero__title {
-  font-size: clamp(1.75rem, 1rem + 2.2vw, 2.625rem);
+  margin: 0;
+  font-size: clamp(2.25rem, 1.2rem + 3.6vw, 4rem);
   font-weight: 500;
-  line-height: 1.12;
-  letter-spacing: -0.025em;
-  color: var(--bone);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
   text-wrap: balance;
 }
 
-/* Corgi sets the memorable half of the headline in an italic accent face.
-   Satoshi is the only brand typeface, so the shift is italic + accent
-   colour rather than a serif. */
 .hero__title em {
   font-style: normal;
   font-weight: 500;
@@ -573,34 +483,172 @@ p {
 }
 
 .hero__sub {
-  margin: clamp(0.75rem, 1.4vw, 1rem) auto 0;
-  max-width: 33rem;
-  color: rgba(244, 240, 231, 0.88);
-  font-size: clamp(0.9375rem, 0.9rem + 0.25vw, 1.0625rem);
+  margin: clamp(1.125rem, 2vw, 1.625rem) 0 clamp(1.75rem, 3vw, 2.5rem);
+  max-width: 38ch;
+  color: var(--caption);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
   line-height: 1.5;
   text-wrap: pretty;
-  /* Photo behind the copy is uneven; a tight shadow holds the small text
-     legible over the busiest part of it without looking like a glow. */
-  text-shadow: 0 1px 3px rgba(7, 11, 9, 0.6), 0 2px 14px rgba(7, 11, 9, 0.7);
 }
 
-.hero__title {
-  text-shadow: 0 1px 2px rgba(7, 11, 9, 0.45), 0 2px 20px rgba(7, 11, 9, 0.55);
+/* --- The switch --- */
+
+.hero__switch {
+  display: inline-flex;
+  gap: 0.25rem;
+  margin-bottom: 0.875rem;
+  padding: 0.25rem;
+  border-radius: var(--pill);
+  background: rgba(38, 24, 20, 0.06);
 }
 
-.hero__inner .btn-os {
-  margin-top: clamp(1.125rem, 2.2vw, 1.625rem);
+.hero__opt {
+  padding: 0.4375rem 0.9375rem;
+  border: 0;
+  border-radius: var(--pill);
+  background: transparent;
+  color: var(--caption);
+  font: 600 0.875rem/1 var(--font);
+  cursor: pointer;
+  transition: background-color 180ms var(--ease), color 180ms var(--ease);
 }
 
-/* The authored line breaks in the headline and subhead are art direction for
-   wide screens; below that, let the text wrap naturally. */
-@media (max-width: 46em) {
-  .hero__title br,
-  .hero__sub br {
-    display: none;
+.hero__opt[aria-pressed='true'] {
+  background: var(--white);
+  color: var(--ink);
+  box-shadow: 0 1px 2px rgba(38, 24, 20, 0.14);
+}
+
+/* --- The inbox --- */
+
+.inbox {
+  border-radius: clamp(0.875rem, 1.6vw, 1.125rem);
+  background: var(--white);
+  box-shadow:
+    inset 0 0 0 1px rgba(38, 24, 20, 0.09),
+    0 1.5rem 3rem rgba(38, 24, 20, 0.1);
+  overflow: hidden;
+}
+
+.inbox__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0;
+  padding: 0.875rem 1.125rem;
+  border-bottom: 1px solid rgba(38, 24, 20, 0.09);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.inbox__label {
+  color: var(--ink);
+}
+
+.inbox__count {
+  color: var(--caption);
+  font-weight: 500;
+}
+
+.inbox__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* One grid for both states. The meta row spans the full width and collapses to
+   nothing without Hoshii, so switching never reflows the rows above it. */
+.inbox__row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 8rem) minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 0.5rem 0.75rem;
+  padding: 0.8125rem 1.125rem;
+  font-size: 0.875rem;
+  line-height: 1.35;
+}
+
+.inbox__row + .inbox__row {
+  border-top: 1px solid rgba(38, 24, 20, 0.07);
+}
+
+.inbox__dot {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 50%;
+  background: rgba(38, 24, 20, 0.28);
+  translate: 0 -0.15rem;
+}
+
+.inbox__who {
+  color: var(--ink);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.inbox__subj {
+  color: var(--caption);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.inbox__time {
+  color: var(--caption);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.inbox__meta {
+  grid-column: 2 / -1;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  overflow: hidden;
+  /* Collapsed rather than display:none so the reveal can be animated. */
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 260ms var(--ease), opacity 200ms var(--ease),
+    margin-top 260ms var(--ease);
+}
+
+.is-hoshii .inbox__meta {
+  max-height: 2.5rem;
+  margin-top: 0.3125rem;
+  opacity: 1;
+}
+
+.inbox__kind {
+  flex: 0 0 auto;
+  padding: 0.1875rem 0.5rem;
+  border-radius: 0.3125rem;
+  background: rgba(226, 89, 44, 0.12);
+  color: #a63d18;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.inbox__fact {
+  color: var(--caption);
+  font-size: 0.8125rem;
+}
+
+/* Without Hoshii the dot is the only signal there is. */
+.is-hoshii .inbox__dot {
+  background: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inbox__meta {
+    transition: none;
   }
 }
-
 
 /* --- Pitch band ---------------------------------------------------------- */
 

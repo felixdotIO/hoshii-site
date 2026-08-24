@@ -10,7 +10,7 @@
       name="description"
       content="The smart inbox that works for you. Hoshii is your team&rsquo;s proactive inbox that gets better every day. Reply faster, reduce manual work."
     />
-    <link rel="stylesheet" href="styles.css?v=207" />
+    <link rel="stylesheet" href="styles.css?v=208" />
   </head>
   <body>
     <svg class="iconsprite" aria-hidden="true" focusable="false">
@@ -110,19 +110,10 @@
     </header>
 
     <main>
-      <!-- Hero — the window's client area + taskbar ---------------------- -->
+      <!-- Hero — copy left, the product right ----------------------------- -->
       <section class="hero" aria-labelledby="hero-title">
-        <div class="hero__screen">
-          <img
-            class="hero__photo"
-            src="assets/img/photo-team.png"
-            alt=""
-            width="1740"
-            height="904"
-            fetchpriority="high"
-          />
-
-          <div class="hero__inner">
+        <div class="hero__grid">
+          <div class="hero__copy">
             <h1 class="hero__title" id="hero-title">
               The smart inbox<br />
               <em>that works for you.</em>
@@ -130,14 +121,82 @@
 
             <p class="hero__sub">
               Hoshii is your team&rsquo;s proactive inbox that gets better every
-              day.<br />
-              Reply faster, reduce manual work.
+              day. Reply faster, reduce manual work.
             </p>
 
             <a class="btn-os btn-os--accent btn-os--lg" href="#demo">Book a demo</a>
           </div>
-        </div>
 
+          <div class="hero__demo">
+            <div class="hero__switch" role="group" aria-label="Compare the inbox">
+              <button class="hero__opt" type="button" data-state="plain">
+                Without Hoshii
+              </button>
+              <button class="hero__opt" type="button" data-state="hoshii" aria-pressed="true">
+                With Hoshii
+              </button>
+            </div>
+
+            <div class="inbox is-hoshii">
+              <p class="inbox__bar">
+                <span class="inbox__label">Team inbox</span>
+                <span class="inbox__count">5 new</span>
+              </p>
+              <ul class="inbox__list">
+              <li class="inbox__row">
+                <span class="inbox__dot" aria-hidden="true"></span>
+                <span class="inbox__who">Meier AG</span>
+                <span class="inbox__subj">Re: Bestellung 4417</span>
+                <span class="inbox__time">09:12</span>
+                <span class="inbox__meta">
+                  <span class="inbox__kind">Order</span>
+                  <span class="inbox__fact">Customer matched &middot; 42 in stock &middot; credit clear</span>
+                </span>
+              </li>
+              <li class="inbox__row">
+                <span class="inbox__dot" aria-hidden="true"></span>
+                <span class="inbox__who">Hans Brenner</span>
+                <span class="inbox__subj">AW: Wo bleibt die Lieferung?</span>
+                <span class="inbox__time">09:08</span>
+                <span class="inbox__meta">
+                  <span class="inbox__kind">Delivery</span>
+                  <span class="inbox__fact">Shipment 8821 &middot; leaves the depot today</span>
+                </span>
+              </li>
+              <li class="inbox__row">
+                <span class="inbox__dot" aria-hidden="true"></span>
+                <span class="inbox__who">info@</span>
+                <span class="inbox__subj">Preisanfrage, 200 Stk</span>
+                <span class="inbox__time">08:57</span>
+                <span class="inbox__meta">
+                  <span class="inbox__kind">Quote</span>
+                  <span class="inbox__fact">Price list 2026&#8209;Q3 &middot; last quote 11 Mar</span>
+                </span>
+              </li>
+              <li class="inbox__row">
+                <span class="inbox__dot" aria-hidden="true"></span>
+                <span class="inbox__who">K&uuml;ng GmbH</span>
+                <span class="inbox__subj">Rechnung Kopie</span>
+                <span class="inbox__time">08:41</span>
+                <span class="inbox__meta">
+                  <span class="inbox__kind">Invoice</span>
+                  <span class="inbox__fact">Invoice 20418 &middot; paid 4 Mar</span>
+                </span>
+              </li>
+              <li class="inbox__row">
+                <span class="inbox__dot" aria-hidden="true"></span>
+                <span class="inbox__who">Sabine Roth</span>
+                <span class="inbox__subj">Reklamation Charge 88</span>
+                <span class="inbox__time">08:22</span>
+                <span class="inbox__meta">
+                  <span class="inbox__kind">Complaint</span>
+                  <span class="inbox__fact">Batch 88 &middot; two open cases this month</span>
+                </span>
+              </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </section>
 
       <!-- Logo strip ------------------------------------------------------ -->
@@ -1156,6 +1215,26 @@
           { threshold: 0.4 }
         );
         io.observe(chatCard);
+      }
+
+      // Hero switch: one inbox, two states. The enriched rows are collapsed
+      // rather than removed, so the panel keeps its height and the rows above
+      // never jump when you flip it.
+      const heroOpts = [...document.querySelectorAll('.hero__opt')];
+      const heroInbox = document.querySelector('.inbox');
+
+      if (heroOpts.length && heroInbox) {
+        heroOpts.forEach((opt) => {
+          opt.addEventListener('click', () => {
+            heroOpts.forEach((o) =>
+              o.setAttribute('aria-pressed', String(o === opt))
+            );
+            heroInbox.classList.toggle('is-hoshii', opt.dataset.state === 'hoshii');
+          });
+        });
+        heroOpts.forEach((o) =>
+          o.setAttribute('aria-pressed', String(o.dataset.state === 'hoshii'))
+        );
       }
 
       const toggle = document.querySelector('.menu-toggle');
