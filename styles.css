@@ -70,7 +70,10 @@
   --caption: #857065; /* Captions     */
   --sage: #c4b7b0; /* Fills        */
   --white: #ffffff;
-  --accent: #e2592c; /* Accent (vermillion) */
+  --accent: #96b3d3; /* Accent (soft blue) */
+  /* #96b3d3 is about 2:1 on the white ground — fine as a fill, unreadable as
+     type. Anything set in the accent on a light band uses this instead. */
+  --accent-ink: #40658c;
 
   --green-deep: #24140f;
 
@@ -80,7 +83,7 @@
 
   /* Near-black that clears AA on the accent at small sizes, where white
      (3.41:1) does not. Used for the announcement bar. */
-  --on-accent-sm: #2b1a10;
+  --on-accent-sm: #1b2b3a;
 
   /* Neutrals. The OS chrome is gone; these are now plain surface and rule
      values so the rest of the sheet keeps working. */
@@ -503,7 +506,7 @@ p {
 .hero__title em {
   font-style: normal;
   font-weight: 500;
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 
 .hero__sub {
@@ -1168,40 +1171,31 @@ p {
   text-wrap: balance;
 }
 
-/* Same italic-accent move as the headline. Held on one line: an accent phrase
-   split across a line break stops reading as one phrase. */
+/* Held on one line: an accent phrase split across a line break stops reading
+   as one phrase. */
 .quote__text em {
-  font-style: italic;
+  font-style: normal;
   font-weight: 500;
   color: var(--accent);
   white-space: nowrap;
 }
 
-/* The attribution is the one place the window chrome is allowed in this band —
-   it ties back to the hero frame without the retro styling reaching the copy. */
+/* No panel and no bevels: portrait, name and role sitting on the ground. */
 .quote__card {
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.875rem;
   margin-top: clamp(1.75rem, 3.5vw, 2.5rem);
-  padding: 0.5rem 1rem 0.5rem 0.5rem;
-  background: var(--chrome-face);
   text-align: left;
-  box-shadow:
-    inset 1.5px 1.5px 0 var(--chrome-light),
-    inset -1.5px -1.5px 0 var(--chrome-shadow);
 }
 
-/* Sunken well, so the portrait reads as inset into the panel. */
 .quote__well {
   flex: 0 0 auto;
   width: 3rem;
   height: 3rem;
-  padding: 2px;
-  background: var(--chrome-face);
-  box-shadow:
-    inset 1.5px 1.5px 0 var(--chrome-shadow),
-    inset -1.5px -1.5px 0 var(--chrome-light);
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(38, 24, 20, 0.1);
 }
 
 .quote__portrait {
@@ -1280,7 +1274,7 @@ p {
 .steps__title em {
   font-style: normal;
   font-weight: 500;
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 
 .steps__list {
@@ -1427,24 +1421,13 @@ p {
   aspect-ratio: 5 / 4;
   margin-bottom: 0.875rem;
   border-radius: clamp(0.75rem, 1.6vw, 1.125rem);
-  background: linear-gradient(158deg, #ffffff 0%, #fafaf9 48%, #f2f2f0 100%);
-  box-shadow: inset 0 0 0 1px rgba(42, 35, 32, 0.07);
+  background: #f7f7f6;
+  box-shadow: inset 0 0 0 1px rgba(38, 24, 20, 0.08);
   overflow: hidden;
 }
 
-/* One dominant bloom, positioned and tinted per scene so fifteen plates do not
-   read as one repeated swatch. */
-.mini__scene::before {
-  content: '';
-  position: absolute;
-  inset: -16%;
-  z-index: -2;
-  background: radial-gradient(
-    52% 66% at var(--bx, 24%) var(--by, 78%),
-    var(--bloom, rgba(59, 36, 31, 0.32)),
-    transparent 66%
-  );
-}
+/* Flat, not bloomed. The soft colour washes were a leftover from the frosted
+   look and read as fog in a scheme this strict. */
 
 .mini__ico {
   position: absolute;
@@ -2092,7 +2075,7 @@ p {
 .shift__title em {
   font-style: normal;
   font-weight: 500;
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 
 .shift__pair {
@@ -2148,7 +2131,7 @@ p {
   z-index: -2;
   background:
     radial-gradient(42% 66% at 4% 50%, rgba(59, 36, 31, 0.30), transparent 68%),
-    radial-gradient(42% 66% at 96% 50%, rgba(226, 89, 44, 0.30), transparent 68%),
+    radial-gradient(42% 66% at 96% 50%, rgba(150, 179, 211, 0.42), transparent 68%),
     radial-gradient(30% 40% at 50% 50%, rgba(255, 255, 255, 0.85), transparent 72%);
 }
 
@@ -2360,7 +2343,7 @@ p {
 }
 
 .flow__pulses path:nth-child(n + 4) {
-  stroke: rgba(226, 89, 44, 0.95);
+  stroke: rgba(64, 101, 140, 0.95);
 }
 
 /* 7 puts the dash just before the start, -107 just past the end, so it crosses
