@@ -520,9 +520,15 @@ p {
 
 /* --- The switch --- */
 
-/* The switch sits in a notch carved out of the picture's left edge, straddling
-   the seam: half on the white column, half on the photograph. It has to live
-   outside .hero__shots, which clips, or the overhanging half disappears. */
+/* The picture column is the containing block for the switch. */
+.hero__demo {
+  position: relative;
+}
+
+/* The switch: two labels in the white margin and two dots sitting on the seam.
+   The divider hairline is the track — nothing extra is drawn for it, and the
+   active dot carves a bone ring out of the line. No rotated type, no lozenge:
+   the rotated labels are what made the first attempt feel clunky. */
 .hero__switch {
   position: absolute;
   z-index: 3;
@@ -532,54 +538,94 @@ p {
   gap: 0.25rem;
   padding: 0.3125rem;
   border-radius: var(--pill);
-  background: var(--bone);
-  box-shadow:
-    inset 0 0 0 1px var(--rule),
-    0 0.75rem 2rem rgba(38, 24, 20, 0.22);
+  background: rgba(28, 18, 14, 0.42);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  backdrop-filter: blur(14px) saturate(1.3);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
 }
 
 .hero__opt {
-  padding: 0.5rem 0.9375rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4375rem 0.9375rem;
   border: 0;
   border-radius: var(--pill);
   background: transparent;
-  color: var(--caption);
+  color: rgba(255, 255, 255, 0.74);
   font: 600 0.875rem/1 var(--font);
-  letter-spacing: 0.01em;
   cursor: pointer;
   transition: background-color 200ms var(--ease), color 200ms var(--ease);
 }
 
 .hero__opt:hover {
-  color: var(--ink);
+  color: #fff;
 }
 
 .hero__opt[aria-pressed='true'] {
-  background: var(--green);
-  color: var(--bone);
+  background: var(--bone);
+  color: var(--ink);
 }
 
-/* Vertical once there is a seam to straddle. */
+/* Once there is a seam, the control moves off the photograph entirely and
+   lives in the white margin, hanging its dots on the rule. */
 @media (min-width: 64em) {
   .hero__switch {
+    /* Low on the seam rather than centred: centred put it level with the
+       sub-copy and the two read as one cramped block. */
     left: 0;
-    top: 50%;
-    bottom: auto;
+    top: auto;
+    bottom: clamp(2.5rem, 6vw, 4.5rem);
+    translate: -100% 0;
     flex-direction: column;
-    translate: -50% -50%;
-    padding: 0.375rem;
+    align-items: flex-end;
+    gap: clamp(1.125rem, 2.2vw, 1.75rem);
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
   }
 
   .hero__opt {
-    writing-mode: vertical-rl;
-    padding: 1.125rem 0.5625rem;
+    gap: 0.9375rem;
+    padding: 0;
+    border-radius: 0;
+    color: var(--caption);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    transition: color 200ms var(--ease);
   }
-}
 
+  .hero__opt:hover {
+    color: var(--ink);
+  }
 
-/* The picture column is the positioning context for the switch. */
-.hero__demo {
-  position: relative;
+  /* The dot, centred on the seam. */
+  .hero__opt::after {
+    content: '';
+    flex: 0 0 auto;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--bone);
+    box-shadow: inset 0 0 0 1.5px rgba(38, 24, 20, 0.32);
+    translate: 50% 0;
+    transition: background-color 200ms var(--ease), box-shadow 200ms var(--ease);
+  }
+
+  .hero__opt[aria-pressed='true'] {
+    background: none;
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  /* Filled, with a bone ring that cuts the rule around it. */
+  .hero__opt[aria-pressed='true']::after {
+    background: var(--green);
+    box-shadow: 0 0 0 0.3125rem var(--bone);
+  }
 }
 
 /* --- The two photographs --- */
