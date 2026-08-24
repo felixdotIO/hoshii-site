@@ -65,10 +65,10 @@
      untouched; only the values changed. */
   --green: #3b241f; /* Primary (brown) */
   --ink: #1f1310; /* Type         */
-  --bone: #f4f0e7; /* Sec. ground  */
-  --wash: #f0e7c0; /* Rare wash    */
+  --bone: #fcfcfb; /* Sec. ground (crisp white) */
+  --wash: #f1efec; /* Rare wash    */
   --caption: #857065; /* Captions     */
-  --sage: #b8a394; /* Fills        */
+  --sage: #c4b7b0; /* Fills        */
   --white: #ffffff;
   --accent: #e2592c; /* Accent (vermillion) */
 
@@ -1179,7 +1179,7 @@ p {
 
 .role__text {
   margin: 0;
-  color: #5d5348;
+  color: #574b45;
   font-size: 0.9375rem;
   line-height: 1.55;
   text-wrap: pretty;
@@ -1405,7 +1405,7 @@ p {
 .step__body {
   margin: 0.625rem 0 0;
   max-width: 42ch;
-  color: #5d5348;
+  color: #574b45;
   font-size: 1rem;
   line-height: 1.55;
   text-wrap: pretty;
@@ -1479,7 +1479,7 @@ p {
   aspect-ratio: 5 / 4;
   margin-bottom: 0.875rem;
   border-radius: clamp(0.75rem, 1.6vw, 1.125rem);
-  background: linear-gradient(158deg, #fffdfa 0%, #f6f1e9 48%, #eee6db 100%);
+  background: linear-gradient(158deg, #ffffff 0%, #fafaf9 48%, #f2f2f0 100%);
   box-shadow: inset 0 0 0 1px rgba(42, 35, 32, 0.07);
   overflow: hidden;
 }
@@ -1566,7 +1566,7 @@ p {
 
 .mini__text {
   margin: 0;
-  color: #5d5348;
+  color: #574b45;
   font-size: 0.9375rem;
   line-height: 1.5;
   text-wrap: pretty;
@@ -2077,7 +2077,7 @@ p {
   padding: 0.4375rem 0.75rem 0.4375rem 0.4375rem;
   border-radius: 0.625rem;
   background: #f2efe7;
-  color: #5d5348;
+  color: #574b45;
   font-size: 0.875rem;
   font-weight: 500;
   line-height: 1;
@@ -2181,7 +2181,7 @@ p {
 }
 
 .shift__art--today {
-  background: #e8e0d7;
+  background: #f0efed;
 }
 
 /* The same frosted room as the step scenes. The hourglass is drawn as two
@@ -2189,7 +2189,7 @@ p {
    at the waist is a shape, and layered gradients could only approximate it. */
 .shift__art--flow {
   isolation: isolate;
-  background: linear-gradient(158deg, #fffdfa 0%, #f7f2ea 46%, #efe7dc 100%);
+  background: linear-gradient(158deg, #ffffff 0%, #fbfbfa 46%, #f3f3f1 100%);
   box-shadow: inset 0 0 0 1px rgba(42, 35, 32, 0.06);
 }
 
@@ -2224,7 +2224,7 @@ p {
   margin: 0 0 0.375rem;
   padding-inline: 0.375rem;
   max-width: 46ch;
-  color: #5d5348;
+  color: #574b45;
   font-size: 0.9375rem;
   line-height: 1.55;
   text-wrap: pretty;
@@ -2309,7 +2309,7 @@ p {
 .today__note {
   margin: 3.6cqw 0 0;
   padding-inline: 6cqw;
-  color: #a1927c;
+  color: #a09a94;
   font-size: max(0.6875rem, 3.2cqw);
   line-height: 1;
 }
@@ -2332,7 +2332,7 @@ p {
   position: absolute;
   inset: 0;
   border-radius: 1cqw;
-  background: #f8f4ed;
+  background: #ffffff;
   box-shadow: inset 0 0 0 1px rgba(126, 111, 92, 0.18);
 }
 
@@ -2357,7 +2357,7 @@ p {
 
 .today__sheet-title {
   margin: 0 0 1.4cqw;
-  color: #b3a693;
+  color: #b0aca7;
   font-size: max(0.6875rem, 3.4cqw);
   font-weight: 500;
   line-height: 1;
@@ -2367,7 +2367,7 @@ p {
   width: var(--w);
   height: 1.9cqw;
   border-radius: 999px;
-  background: #e0d6ca;
+  background: #e8e7e4;
 }
 
 /* --- With Hoshii: everything converges ------------------------------------ */
