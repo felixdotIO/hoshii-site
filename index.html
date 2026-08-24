@@ -10,7 +10,7 @@
       name="description"
       content="The intelligent inbox that keeps work moving. Hoshii is your team&rsquo;s proactive inbox that gets better every day. Reply faster, reduce manual work."
     />
-    <link rel="stylesheet" href="styles.css?v=225" />
+    <link rel="stylesheet" href="styles.css?v=228" />
   </head>
   <body>
     <svg class="iconsprite" aria-hidden="true" focusable="false">
@@ -125,7 +125,7 @@
 
           <div class="hero__demo">
 
-            <figure class="hero__shots">
+            <figure class="hero__shots" data-show="plain">
               <img
                 class="hero__shot hero__shot--paper"
                 src="assets/img/desk-paper.jpg"
@@ -137,9 +137,9 @@
               <img
                 class="hero__shot hero__shot--clear"
                 src="assets/img/desk-clear.jpg"
-                alt="The same four people at the same table, now clear."
-                width="1122"
-                height="1402"
+                alt="The same four people at the same table, working on laptops with the paper gone."
+                width="1086"
+                height="1448"
                 fetchpriority="high"
               />
             </figure>
@@ -1180,21 +1180,37 @@
       const heroSwitch = document.querySelector('.hero__switch');
 
       if (heroOpts.length && heroInbox) {
-        const showState = (opt) => {
+        // Committed state versus what is on screen. Hovering the photograph
+        // peeks at the other one without changing what you chose; the marks
+        // follow the picture, so the filled dot always names what you see.
+        let committed = 'plain';
+
+        const render = (shown) => {
+          heroInbox.dataset.show = shown;
+          heroSwitch.dataset.active = shown;
           heroOpts.forEach((o) =>
-            o.setAttribute('aria-pressed', String(o === opt))
+            o.setAttribute('aria-pressed', String(o.dataset.state === shown))
           );
-          heroInbox.classList.toggle('is-hoshii', opt.dataset.state === 'hoshii');
-          heroSwitch.dataset.active = opt.dataset.state;
+        };
+
+        const commit = (state) => {
+          committed = state;
+          render(state);
         };
 
         heroOpts.forEach((opt) => {
-          // Hover is enough to swap the photograph; click and focus are there
-          // for touch and for the keyboard.
-          opt.addEventListener('mouseenter', () => showState(opt));
-          opt.addEventListener('focus', () => showState(opt));
-          opt.addEventListener('click', () => showState(opt));
+          const state = opt.dataset.state;
+          opt.addEventListener('mouseenter', () => commit(state));
+          opt.addEventListener('focus', () => commit(state));
+          opt.addEventListener('click', () => commit(state));
         });
+
+        heroInbox.addEventListener('mouseenter', () =>
+          render(committed === 'plain' ? 'hoshii' : 'plain')
+        );
+        heroInbox.addEventListener('mouseleave', () => render(committed));
+
+        render(committed);
         heroOpts.forEach((o) =>
           o.setAttribute('aria-pressed', String(o.dataset.state === 'plain'))
         );

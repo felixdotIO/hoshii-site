@@ -666,11 +666,12 @@ p {
     box-shadow: 0 0 0 0.3125rem var(--bone), inset 0 0 0 1.5px rgba(38, 24, 20, 0.42);
     translate: 50% -50%;
     opacity: 0;
-    transition: opacity 240ms var(--ease);
+    transition: opacity 200ms var(--ease);
   }
 
-  .hero__shots:hover ~ .hero__switch .hero__opt[aria-pressed='false']::after,
-  .hero__switch:hover .hero__opt[aria-pressed='false']::after {
+  /* Always visible on the position you are not on: the pair of marks is what
+     tells you there are two states before you touch anything. */
+  .hero__opt[aria-pressed='false']::after {
     opacity: 1;
   }
 
@@ -724,7 +725,10 @@ p {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 62%;
+  /* The truck is in the top of both frames and the sources are portrait in a
+     landscape-ish column, so cover crops hard top and bottom. 25% keeps the
+     loading bay in shot; much lower and the table starts losing people. */
+  object-position: 50% 25%;
   transition: opacity 460ms var(--ease);
 }
 
@@ -732,7 +736,7 @@ p {
   opacity: 0;
 }
 
-.hero__shots.is-hoshii .hero__shot--clear {
+.hero__shots[data-show='hoshii'] .hero__shot--clear {
   opacity: 1;
 }
 
@@ -1431,7 +1435,10 @@ p {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 40%;
+  /* The truck is in the top of both frames and the sources are portrait in a
+     landscape-ish column, so cover crops hard top and bottom. 25% keeps the
+     loading bay in shot; much lower and the table starts losing people. */
+  object-position: 50% 25%;
 }
 
 .quote__who {
