@@ -60,32 +60,34 @@
 /* --- Tokens -------------------------------------------------------------- */
 
 :root {
-  /* Brand palette (Hoshii, Aug 2026) */
-  --green: #133021; /* Primary      */
-  --ink: #2a2320; /* Type         */
+  /* LAB PALETTE — brown primary, brass accent, no OS chrome.
+     Token names keep the --green/--chrome shape so the rest of the sheet is
+     untouched; only the values changed. */
+  --green: #5e3023; /* Primary (brown) */
+  --ink: #241813; /* Type         */
   --bone: #f4f0e7; /* Sec. ground  */
   --wash: #f0e7c0; /* Rare wash    */
-  --caption: #7e6f5c; /* Captions     */
-  --sage: #a4ac9b; /* Fills        */
+  --caption: #8a7266; /* Captions     */
+  --sage: #b8a394; /* Fills        */
   --white: #ffffff;
-  --accent: #fd4b01; /* Accent (unlabelled on the palette sheet) */
+  --accent: #a8763c; /* Accent (brass) */
 
-  --green-deep: #0b1c13;
+  --green-deep: #3a1b13;
 
   /* Text on dark */
   --on-dark: var(--bone);
-  --on-dark-dim: #c3ccbc;
+  --on-dark-dim: #d6c4ba;
 
   /* Near-black that clears AA on the accent at small sizes, where white
      (3.41:1) does not. Used for the announcement bar. */
-  --on-accent-sm: #1a1310;
+  --on-accent-sm: #ffffff;
 
-  /* Retro-OS chrome. Warm greys sampled off the brand renders — the true
-     Win95 #c0c0c0 goes blue against the green. */
-  --chrome-face: #cfc7b8;
-  --chrome-light: #ece7dc;
-  --chrome-shadow: #8b8474;
-  --chrome-dark: #4f4b44;
+  /* Neutrals. The OS chrome is gone; these are now plain surface and rule
+     values so the rest of the sheet keeps working. */
+  --chrome-face: #ffffff;
+  --chrome-light: #faf8f3;
+  --chrome-shadow: rgba(46, 30, 24, 0.14);
+  --chrome-dark: #6f5b52;
 
   --font: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui,
     sans-serif;
@@ -98,7 +100,7 @@
      the column the slab is set in — visible in the space above and below it,
      hidden behind the slab itself. Keep the two values in step. */
   --guide-col: 94rem;
-  --rule: rgba(42, 35, 32, 0.1);
+  --rule: rgba(46, 30, 24, 0.11);
   --pill: 999px;
 
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -219,10 +221,6 @@ p {
   top: 0;
   z-index: 50;
   background: var(--green);
-  /* Three sides of the window frame. .hero carries the other two, so the two
-     elements read as one continuous window. */
-  border: 3px solid var(--chrome-face);
-  border-bottom: 0;
 }
 
 .titlebar__inner {
@@ -274,29 +272,20 @@ p {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  height: 1.875rem;
-  padding: 0 0.6875rem;
-  background: var(--chrome-face);
-  color: var(--ink);
-  box-shadow:
-    inset 1.5px 1.5px 0 var(--chrome-light),
-    inset -1.5px -1.5px 0 var(--chrome-shadow);
-  font-size: 0.875rem;
+  height: 2rem;
+  padding: 0 0.5rem;
+  border-radius: 0.375rem;
+  background: transparent;
+  color: var(--on-dark-dim);
+  font-size: 0.9375rem;
   font-weight: 500;
   text-decoration: none;
   white-space: nowrap;
-  transition: background-color 140ms var(--ease);
+  transition: color 160ms var(--ease);
 }
 
 .nav__btn:hover {
-  background: var(--chrome-light);
-}
-
-/* Pressed-in on click, like a real toolbar button. */
-.nav__btn:active {
-  box-shadow:
-    inset 1.5px 1.5px 0 var(--chrome-shadow),
-    inset -1.5px -1.5px 0 var(--chrome-light);
+  color: var(--bone);
 }
 
 /* Signals the use-case submenu. The menu itself is not built yet. */
@@ -315,19 +304,12 @@ p {
 }
 
 
-/* Beveled control: window buttons, Start, and the title-bar CTA. Chrome gets
-   OS styling; content inside the screen gets the modern pill. */
-.chip,
-.btn-os,
-.hero__start {
+/* One control, no bevels: a solid pill in the primary brown. Strictness comes
+   from the shape being the same everywhere, not from ornament. */
+.btn-os {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--chrome-face);
-  color: var(--ink);
-  box-shadow:
-    inset 1.5px 1.5px 0 var(--chrome-light),
-    inset -1.5px -1.5px 0 var(--chrome-shadow);
 }
 
 .chip {
@@ -342,23 +324,39 @@ p {
   height: 2.375rem;
   padding: 0 1.125rem;
   border: 0;
-  font: 700 1rem/1 var(--font);
+  border-radius: var(--pill);
+  font: 600 0.9375rem/1 var(--font);
+  letter-spacing: -0.005em;
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
-  transition: filter 160ms var(--ease);
+  transition: background-color 180ms var(--ease), transform 180ms var(--ease);
 }
 
 .btn-os--accent {
-  background: var(--accent);
-  color: var(--white);
-  box-shadow:
-    inset 1.5px 1.5px 0 rgba(255, 255, 255, 0.45),
-    inset -1.5px -1.5px 0 rgba(0, 0, 0, 0.28);
+  background: var(--green);
+  color: var(--bone);
 }
 
 .btn-os--accent:hover {
-  filter: brightness(1.08);
+  background: #4a251b;
+}
+
+.btn-os--accent:active {
+  transform: translateY(1px);
+}
+
+/* Inverted on the dark grounds, so the CTA is always the highest-contrast
+   object in its band rather than brown on brown. */
+.titlebar .btn-os--accent,
+.closer .btn-os--accent {
+  background: var(--bone);
+  color: var(--green);
+}
+
+.titlebar .btn-os--accent:hover,
+.closer .btn-os--accent:hover {
+  background: var(--white);
 }
 
 /* Hero size. */
@@ -368,11 +366,7 @@ p {
   font-size: 1.0625rem;
 }
 
-.btn-os:active {
-  box-shadow:
-    inset 1.5px 1.5px 0 var(--chrome-shadow),
-    inset -1.5px -1.5px 0 var(--chrome-light);
-}
+
 
 /* --- Mobile menu --------------------------------------------------------- */
 
@@ -458,9 +452,7 @@ p {
 .hero {
   display: flex;
   flex-direction: column;
-  background: var(--chrome-face);
-  border: 3px solid var(--chrome-face);
-  border-top: 0;
+  background: var(--bone);
 }
 
 /* --- Screen --- */
@@ -478,12 +470,8 @@ p {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  min-height: 0;
   overflow: hidden;
   background: var(--green-deep);
-  box-shadow:
-    inset 1.5px 1.5px 0 var(--chrome-shadow),
-    inset -1.5px -1.5px 0 var(--chrome-light);
 }
 
 .hero__photo {
@@ -536,98 +524,6 @@ p {
   text-align: center;
 }
 
-/* --- Taskbar --- */
-
-.hero__taskbar {
-  display: flex;
-  align-items: center;
-  flex: 0 0 auto;
-  height: 2.75rem;
-  margin-top: 3px;
-  padding: 0 0.375rem;
-  color: var(--ink);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  user-select: none;
-}
-
-.hero__start {
-  gap: 0.375rem;
-  height: 1.875rem;
-  padding: 0 0.75rem;
-  font-weight: 700;
-}
-
-/* Taskbar task button, and the second route to the demo. */
-.hero__task {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4375rem;
-  height: 1.875rem;
-  padding: 0 0.75rem;
-  margin-inline-start: 0.375rem;
-  background: var(--chrome-face);
-  color: var(--ink);
-  box-shadow:
-    inset 1.5px 1.5px 0 var(--chrome-light),
-    inset -1.5px -1.5px 0 var(--chrome-shadow);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: background-color 140ms var(--ease);
-}
-
-.hero__task:hover {
-  background: var(--chrome-light);
-}
-
-.hero__task:active {
-  box-shadow:
-    inset 1.5px 1.5px 0 var(--chrome-shadow),
-    inset -1.5px -1.5px 0 var(--chrome-light);
-}
-
-/* Start and the task buttons sit left; the tray is pushed to the right. */
-.hero__tray {
-  margin-inline-start: auto;
-}
-
-.hero__start-glyph {
-  width: 0.875rem;
-  height: 0.875rem;
-  background:
-    linear-gradient(var(--accent) 0 0) 0 0 / 45% 45% no-repeat,
-    linear-gradient(var(--wash) 0 0) 100% 0 / 45% 45% no-repeat,
-    linear-gradient(var(--sage) 0 0) 0 100% / 45% 45% no-repeat,
-    linear-gradient(var(--green) 0 0) 100% 100% / 45% 45% no-repeat;
-}
-
-.hero__tray {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  height: 1.875rem;
-  padding: 0 0.625rem;
-  box-shadow:
-    inset 1.5px 1.5px 0 var(--chrome-shadow),
-    inset -1.5px -1.5px 0 var(--chrome-light);
-}
-
-.hero__clock {
-  font-variant-numeric: tabular-nums;
-}
-
-/* The screen holds a ratio rather than whatever height the fold leaves over.
-   Sizing it to `100svh - reserve` meant a 720px-tall laptop produced a 2.86:1
-   screen — a 218px crop that took the tops of the subjects' heads off. With
-   `object-fit: cover` the width sets how big they are and the ratio only sets
-   how much is cropped, so holding the ratio holds the framing at every
-   viewport height. Chrome above and below comes to ~145px, so a 2.25:1 screen
-   still lands inside a 720px fold with the client row showing under it.
-
-   Portrait viewports get a tall crop instead: 2.25:1 at 375px wide is a 167px
-   letterbox with nowhere for the copy to go. */
 .hero__screen {
   aspect-ratio: 4 / 5;
   min-height: 22rem;
@@ -645,7 +541,7 @@ p {
        slack. Keep it in step with those four. A fixed ratio cannot do this
        job: at 2.25 the strip fell 27px past the fold on a 1920x1080 screen,
        and picking a flatter fixed ratio to fix that breaks 1600x900 instead. */
-    --fold-reserve: 16.5rem;
+    --fold-reserve: 12.5rem;
     max-height: calc(100svh - var(--fold-reserve));
 
     /* ...but never so short that the crop eats the subjects. This floors the
@@ -654,7 +550,7 @@ p {
        laptop and cut the tops of their heads off. min-height beats max-height
        in CSS, which is what makes this a hard floor rather than a preference.
        Keyed to 100vw because this box spans the full width bar its borders. */
-    min-height: max(20rem, calc((100vw - 6px) / 2.7));
+    min-height: max(20rem, calc(100vw / 2.7));
   }
 }
 
@@ -704,6 +600,7 @@ p {
     display: none;
   }
 }
+
 
 /* --- Pitch band ---------------------------------------------------------- */
 
@@ -792,6 +689,10 @@ p {
    width; side by side above 56em, because two stacked windows are what made
    the slab tall. */
 .pitch__art {
+  display: none;
+}
+
+.pitch__art--was {
   display: flex;
   flex-direction: column;
   /* Generous, because rotation is not accounted for in layout: a 2.5deg turn
@@ -850,6 +751,10 @@ p {
      two sides again. Offset vertically so the pair still steps rather than
      sitting on one line. */
   .pitch__art {
+  display: none;
+}
+
+.pitch__art--was {
     flex-direction: row;
     align-items: center;
     justify-content: center;
@@ -996,7 +901,6 @@ p {
   padding: clamp(3.5rem, 8vw, 7rem) var(--gutter);
   background: var(--green);
   color: var(--on-dark);
-  border: 3px solid var(--chrome-face);
   text-align: center;
 }
 
@@ -1202,25 +1106,19 @@ p {
 .role__tile {
   display: grid;
   place-items: center;
-  width: 3.5rem;
-  height: 3.5rem;
+  width: 2.75rem;
+  height: 2.75rem;
   margin-bottom: clamp(1.5rem, 3.5vw, 2.25rem);
-  border-radius: 1rem;
-  background: linear-gradient(158deg, #fdfcf9 0%, #f3f0e7 100%);
-  box-shadow: inset 0 0 0 1px rgba(42, 35, 32, 0.08);
+  border-radius: 0.75rem;
+  background: var(--bone);
+  box-shadow: inset 0 0 0 1px rgba(46, 30, 24, 0.09);
 }
 
 .role__ico {
   display: block;
-  width: 2.75rem;
-  height: 2.75rem;
-}
-
-.role__ico .vox {
-  display: block;
-  width: 100%;
-  height: 100%;
-  filter: drop-shadow(0 1px 3px rgba(42, 35, 32, 0.22));
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--green);
 }
 
 .role__name {
@@ -1479,11 +1377,31 @@ p {
 
 /* The voxel sprite: every cube icon defined once in <defs> and pulled in with
    <use>. Inlining 46 copies would have meant roughly 8,000 extra path nodes. */
-.voxsprite {
+/* One stroke weight across every icon on the page. Geometry does the work;
+   nothing is filled, nothing is beveled. */
+.iconsprite {
   position: absolute;
   width: 0;
   height: 0;
   overflow: hidden;
+}
+
+.vox {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Small icons need a touch more weight or they disappear. */
+.role__ico .vox,
+.chatband__chip-ico .vox,
+.chatband__tool .vox {
+  stroke-width: 1.6;
 }
 
 /* --- Three scenes per step ------------------------------------------------ */
@@ -1513,7 +1431,7 @@ p {
   aspect-ratio: 5 / 4;
   margin-bottom: 0.875rem;
   border-radius: clamp(0.75rem, 1.6vw, 1.125rem);
-  background: linear-gradient(158deg, #fefdfa 0%, #f4f1e8 48%, #e9e5d9 100%);
+  background: linear-gradient(158deg, #fffdfa 0%, #f6f1e9 48%, #eee6db 100%);
   box-shadow: inset 0 0 0 1px rgba(42, 35, 32, 0.07);
   overflow: hidden;
 }
@@ -1527,7 +1445,7 @@ p {
   z-index: -2;
   background: radial-gradient(
     52% 66% at var(--bx, 24%) var(--by, 78%),
-    var(--bloom, rgba(74, 118, 82, 0.42)),
+    var(--bloom, rgba(94, 48, 35, 0.30)),
     transparent 66%
   );
 }
@@ -1538,16 +1456,10 @@ p {
   top: var(--y);
   display: block;
   width: var(--s);
+  aspect-ratio: 1;
   translate: -50% -50%;
-  filter: drop-shadow(0 3px 6px rgba(42, 35, 32, 0.22));
-}
-
-.mini__ico .pix,
-.mini__ico .vox {
-  display: block;
-  width: 100%;
-  height: 100%;
-  filter: none;
+  color: var(--green);
+  filter: blur(var(--b, 0px));
 }
 
 /* Hairlines from the one thing to the several, or the several to the one. */
@@ -1752,17 +1664,16 @@ p {
 /* Sunken well, the inverse bevel of the frame. */
 .dlg__well {
   flex: 1 1 auto;
-  height: 1.125rem;
-  padding: 2px;
-  background: var(--chrome-face);
-  box-shadow:
-    inset 1.5px 1.5px 0 var(--chrome-shadow),
-    inset -1.5px -1.5px 0 var(--chrome-light);
+  height: 0.5rem;
+  border-radius: var(--pill);
+  background: rgba(46, 30, 24, 0.12);
+  overflow: hidden;
 }
 
 .dlg__fill {
   display: block;
   height: 100%;
+  border-radius: var(--pill);
   background: var(--green);
   animation: dlg-fill 1100ms var(--ease) both;
 }
@@ -2001,7 +1912,6 @@ p {
   padding: clamp(3.5rem, 7vw, 6rem) var(--gutter);
   background: var(--green);
   color: var(--on-dark);
-  border: 3px solid var(--chrome-face);
 }
 
 .chatband__inner {
@@ -2131,11 +2041,9 @@ p {
   height: 1rem;
 }
 
-.chatband__chip-ico .pix,
-.chatband__tool .pix {
-  width: 100%;
-  height: 100%;
-  filter: none;
+.chatband__chip-ico,
+.chatband__tool {
+  color: var(--green);
 }
 
 .chatband__tools {
@@ -2225,7 +2133,7 @@ p {
 }
 
 .shift__art--today {
-  background: #e6e3d8;
+  background: #e8e0d7;
 }
 
 /* The same frosted room as the step scenes. The hourglass is drawn as two
@@ -2233,7 +2141,7 @@ p {
    at the waist is a shape, and layered gradients could only approximate it. */
 .shift__art--flow {
   isolation: isolate;
-  background: linear-gradient(158deg, #fefdfa 0%, #f6f3ea 46%, #eeeadd 100%);
+  background: linear-gradient(158deg, #fffdfa 0%, #f7f2ea 46%, #efe7dc 100%);
   box-shadow: inset 0 0 0 1px rgba(42, 35, 32, 0.06);
 }
 
@@ -2243,8 +2151,8 @@ p {
   inset: -12%;
   z-index: -2;
   background:
-    radial-gradient(42% 66% at 4% 50%, rgba(74, 118, 82, 0.4), transparent 68%),
-    radial-gradient(42% 66% at 96% 50%, rgba(253, 96, 20, 0.32), transparent 68%),
+    radial-gradient(42% 66% at 4% 50%, rgba(94, 48, 35, 0.28), transparent 68%),
+    radial-gradient(42% 66% at 96% 50%, rgba(168, 118, 60, 0.36), transparent 68%),
     radial-gradient(30% 40% at 50% 50%, rgba(255, 255, 255, 0.85), transparent 72%);
 }
 
@@ -2330,9 +2238,9 @@ p {
   position: relative;
   padding: 1.9cqw 3.4cqw;
   border-radius: 999px;
-  background: #fbe8e5;
-  box-shadow: inset 0 0 0 1px rgba(196, 78, 66, 0.42);
-  color: #b8483c;
+  background: #f3e6e1;
+  box-shadow: inset 0 0 0 1px rgba(140, 74, 58, 0.34);
+  color: #8c4a3a;
   font-size: max(0.6875rem, 3.4cqw);
   font-weight: 500;
   line-height: 1;
@@ -2347,7 +2255,7 @@ p {
   left: 100%;
   top: 50%;
   width: 3.4cqw;
-  border-top: 1px dashed rgba(196, 78, 66, 0.5);
+  border-top: 1px dashed rgba(140, 74, 58, 0.4);
 }
 
 .today__note {
@@ -2376,7 +2284,7 @@ p {
   position: absolute;
   inset: 0;
   border-radius: 1cqw;
-  background: #f6f3ec;
+  background: #f8f4ed;
   box-shadow: inset 0 0 0 1px rgba(126, 111, 92, 0.18);
 }
 
@@ -2411,7 +2319,7 @@ p {
   width: var(--w);
   height: 1.9cqw;
   border-radius: 999px;
-  background: #ded7c8;
+  background: #e0d6ca;
 }
 
 /* --- With Hoshii: everything converges ------------------------------------ */
@@ -2441,7 +2349,7 @@ p {
    reads as "in, decided, out". */
 .flow__pulses path {
   fill: none;
-  stroke: rgba(47, 145, 71, 0.9);
+  stroke: rgba(94, 48, 35, 0.85);
   stroke-width: 1.6;
   stroke-linecap: round;
   /* The gap has to be far longer than the path, not equal to it. At `7 100`
@@ -2456,7 +2364,7 @@ p {
 }
 
 .flow__pulses path:nth-child(n + 4) {
-  stroke: rgba(253, 75, 1, 0.95);
+  stroke: rgba(168, 118, 60, 0.95);
 }
 
 /* 7 puts the dash just before the start, -107 just past the end, so it crosses
@@ -2489,26 +2397,22 @@ p {
    the reference does, but it only survives on solid silhouettes; outline art
    like ours turns into an unreadable tray. Non-square now, so height is free. */
 .flow__glyph {
-  display: block;
-  width: 16cqw;
+  display: grid;
+  place-items: center;
+  width: 13cqw;
+  height: 13cqw;
   margin-inline: auto;
+  border-radius: 3.6cqw;
+  background: var(--white);
+  color: var(--green);
+  box-shadow:
+    inset 0 0 0 1px rgba(46, 30, 24, 0.09),
+    0 1cqw 2.4cqw rgba(46, 30, 24, 0.12);
 }
 
 .flow__glyph .vox {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-.pix,
-.flow__glyph .vox {
-  width: 100%;
-  height: 100%;
-  filter: drop-shadow(0 0.7cqw 1.2cqw rgba(42, 35, 32, 0.26));
-}
-
-.flow__glyph .vox {
-  height: auto;
+  width: 56%;
+  height: 56%;
 }
 
 /* Positions match the wire endpoints in the 400 × 260 viewBox above: inputs on
