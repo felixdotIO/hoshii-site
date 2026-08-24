@@ -70,15 +70,11 @@
   --caption: #857065; /* Captions     */
   --sage: #c4b7b0; /* Fills        */
   --white: #ffffff;
-  /* Petrol. Brown is a desaturated orange, so its complement is a blue-cyan —
-     the family was right, the value was not: #96b3d3 is 2.11:1 on white, and
-     every headline accent on this page sits on white. No single value clears
-     both grounds, so the accent is two values of one hue. */
-  --accent: #2a6b7a; /* on light: 5.87:1 */
-  --accent-soft: #9ec9d3; /* on espresso: 8.06:1 */
-  /* #96b3d3 is about 2:1 on the white ground — fine as a fill, unreadable as
-     type. Anything set in the accent on a light band uses this instead. */
-  --accent-ink: #40658c;
+  /* Deep rust. Chosen by measurement: of the non-blue candidates it is the
+     only one that clears both grounds on a single value — 4.57:1 on white,
+     3.07:1 on the espresso bands — so the accent is one token again rather
+     than a light/dark pair. */
+  --accent: #c44e2c;
 
   --green-deep: #24140f;
 
@@ -545,7 +541,7 @@ p {
 .hero__title em {
   font-style: normal;
   font-weight: 500;
-  color: var(--accent-ink);
+  color: var(--accent);
 }
 
 .hero__sub {
@@ -1480,7 +1476,7 @@ p {
 .steps__title em {
   font-style: normal;
   font-weight: 500;
-  color: var(--accent-ink);
+  color: var(--accent);
 }
 
 .steps__list {
@@ -2137,7 +2133,7 @@ p {
 .closer__title em {
   font-style: normal;
   font-weight: 500;
-  color: var(--accent-soft);
+  color: var(--accent);
 }
 
 .chatband__lead {
@@ -2282,7 +2278,7 @@ p {
 .shift__title em {
   font-style: normal;
   font-weight: 500;
-  color: var(--accent-ink);
+  color: var(--accent);
 }
 
 .shift__pair {
