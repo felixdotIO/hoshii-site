@@ -641,10 +641,37 @@ p {
     color: var(--ink);
   }
 
+  .hero__opt {
+    position: relative;
+  }
+
   .hero__opt[aria-pressed='true'] {
     background: none;
     color: var(--ink);
     font-weight: 700;
+  }
+
+  /* Hovering the photograph reveals a hollow mark at the position you are not
+     on, so the other state announces itself before you go looking for it.
+     Absolutely placed, so it costs the row no layout. */
+  .hero__opt::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--bone);
+    box-shadow: 0 0 0 0.3125rem var(--bone), inset 0 0 0 1.5px rgba(38, 24, 20, 0.42);
+    translate: 50% -50%;
+    opacity: 0;
+    transition: opacity 240ms var(--ease);
+  }
+
+  .hero__shots:hover ~ .hero__switch .hero__opt[aria-pressed='false']::after,
+  .hero__switch:hover .hero__opt[aria-pressed='false']::after {
+    opacity: 1;
   }
 
   /* One indicator that travels, rather than two dots that light up: the
