@@ -4,13 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>
-      Hoshii | The smart inbox that works for you
+      Hoshii | The intelligent inbox that keeps work moving
     </title>
     <meta
       name="description"
-      content="The smart inbox that works for you. Hoshii is your team&rsquo;s proactive inbox that gets better every day. Reply faster, reduce manual work."
+      content="The intelligent inbox that keeps work moving. Hoshii is your team&rsquo;s proactive inbox that gets better every day. Reply faster, reduce manual work."
     />
-    <link rel="stylesheet" href="styles.css?v=219" />
+    <link rel="stylesheet" href="styles.css?v=222" />
   </head>
   <body>
     <svg class="iconsprite" aria-hidden="true" focusable="false">
@@ -82,7 +82,7 @@
         </nav>
 
         <div class="titlebar__actions">
-          <a class="btn-os btn-os--accent" href="#demo">Book a demo</a>
+          <a class="btn-os btn-os--accent" href="#demo">Book a demo<span class="btn-os__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg></span></a>
 
           <button
             class="menu-toggle"
@@ -111,8 +111,8 @@
         <div class="hero__grid">
           <div class="hero__copy">
             <h1 class="hero__title" id="hero-title">
-              The smart inbox<br />
-              <em>that works for you.</em>
+              The intelligent inbox<br />
+              <em>that keeps work moving.</em>
             </h1>
 
             <p class="hero__sub">
@@ -120,12 +120,12 @@
               day. Reply faster, reduce manual work.
             </p>
 
-            <a class="btn-os btn-os--accent btn-os--lg" href="#demo">Book a demo</a>
+            <a class="btn-os btn-os--accent btn-os--lg" href="#demo">Book a demo<span class="btn-os__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg></span></a>
           </div>
 
           <div class="hero__demo">
 
-            <figure class="hero__shots is-hoshii">
+            <figure class="hero__shots">
               <img
                 class="hero__shot hero__shot--paper"
                 src="assets/img/desk-paper.jpg"
@@ -143,11 +143,11 @@
                 fetchpriority="high"
               />
             </figure>
-            <div class="hero__switch" role="group" aria-label="Compare the inbox">
-              <button class="hero__opt" type="button" data-state="plain">
+            <div class="hero__switch" data-active="plain" role="group" aria-label="Compare the inbox">
+              <button class="hero__opt" type="button" data-state="plain" aria-pressed="true">
                 Without Hoshii
               </button>
-              <button class="hero__opt" type="button" data-state="hoshii" aria-pressed="true">
+              <button class="hero__opt" type="button" data-state="hoshii">
                 With Hoshii
               </button>
             </div>
@@ -879,7 +879,7 @@
                 was built for it.
               </p>
             </div>
-            <a class="btn-os btn-os--accent roles__cta" href="#demo">Book a demo</a>
+            <a class="btn-os btn-os--accent roles__cta" href="#demo">Book a demo<span class="btn-os__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg></span></a>
           </header>
 
           <ul class="roles__grid">
@@ -947,9 +947,7 @@
             We&rsquo;ll show you exactly what Hoshii does with your operations,
             live, in 30 minutes.
           </p>
-          <a class="btn-os btn-os--accent btn-os--lg closer__cta" href="#demo">
-            Book a demo
-          </a>
+          <a class="btn-os btn-os--accent btn-os--lg closer__cta" href="#demo">Book a demo<span class="btn-os__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg></span></a>
         </div>
       </section>
 
@@ -1179,6 +1177,7 @@
       // never jump when you flip it.
       const heroOpts = [...document.querySelectorAll('.hero__opt')];
       const heroInbox = document.querySelector('.hero__shots');
+      const heroSwitch = document.querySelector('.hero__switch');
 
       if (heroOpts.length && heroInbox) {
         heroOpts.forEach((opt) => {
@@ -1187,10 +1186,11 @@
               o.setAttribute('aria-pressed', String(o === opt))
             );
             heroInbox.classList.toggle('is-hoshii', opt.dataset.state === 'hoshii');
+            heroSwitch.dataset.active = opt.dataset.state;
           });
         });
         heroOpts.forEach((o) =>
-          o.setAttribute('aria-pressed', String(o.dataset.state === 'hoshii'))
+          o.setAttribute('aria-pressed', String(o.dataset.state === 'plain'))
         );
       }
 
@@ -1225,7 +1225,7 @@
             />
           </a>
           <p class="foot__line">
-            The smart inbox that works for you. Built in Zurich for the teams
+            The intelligent inbox that keeps work moving. Built in Zurich for the teams
             that keep goods moving.
           </p>
         </div>
