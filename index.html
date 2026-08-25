@@ -10,7 +10,7 @@
       name="description"
       content="The intelligent inbox that keeps work moving. Hoshii is your team&rsquo;s proactive inbox that gets better every day. Reply faster, reduce manual work."
     />
-    <link rel="stylesheet" href="styles.css?v=258" />
+    <link rel="stylesheet" href="styles.css?v=260" />
   </head>
   <body>
     <svg class="iconsprite" aria-hidden="true" focusable="false">
@@ -1020,6 +1020,12 @@
 
     </main>
 
+    <!-- Follows the pointer across the industry panels, in place of the arrow -->
+    <div class="cursorpill" aria-hidden="true">
+      Book a demo
+      <svg viewBox="0 0 16 16" width="13" height="13"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+
     <script>
       document
         .querySelector('.announce__close')
@@ -1290,6 +1296,61 @@
         toggle.setAttribute('aria-expanded', String(!open));
         mobileNav.hidden = open;
       });
+
+      // --- The industry panels' cursor -----------------------------------
+      // The panels are links, and the pointer should say where to. Replaces the
+      // arrow with a label that follows it.
+      // Gated on a fine pointer that can hover: on touch there is no cursor to
+      // replace, and the panels are display:none there anyway. The `cursor:
+      // none` that hides the arrow is applied from here rather than in the
+      // stylesheet, so a failed script leaves a visible cursor rather than none.
+      const pill = document.querySelector('.cursorpill');
+      const pillZone = document.querySelector('.pitch__roles');
+
+      if (
+        pill &&
+        pillZone &&
+        window.matchMedia('(hover: hover) and (pointer: fine)').matches
+      ) {
+        document.documentElement.classList.add('has-cursorpill');
+
+        let px = 0;
+        let py = 0;
+        let frame = null;
+
+        function place() {
+          frame = null;
+          // Flip to the left of the pointer near the right edge, so a fixed
+          // element cannot push the viewport wider than it is.
+          const w = pill.offsetWidth;
+          const flip = px + w + 26 > window.innerWidth;
+          pill.style.translate =
+            (flip ? px - w - 14 : px + 14) + 'px ' + (py + 16) + 'px';
+        }
+
+        function track(e) {
+          px = e.clientX;
+          py = e.clientY;
+          if (!frame) frame = requestAnimationFrame(place);
+        }
+
+        pillZone.addEventListener('pointerenter', (e) => {
+          track(e);
+          place();
+          pill.classList.add('is-on');
+        });
+        pillZone.addEventListener('pointermove', track);
+        pillZone.addEventListener('pointerleave', () => {
+          pill.classList.remove('is-on');
+        });
+        // Scrolling can move the panels out from under a stationary pointer,
+        // which fires no pointer event of its own.
+        window.addEventListener(
+          'scroll',
+          () => pill.classList.remove('is-on'),
+          { passive: true }
+        );
+      }
     </script>
     <!-- Footer ------------------------------------------------------------ -->
     <footer class="foot">
