@@ -206,6 +206,13 @@ p {
   line-height: 1.35;
 }
 
+/* The event name leads, so the bar says what it is before it says why. Bold
+   rather than a colour: the bar is already cream, and a second colour in a
+   13px line reads as clutter. */
+.announce__tag {
+  font-weight: 700;
+}
+
 .announce__link {
   font-weight: 700;
   text-decoration: underline;
@@ -2992,23 +2999,71 @@ p {
 /* No hover to drive the swap on touch, so the six texts would be unreachable.
    Show them as a plain list under the panels instead and let the paragraph
    keep its place. */
+/* On touch the panels used to be hidden and the six lines shown as a list. That
+   was the wrong trade: the role name lives on the panel, so the list came out
+   as six unlabelled paragraphs each opening "Hoshii is for you if", with no way
+   to tell which industry any of them described.
+   The panels are the part that carries meaning here, so they stay and become a
+   swipeable row. The hover-depth lines are hidden: there is no hover to reveal
+   them with, and the name plus the photograph is what this section is for. They
+   stay in the document, so nothing is lost to a crawler or a reader. */
 @media (hover: none) {
-  .pitch__lede {
-    display: block;
-  }
-
   .pswap {
-    opacity: 1;
-    translate: 0 0;
-    margin-top: 1.25rem;
-    font-size: 1.0625rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: var(--on-dark-dim);
+    display: none;
   }
 
   .pitch__roles {
+    display: flex;
+    /* Bleeds to both edges of the slab so the row reads as continuing past
+       them, then pads the ends back in so the first and last card still clear
+       the edge when parked. */
+    margin-inline: calc(-1 * clamp(2rem, 4vw, 3.75rem));
+    padding-inline: clamp(2rem, 4vw, 3.75rem);
+    gap: 0.625rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: clamp(2rem, 4vw, 3.75rem);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .pitch__roles::-webkit-scrollbar {
     display: none;
+  }
+
+  .prole-cell {
+    flex: 0 0 72%;
+    scroll-snap-align: start;
+  }
+
+  .prole {
+    min-height: clamp(8rem, 34vw, 11rem);
+  }
+}
+
+/* --- Step scenes on touch ---
+   Three full-width plates per step, six steps over, is eighteen screens of
+   scroll. Same gesture as the industries row instead. */
+@media (hover: none) and (max-width: 48em) {
+  .minis {
+    display: flex;
+    margin-inline: calc(-1 * var(--gutter));
+    padding-inline: var(--gutter);
+    gap: 0.75rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .minis::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mini {
+    flex: 0 0 76%;
+    scroll-snap-align: start;
   }
 }
 
@@ -3127,13 +3182,6 @@ p {
   line-height: 1.4;
 }
 
-.origin__arrow {
-  align-self: center;
-  display: grid;
-  place-items: center;
-  color: var(--accent-deep);
-}
-
 .trust__badges {
   display: flex;
   flex-wrap: wrap;
@@ -3150,13 +3198,35 @@ p {
   gap: 0.4375rem;
 }
 
-/* A hairline between neighbours rather than a frame around each. Only between
-   badges: the origin row and the badge row wrap onto separate lines at this
-   column width, so a divider on the list itself hung off the front of the
-   second line with nothing to its left. */
+/* A hairline between neighbours rather than a frame around each. */
 .badge + .badge {
   padding-left: 1.125rem;
   border-left: 1px solid rgba(38, 24, 20, 0.16);
+}
+
+/* Once the row wraps, every divider except the first line's lands at the start
+   of a line with nothing to its left, which is what made this look skewed on a
+   phone. Below the width where all three still fit, they stack and the
+   dividers come off entirely. */
+@media (max-width: 46em) {
+  .trust__badges {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4375rem;
+  }
+
+  .badge + .badge {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+/* At 3.56:1 the strip is barely 100px tall on a phone and the towers stop
+   reading. Squarer below the two-column break. */
+@media (max-width: 64em) {
+  .trust__strip {
+    aspect-ratio: 16 / 9;
+  }
 }
 
 .badge__ico {
@@ -3232,4 +3302,27 @@ p {
     scale: 1;
     transition: none;
   }
+}
+
+/* --- The title bar's CTA treatment, on a light ground --------------------- */
+
+/* The inversion above is scoped to .titlebar and .closer, where a bone pill is
+   the highest-contrast object in a dark band. The hero wants the same look but
+   sits on the bone ground, where that pill has almost no edge, so this one
+   carries a hairline ring. Without it the button reads as floating text with a
+   badge next to it. */
+.btn-os--light {
+  background: var(--white);
+  color: var(--green);
+  box-shadow: inset 0 0 0 1px rgba(38, 24, 20, 0.14);
+}
+
+.btn-os--light:hover {
+  background: var(--white);
+  box-shadow: inset 0 0 0 1px rgba(38, 24, 20, 0.3);
+}
+
+.btn-os--light .btn-os__go {
+  background: var(--green);
+  color: var(--bone);
 }
