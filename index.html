@@ -10,7 +10,7 @@
       name="description"
       content="The intelligent inbox that keeps work moving. Hoshii is your team&rsquo;s proactive inbox that gets better every day. Reply faster, reduce manual work."
     />
-    <link rel="stylesheet" href="styles.css?v=228" />
+    <link rel="stylesheet" href="styles.css?v=258" />
   </head>
   <body>
     <svg class="iconsprite" aria-hidden="true" focusable="false">
@@ -128,18 +128,18 @@
             <figure class="hero__shots" data-show="plain">
               <img
                 class="hero__shot hero__shot--paper"
-                src="assets/img/desk-paper.jpg"
-                alt="Four people at a table buried under stacks of paper orders."
-                width="1096"
-                height="1435"
+                src="assets/img/desk-storm.jpg"
+                alt="A woman at her desk as paperwork, invoices and a calculator fly through the air around her."
+                width="1023"
+                height="1537"
                 fetchpriority="high"
               />
               <img
                 class="hero__shot hero__shot--clear"
-                src="assets/img/desk-clear.jpg"
-                alt="The same four people at the same table, working on laptops with the paper gone."
-                width="1086"
-                height="1448"
+                src="assets/img/desk-calm.jpg"
+                alt="The same woman at the same desk, the paper gone, sitting back with a coffee."
+                width="1023"
+                height="1537"
                 fetchpriority="high"
               />
             </figure>
@@ -229,32 +229,102 @@
       <!-- Pitch band ------------------------------------------------------ -->
       <section class="pitch guides" aria-labelledby="pitch-text">
         <div class="pitch__panel">
-          <p class="pitch__text" id="pitch-text">
-            <span class="pitch__brand">Hoshii</span> is the AI&#8209;native inbox purpose&#8209;built to enable
-            B2B operations teams to communicate faster and with fewer errors. We
-            proactively draft client&#8209;specific replies, suggest areas of
-            improvement and take care of the repetitive but necessary work in
-            your day.
-          </p>
-
-          <div class="pitch__art" aria-hidden="true">
-            <img
-              class="pitch__art-back"
-              src="assets/img/dialog-learning.png"
-              alt=""
-              width="930"
-              height="491"
-              loading="lazy"
-            />
-            <img
-              class="pitch__art-front"
-              src="assets/img/dialog-noticed.png"
-              alt=""
-              width="1088"
-              height="532"
-              loading="lazy"
-            />
+          <div class="pitch__lede">
+            <p class="pitch__text" id="pitch-text">
+              <span class="pitch__brand">Hoshii</span> is the AI&#8209;native inbox purpose&#8209;built to enable
+              B2B operations teams to communicate faster and with fewer errors. We
+              proactively draft client&#8209;specific replies, suggest areas of
+              improvement and take care of the repetitive but necessary work in
+              your day.
+            </p>
+            <p class="pswap" id="pswap-1" data-role="1">
+              <span class="pswap__cue">Hoshii is for you if&hellip;</span>
+              hundreds of mails land in the shared inbox and your own, and half the week goes on work that never quite feels productive.
+            </p>
+            <p class="pswap" id="pswap-2" data-role="2">
+              <span class="pswap__cue">Hoshii is for you if&hellip;</span>
+              price requests stack up while you are in calls and on site, and the quote that takes ten minutes to write is the one that waits two days.
+            </p>
+            <p class="pswap" id="pswap-3" data-role="3">
+              <span class="pswap__cue">Hoshii is for you if&hellip;</span>
+              the same questions come in all day, the history sits in five different tools, and the hard cases wait while you answer the easy ones again.
+            </p>
+            <p class="pswap" id="pswap-4" data-role="4">
+              <span class="pswap__cue">Hoshii is for you if&hellip;</span>
+              each delivery question means the ERP, the carrier portal and the mail, and you are what holds the customer and the forwarder together.
+            </p>
+            <p class="pswap" id="pswap-5" data-role="5">
+              <span class="pswap__cue">Hoshii is for you if&hellip;</span>
+              invoice copies, payment queries and the dunning run all share one inbox, and a good part of the month goes on chasing instead of closing.
+            </p>
+            <p class="pswap" id="pswap-6" data-role="6">
+              <span class="pswap__cue">Hoshii is for you if&hellip;</span>
+              you piece the week together from what people remember instead of numbers, and problems reach you when they escalate instead of when they start.
+            </p>
           </div>
+
+          <ul class="pitch__roles">
+            <li class="prole-cell">
+              <a class="prole" href="#demo" data-role="1"
+                      aria-describedby="pswap-1"
+                      style="--bx:18%;--by:24%;--bloom:rgba(196,78,44,.30);--shot:url('assets/img/prof-orderdesk.jpg')">
+                <span class="prole__ico" aria-hidden="true">
+                  <svg class="vox" viewBox="0 0 24 24"><use href="#vox-doc"/></svg>
+                </span>
+                <span class="prole__label">Order desk &amp; inbound sales</span>
+              </a>
+            </li>
+            <li class="prole-cell">
+              <a class="prole" href="#demo" data-role="2"
+                      aria-describedby="pswap-2"
+                      style="--blur:3px;--bx:78%;--by:22%;--bloom:rgba(214,150,90,.24);--shot:url('assets/img/prof-sales.jpg')">
+                <span class="prole__ico" aria-hidden="true">
+                  <svg class="vox" viewBox="0 0 24 24"><use href="#vox-sent"/></svg>
+                </span>
+                <span class="prole__label">Sales &amp; account management</span>
+              </a>
+            </li>
+            <li class="prole-cell">
+              <a class="prole" href="#demo" data-role="3"
+                      aria-describedby="pswap-3"
+                      style="--bx:26%;--by:74%;--bloom:rgba(148,164,140,.24);--shot:url('assets/img/prof-service.jpg')">
+                <span class="prole__ico" aria-hidden="true">
+                  <svg class="vox" viewBox="0 0 24 24"><use href="#vox-chat"/></svg>
+                </span>
+                <span class="prole__label">Customer service</span>
+              </a>
+            </li>
+            <li class="prole-cell">
+              <a class="prole" href="#demo" data-role="4"
+                      aria-describedby="pswap-4"
+                      style="--bx:72%;--by:70%;--bloom:rgba(160,140,190,.20);--shot:url('assets/img/prof-logistics.jpg')">
+                <span class="prole__ico" aria-hidden="true">
+                  <svg class="vox" viewBox="0 0 24 24"><use href="#vox-parcel"/></svg>
+                </span>
+                <span class="prole__label">Logistics &amp; dispatch</span>
+              </a>
+            </li>
+            <li class="prole-cell">
+              <a class="prole" href="#demo" data-role="5"
+                      aria-describedby="pswap-5"
+                      style="--bx:22%;--by:40%;--bloom:rgba(196,78,44,.22);--shot:url('assets/img/prof-finance.jpg')">
+                <span class="prole__ico" aria-hidden="true">
+                  <svg class="vox" viewBox="0 0 24 24"><use href="#vox-money"/></svg>
+                </span>
+                <span class="prole__label">Finance &amp; accounts receivable</span>
+              </a>
+            </li>
+            <li class="prole-cell">
+              <a class="prole" href="#demo" data-role="6"
+                      aria-describedby="pswap-6"
+                      style="--blur:3px;--bx:76%;--by:46%;--bloom:rgba(120,150,170,.22);--shot:url('assets/img/prof-leads.jpg')">
+                <span class="prole__ico" aria-hidden="true">
+                  <svg class="vox" viewBox="0 0 24 24"><use href="#vox-bars"/></svg>
+                </span>
+                <span class="prole__label">Team leads &amp; operations</span>
+              </a>
+            </li>
+          </ul>
         </div>
       </section>
 
@@ -284,6 +354,178 @@
             </span>
           </figcaption>
         </figure>
+      </section>
+      <section class="shift guides" aria-labelledby="shift-title">
+        <div class="shift__inner">
+          <header class="shift__head">
+            <h2 class="shift__title" id="shift-title">
+              Same team, same orders.
+              <em>Two different days.</em>
+            </h2>
+          </header>
+
+          <div class="shift__pair">
+            <!-- Today: a line that never closes ---------------------------- -->
+            <article class="shift__card">
+              <div class="shift__art shift__art--today">
+                <div class="today" aria-hidden="true">
+                  <div class="today__rail">
+                    <div class="today__belt">
+                    <ol class="today__chips">
+                      <li class="today__chip">Open email</li>
+                      <li class="today__chip">Read the order</li>
+                      <li class="today__chip">Look up customer</li>
+                      <li class="today__chip">Retype lines</li>
+                      <li class="today__chip">Post to ERP</li>
+                      <li class="today__chip">Write confirmation</li>
+                      <li class="today__chip">Send</li>
+                    </ol>
+                    <ol class="today__chips" aria-hidden="true">
+                      <li class="today__chip">Open email</li>
+                      <li class="today__chip">Read the order</li>
+                      <li class="today__chip">Look up customer</li>
+                      <li class="today__chip">Retype lines</li>
+                      <li class="today__chip">Post to ERP</li>
+                      <li class="today__chip">Write confirmation</li>
+                      <li class="today__chip">Send</li>
+                    </ol>
+                    </div>
+                  </div>
+
+                  <p class="today__note">
+                    <span class="today__count">7+</span>
+                    steps. Then again, for the next one.
+                  </p>
+
+                  <div class="today__stack">
+                    <div class="today__sheet today__sheet--c"></div>
+                    <div class="today__sheet today__sheet--b"></div>
+                    <div class="today__sheet today__sheet--a">
+                      <p class="today__sheet-title">Order &middot; 4417</p>
+                      <span class="today__bar" style="--w: 82%"></span>
+                      <span class="today__bar" style="--w: 64%"></span>
+                      <span class="today__bar" style="--w: 74%"></span>
+                      <span class="today__bar" style="--w: 48%"></span>
+                      <span class="today__bar" style="--w: 70%"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <h3 class="shift__label">Your inbox today</h3>
+              <p class="shift__body">
+                Open the mail, look up the customer, check stock, retype the
+                lines, post to the ERP. Seven or more steps per order, held
+                together by whoever has done it longest. Nothing you fix today
+                makes tomorrow faster.
+              </p>
+            </article>
+
+            <!-- With Hoshii: everything converges -------------------------- -->
+            <article class="shift__card">
+              <div class="shift__art shift__art--flow">
+                <div class="flow" aria-hidden="true">
+                  <svg class="flow__glow" viewBox="0 0 400 285">
+                    <defs>
+                      <linearGradient id="flow-in" x1="0" x2="1" y1="0" y2="0">
+                        <stop offset="0" stop-color="#3b241f" stop-opacity=".34"/>
+                        <stop offset=".45" stop-color="#6d493f" stop-opacity=".2"/>
+                        <stop offset="1" stop-color="#c4b7b0" stop-opacity="0"/>
+                      </linearGradient>
+                      <linearGradient id="flow-out" x1="1" x2="0" y1="0" y2="0">
+                        <stop offset="0" stop-color="#96b3d3" stop-opacity=".3"/>
+                        <stop offset=".45" stop-color="#b9cee4" stop-opacity=".17"/>
+                        <stop offset="1" stop-color="#96b3d3" stop-opacity="0"/>
+                      </linearGradient>
+                      <radialGradient id="flow-core">
+                        <stop offset="0" stop-color="#ffffff" stop-opacity=".95"/>
+                        <stop offset=".5" stop-color="#ffffff" stop-opacity=".45"/>
+                        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+                      </radialGradient>
+                      <filter id="flow-soft" x="-25%" y="-35%" width="150%" height="170%" color-interpolation-filters="sRGB">
+                        <feGaussianBlur stdDeviation="9"/>
+                      </filter>
+                    </defs>
+                    <g filter="url(#flow-soft)">
+                      <path d="M-14 6c74 0 128 92 196 112v39C114 177 60 279-14 279Z" fill="url(#flow-in)"/>
+                      <path d="M414 6c-74 0-128 92-196 112v39c68 20 122 122 196 122Z" fill="url(#flow-out)"/>
+                      <ellipse cx="200" cy="142.5" rx="86" ry="50" fill="url(#flow-core)"/>
+                    </g>
+                  </svg>
+
+                  <svg class="flow__wires" viewBox="0 0 400 285">
+                    <g class="flow__lines">
+                      <path d="M87 57C124 57 130 142.5 161 142.5"/>
+                      <path d="M87 142.5H161"/>
+                      <path d="M87 228C124 228 130 142.5 161 142.5"/>
+                      <path d="M239 142.5C270 142.5 276 57 313 57"/>
+                      <path d="M239 142.5H313"/>
+                      <path d="M239 142.5C270 142.5 276 228 313 228"/>
+                    </g>
+                    <g class="flow__pulses">
+                      <path d="M87 57C124 57 130 142.5 161 142.5" style="--d: 0s" pathLength="100"/>
+                      <path d="M87 142.5H161" style="--d: 1.1s" pathLength="100"/>
+                      <path d="M87 228C124 228 130 142.5 161 142.5" style="--d: 2.2s" pathLength="100"/>
+                      <path d="M239 142.5C270 142.5 276 57 313 57" style="--d: .55s" pathLength="100"/>
+                      <path d="M239 142.5H313" style="--d: 1.65s" pathLength="100"/>
+                      <path d="M239 142.5C270 142.5 276 228 313 228" style="--d: 2.75s" pathLength="100"/>
+                    </g>
+                  </svg>
+
+                  <p class="flow__tile flow__tile--i1">
+                    <span class="flow__glyph">
+                      <svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#vox-mail"/></svg>
+                    </span>
+                  </p>
+                  <p class="flow__tile flow__tile--i2">
+                    <span class="flow__glyph">
+                      <svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#vox-chat"/></svg>
+                    </span>
+                  </p>
+                  <p class="flow__tile flow__tile--i3">
+                    <span class="flow__glyph">
+                      <svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#vox-doc"/></svg>
+                    </span>
+                  </p>
+
+                  <p class="flow__core">
+                    <svg class="flow__mark" viewBox="0 0 1259 1756" fill="currentColor">
+                      <rect x="0" y="0" width="1259" height="413"/>
+                      <rect x="184" y="605" width="403" height="1151"/>
+                      <rect x="707" y="605" width="402" height="1151"/>
+                    </svg>
+                  </p>
+
+                  <p class="flow__tile flow__tile--o1">
+                    <span class="flow__glyph">
+                      <svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#vox-check"/></svg>
+                    </span>
+                  </p>
+                  <p class="flow__tile flow__tile--o2">
+                    <span class="flow__glyph">
+                      <svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#vox-heart"/></svg>
+                    </span>
+                  </p>
+                  <p class="flow__tile flow__tile--o3">
+                    <span class="flow__glyph">
+                      <svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#vox-money"/></svg>
+                    </span>
+                  </p>
+                </div>
+              </div>
+
+              <h3 class="shift__label">Your inbox with Hoshii</h3>
+              <p class="shift__body">
+                Hoshii is the AI&#8209;native inbox for B2B operations teams.
+                Every channel lands in one place with the work already started:
+                context looked up, order drafted, reply written. You approve, it
+                learns, and because
+                <strong>one system covers the flow end to end</strong> the gains
+                compound instead of stopping at every handover.
+              </p>
+            </article>
+          </div>
+        </div>
       </section>
       <!-- How it works — the sequence, in order ---------------------------- -->
       <section class="steps guides" aria-labelledby="steps-title">
@@ -638,178 +880,6 @@
       </section>
 
       <!-- What changes: the pile against the flow --------------------------- -->
-      <section class="shift guides" aria-labelledby="shift-title">
-        <div class="shift__inner">
-          <header class="shift__head">
-            <h2 class="shift__title" id="shift-title">
-              Same team, same orders.
-              <em>Two different days.</em>
-            </h2>
-          </header>
-
-          <div class="shift__pair">
-            <!-- Today: a line that never closes ---------------------------- -->
-            <article class="shift__card">
-              <div class="shift__art shift__art--today">
-                <div class="today" aria-hidden="true">
-                  <div class="today__rail">
-                    <div class="today__belt">
-                    <ol class="today__chips">
-                      <li class="today__chip">Open email</li>
-                      <li class="today__chip">Read the order</li>
-                      <li class="today__chip">Look up customer</li>
-                      <li class="today__chip">Retype lines</li>
-                      <li class="today__chip">Post to ERP</li>
-                      <li class="today__chip">Write confirmation</li>
-                      <li class="today__chip">Send</li>
-                    </ol>
-                    <ol class="today__chips" aria-hidden="true">
-                      <li class="today__chip">Open email</li>
-                      <li class="today__chip">Read the order</li>
-                      <li class="today__chip">Look up customer</li>
-                      <li class="today__chip">Retype lines</li>
-                      <li class="today__chip">Post to ERP</li>
-                      <li class="today__chip">Write confirmation</li>
-                      <li class="today__chip">Send</li>
-                    </ol>
-                    </div>
-                  </div>
-
-                  <p class="today__note">
-                    <span class="today__count">7+</span>
-                    steps. Then again, for the next one.
-                  </p>
-
-                  <div class="today__stack">
-                    <div class="today__sheet today__sheet--c"></div>
-                    <div class="today__sheet today__sheet--b"></div>
-                    <div class="today__sheet today__sheet--a">
-                      <p class="today__sheet-title">Order &middot; 4417</p>
-                      <span class="today__bar" style="--w: 82%"></span>
-                      <span class="today__bar" style="--w: 64%"></span>
-                      <span class="today__bar" style="--w: 74%"></span>
-                      <span class="today__bar" style="--w: 48%"></span>
-                      <span class="today__bar" style="--w: 70%"></span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <h3 class="shift__label">Your inbox today</h3>
-              <p class="shift__body">
-                Open the mail, look up the customer, check stock, retype the
-                lines, post to the ERP. Seven or more steps per order, held
-                together by whoever has done it longest. Nothing you fix today
-                makes tomorrow faster.
-              </p>
-            </article>
-
-            <!-- With Hoshii: everything converges -------------------------- -->
-            <article class="shift__card">
-              <div class="shift__art shift__art--flow">
-                <div class="flow" aria-hidden="true">
-                  <svg class="flow__glow" viewBox="0 0 400 285">
-                    <defs>
-                      <linearGradient id="flow-in" x1="0" x2="1" y1="0" y2="0">
-                        <stop offset="0" stop-color="#3b241f" stop-opacity=".34"/>
-                        <stop offset=".45" stop-color="#6d493f" stop-opacity=".2"/>
-                        <stop offset="1" stop-color="#c4b7b0" stop-opacity="0"/>
-                      </linearGradient>
-                      <linearGradient id="flow-out" x1="1" x2="0" y1="0" y2="0">
-                        <stop offset="0" stop-color="#96b3d3" stop-opacity=".3"/>
-                        <stop offset=".45" stop-color="#b9cee4" stop-opacity=".17"/>
-                        <stop offset="1" stop-color="#96b3d3" stop-opacity="0"/>
-                      </linearGradient>
-                      <radialGradient id="flow-core">
-                        <stop offset="0" stop-color="#ffffff" stop-opacity=".95"/>
-                        <stop offset=".5" stop-color="#ffffff" stop-opacity=".45"/>
-                        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
-                      </radialGradient>
-                      <filter id="flow-soft" x="-25%" y="-35%" width="150%" height="170%" color-interpolation-filters="sRGB">
-                        <feGaussianBlur stdDeviation="9"/>
-                      </filter>
-                    </defs>
-                    <g filter="url(#flow-soft)">
-                      <path d="M-14 6c74 0 128 92 196 112v39C114 177 60 279-14 279Z" fill="url(#flow-in)"/>
-                      <path d="M414 6c-74 0-128 92-196 112v39c68 20 122 122 196 122Z" fill="url(#flow-out)"/>
-                      <ellipse cx="200" cy="142.5" rx="86" ry="50" fill="url(#flow-core)"/>
-                    </g>
-                  </svg>
-
-                  <svg class="flow__wires" viewBox="0 0 400 285">
-                    <g class="flow__lines">
-                      <path d="M87 57C124 57 130 142.5 161 142.5"/>
-                      <path d="M87 142.5H161"/>
-                      <path d="M87 228C124 228 130 142.5 161 142.5"/>
-                      <path d="M239 142.5C270 142.5 276 57 313 57"/>
-                      <path d="M239 142.5H313"/>
-                      <path d="M239 142.5C270 142.5 276 228 313 228"/>
-                    </g>
-                    <g class="flow__pulses">
-                      <path d="M87 57C124 57 130 142.5 161 142.5" style="--d: 0s" pathLength="100"/>
-                      <path d="M87 142.5H161" style="--d: 1.1s" pathLength="100"/>
-                      <path d="M87 228C124 228 130 142.5 161 142.5" style="--d: 2.2s" pathLength="100"/>
-                      <path d="M239 142.5C270 142.5 276 57 313 57" style="--d: .55s" pathLength="100"/>
-                      <path d="M239 142.5H313" style="--d: 1.65s" pathLength="100"/>
-                      <path d="M239 142.5C270 142.5 276 228 313 228" style="--d: 2.75s" pathLength="100"/>
-                    </g>
-                  </svg>
-
-                  <p class="flow__tile flow__tile--i1">
-                    <span class="flow__glyph">
-                      <svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#vox-mail"/></svg>
-                    </span>
-                  </p>
-                  <p class="flow__tile flow__tile--i2">
-                    <span class="flow__glyph">
-                      <svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#vox-chat"/></svg>
-                    </span>
-                  </p>
-                  <p class="flow__tile flow__tile--i3">
-                    <span class="flow__glyph">
-                      <svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#vox-doc"/></svg>
-                    </span>
-                  </p>
-
-                  <p class="flow__core">
-                    <svg class="flow__mark" viewBox="0 0 1259 1756" fill="currentColor">
-                      <rect x="0" y="0" width="1259" height="413"/>
-                      <rect x="184" y="605" width="403" height="1151"/>
-                      <rect x="707" y="605" width="402" height="1151"/>
-                    </svg>
-                  </p>
-
-                  <p class="flow__tile flow__tile--o1">
-                    <span class="flow__glyph">
-                      <svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#vox-check"/></svg>
-                    </span>
-                  </p>
-                  <p class="flow__tile flow__tile--o2">
-                    <span class="flow__glyph">
-                      <svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#vox-heart"/></svg>
-                    </span>
-                  </p>
-                  <p class="flow__tile flow__tile--o3">
-                    <span class="flow__glyph">
-                      <svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#vox-money"/></svg>
-                    </span>
-                  </p>
-                </div>
-              </div>
-
-              <h3 class="shift__label">Your inbox with Hoshii</h3>
-              <p class="shift__body">
-                Hoshii is the AI&#8209;native inbox for B2B operations teams.
-                Every channel lands in one place with the work already started:
-                context looked up, order drafted, reply written. You approve, it
-                learns, and because
-                <strong>one system covers the flow end to end</strong> the gains
-                compound instead of stopping at every handover.
-              </p>
-            </article>
-          </div>
-        </div>
-      </section>
 
       <!-- Hoshii Chat band -------------------------------------------------- -->
       <section class="chatband" aria-labelledby="chatband-title">
@@ -864,72 +934,69 @@
 
 
       <!-- Who it is for ---------------------------------------------------- -->
-      <section class="roles guides" aria-labelledby="roles-title">
-        <div class="roles__inner">
-          <header class="roles__head">
-            <div class="roles__copy">
-              <h2 class="roles__title" id="roles-title">
-                Purpose&#8209;built for the order desk.
-                <em>Adopted by everyone around it.</em>
-              </h2>
-              <p class="roles__lead">
-                Different desks, one shared problem: more arrives every morning
-                than anyone can answer by hand, and the backlog is invisible
-                until a customer chases it. If one of these is your day, Hoshii
-                was built for it.
-              </p>
-            </div>
-            <a class="btn-os btn-os--accent roles__cta" href="#demo">Book a demo<span class="btn-os__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg></span></a>
-          </header>
 
-          <ul class="roles__grid">
-            <li class="role">
-              <span class="role__tile" aria-hidden="true"><span class="role__ico">
-                <svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#vox-doc"/></svg>
-              </span></span>
-              <h3 class="role__name">Order desk &amp; inbound sales</h3>
-              <p class="role__text">Orders arrive as email, PDF and scan, and every line still gets retyped into the ERP by hand.</p>
-            </li>
-            <li class="role">
-              <span class="role__tile" aria-hidden="true"><span class="role__ico">
-                <svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#vox-sent"/></svg>
-              </span></span>
-              <h3 class="role__name">Sales &amp; account management</h3>
-              <p class="role__text">RFQs and price requests pile up while you&rsquo;re in calls, and the quote goes out a day too late.</p>
-            </li>
-            <li class="role">
-              <span class="role__tile" aria-hidden="true"><span class="role__ico">
-                <svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#vox-chat"/></svg>
-              </span></span>
-              <h3 class="role__name">Customer service</h3>
-              <p class="role__text">The same questions every day, the history scattered across five tools, the answer typed from memory.</p>
-            </li>
-            <li class="role">
-              <span class="role__tile" aria-hidden="true"><span class="role__ico">
-                <svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#vox-parcel"/></svg>
-              </span></span>
-              <h3 class="role__name">Logistics &amp; dispatch</h3>
-              <p class="role__text">&ldquo;Where is my delivery?&rdquo; twenty times a day, each one looked up in the ERP by hand.</p>
-            </li>
-            <li class="role">
-              <span class="role__tile" aria-hidden="true"><span class="role__ico">
-                <svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#vox-money"/></svg>
-              </span></span>
-              <h3 class="role__name">Finance &amp; accounts receivable</h3>
-              <p class="role__text">Payment questions, dunning and invoice copies, in a shared inbox that quietly decides how fast you get paid.</p>
-            </li>
-            <li class="role">
-              <span class="role__tile" aria-hidden="true"><span class="role__ico">
-                <svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#vox-bars"/></svg>
-              </span></span>
-              <h3 class="role__name">Team leads &amp; operations</h3>
-              <p class="role__text">You see the backlog only when a customer escalates, instead of every morning, in numbers.</p>
-            </li>
-          </ul>
+      <!-- Closing call to action ------------------------------------------- -->
+      <!-- Security: a thin band on the bone ground, no fill, no picture -->
+      <section class="trust guides" aria-labelledby="trust-title">
+        <div class="trust__inner">
+          <h2 class="trust__title" id="trust-title">
+            Built in Zurich for <em>European B2B.</em>
+          </h2>
+
+          <div class="trust__side">
+            <p class="trust__lead">
+              Your data stays in the EU and is never used to train
+              third&#8209;party models. GDPR&#8209;compliant, with a DPA on request.
+            </p>
+
+            <div class="trust__facts">
+              <p class="trust__origin">
+                <span class="origin__key">Built in</span>
+                <span class="origin__val">Zurich</span>
+                <span class="origin__arrow" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="16" height="16"><path d="M4 12h15M14.5 7.5 19 12l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <span class="origin__key">Hosted in</span>
+                <span class="origin__val">the EU</span>
+              </p>
+
+              <ul class="trust__badges">
+                <li class="badge">
+                  <span class="badge__ico" aria-hidden="true">
+                    <svg class="vox" viewBox="0 0 24 24"><use href="#vox-lock"/></svg>
+                  </span>
+                  <span class="badge__name">GDPR&#8209;compliant</span>
+                </li>
+                <li class="badge">
+                  <span class="badge__ico" aria-hidden="true">
+                    <svg class="vox" viewBox="0 0 24 24"><use href="#vox-clock"/></svg>
+                  </span>
+                  <span class="badge__name">SOC 2</span>
+                  <span class="badge__note">Audit pending</span>
+                </li>
+                <li class="badge">
+                  <span class="badge__ico" aria-hidden="true">
+                    <svg class="vox" viewBox="0 0 24 24"><use href="#vox-check"/></svg>
+                  </span>
+                  <span class="badge__name">ISO 27001</span>
+                  <span class="badge__note">Audit pending</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <figure class="trust__strip">
+            <img
+              src="assets/img/zurich-strip.jpg"
+              alt="Zurich at dusk: the Grossm&uuml;nster towers above the Limmat, with a tram passing as a streak of light."
+              width="1600"
+              height="450"
+              loading="lazy"
+            />
+          </figure>
         </div>
       </section>
 
-      <!-- Closing call to action ------------------------------------------- -->
       <section class="closer" aria-labelledby="closer-title">
         <div class="closer__inner">
           <span class="closer__mark" aria-hidden="true">

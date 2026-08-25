@@ -74,7 +74,14 @@
      only one that clears both grounds on a single value — 4.57:1 on white,
      3.07:1 on the espresso bands — so the accent is one token again rather
      than a light/dark pair. */
-  --accent: #c44e2c;
+  /* Soft blue, replacing the vermillion. Two weights, because one pale colour
+     cannot do both jobs: #97bbe0 is 7.2-8.2:1 on the dark surfaces (slab, chat
+     band, closer) and only 1.95:1 on the bone bands, which fails even large
+     text. --accent-deep is the same hue taken down until it clears AA on bone
+     at 4.7:1, so accent type on light grounds stays legible. Bright on dark,
+     deep on light. */
+  --accent: #97bbe0;
+  --accent-deep: #3d76ab;
 
   --green-deep: #24140f;
 
@@ -85,6 +92,15 @@
   /* Near-black that clears AA on the accent at small sizes, where white
      (3.41:1) does not. Used for the announcement bar. */
   --on-accent-sm: #1b2b3a;
+
+  /* Cream, for highlight surfaces: the announcement banner and the upsell pill.
+     Taken from the brand sheet's "rare wash" — this direction's palette had
+     replaced that slot with a cool grey, so the warm cream was missing. The
+     division is deliberate: cream fills the surfaces, the accent stays on type.
+     Its own text is a warm near-black at ~13:1. Not the accent: #c44e2c on this
+     cream is 3.75:1, which fails AA at the 13px these both use. */
+  --cream: #f0e7c0;
+  --on-cream: #2a1a12;
 
   /* Neutrals. The OS chrome is gone; these are now plain surface and rule
      values so the rest of the sheet keeps working. */
@@ -103,7 +119,13 @@
      .pitch__panel: the rules land exactly on the slab's edges, so they read as
      the column the slab is set in — visible in the space above and below it,
      hidden behind the slab itself. Keep the two values in step. */
-  --guide-col: 94rem;
+  --guide-col: 98rem;
+
+  /* The slab band's own gutter, tighter than --gutter. Below the max-width the
+     slab's width is set by this, not by the ceiling, so widening the slab means
+     moving this. The column rules floor at the same value, which is what keeps
+     them glued to the slab's edges at every width. Keep those two in step too. */
+  --slab-gutter: clamp(1rem, 2vw, 1.5rem);
   --rule: rgba(38, 24, 20, 0.12);
   --pill: 999px;
 
@@ -173,8 +195,8 @@ p {
   gap: 0.5rem;
   min-height: 2.125rem;
   padding: 0.375rem 2.5rem;
-  background: var(--accent);
-  color: var(--on-accent-sm);
+  background: var(--cream);
+  color: var(--on-cream);
   text-align: center;
 }
 
@@ -518,8 +540,12 @@ p {
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    padding: 2rem clamp(2rem, 4vw, 4rem) 2rem
-      calc(max(var(--gutter), (100vw - 88rem) / 2) + clamp(1.5rem, 4vw, 4rem));
+    /* Left inset matches the right, so the copy sits evenly in its column.
+       Deliberately not the old shell-centring term, which grew without bound
+       (296px at 2000 wide, 576px at 2560) and is what made earlier nudges
+       invisible on a large screen. This clamp tops out at 64px, so the whole
+       range of movement is 51px to 64px. */
+    padding: 2rem clamp(2rem, 4vw, 4rem);
     /* One hairline: the split is stated, not implied. */
     border-right: 1px solid var(--rule);
   }
@@ -541,7 +567,7 @@ p {
 .hero__title em {
   font-style: normal;
   font-weight: 500;
-  color: var(--accent);
+  color: var(--accent-deep);
 }
 
 .hero__sub {
@@ -725,10 +751,11 @@ p {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* The truck is in the top of both frames and the sources are portrait in a
-     landscape-ish column, so cover crops hard top and bottom. 25% keeps the
-     loading bay in shot; much lower and the table starts losing people. */
-  object-position: 50% 25%;
+  /* Both sources are 2:3 portraits in a roughly square column, so cover crops
+     hard top and bottom. The subject sits a little above centre in both frames
+     and the desk has to stay in shot under her, so the window is nudged up
+     from the middle rather than centred. */
+  object-position: 50% 42%;
   transition: opacity 460ms var(--ease);
 }
 
@@ -765,7 +792,7 @@ p {
    won on source order and these were silently ignored. */
 .pitch {
   --band-pad: clamp(2rem, 5vw, 4rem);
-  padding: var(--band-pad) var(--gutter) 0;
+  padding: var(--band-pad) var(--slab-gutter) 0;
   background-color: var(--bone);
   background-image: linear-gradient(var(--rule), var(--rule));
   background-repeat: no-repeat;
@@ -794,7 +821,7 @@ p {
      At 88rem it stopped growing at 1408px, which on a 1920 screen left it at
      73% of the viewport — noticeably narrower than the reference. Kept in step
      with --guide-col. */
-  max-width: 94rem;
+  max-width: 98rem;
   margin-inline: auto;
   /* Block padding trimmed to keep the slab flat — it is a wide band, not a
      card. Most of its height comes from the art column, which is why those
@@ -803,7 +830,6 @@ p {
   /* Warm near-black in the brown family, a shade under the title bar so the
      two dark surfaces read as related rather than identical. */
   background: #24170f;
-  border-radius: clamp(1.25rem, 2.5vw, 2rem);
   overflow: hidden;
 }
 
@@ -815,7 +841,9 @@ p {
   color: var(--accent);
 }
 
-.pitch__text {
+.pitch__text,
+.pswap {
+  margin: 0;
   max-width: 46ch;
   color: var(--on-dark);
   font-size: clamp(1.1875rem, 0.9rem + 1.35vw, 1.875rem);
@@ -1222,11 +1250,11 @@ p {
 }
 
 .guides::before {
-  left: max(var(--gutter), calc(50% - var(--guide-col) / 2));
+  left: max(var(--slab-gutter), calc(50% - var(--guide-col) / 2));
 }
 
 .guides::after {
-  right: max(var(--gutter), calc(50% - var(--guide-col) / 2));
+  right: max(var(--slab-gutter), calc(50% - var(--guide-col) / 2));
 }
 
 /* Content clears the rules. */
@@ -1286,7 +1314,7 @@ p {
 .roles__title em {
   font-style: normal;
   font-weight: 500;
-  color: var(--accent);
+  color: var(--accent-deep);
 }
 
 .roles__lead {
@@ -1409,7 +1437,7 @@ p {
 .quote__text em {
   font-style: normal;
   font-weight: 500;
-  color: var(--accent);
+  color: var(--accent-deep);
   white-space: nowrap;
 }
 
@@ -1510,7 +1538,7 @@ p {
 .steps__title em {
   font-style: normal;
   font-weight: 500;
-  color: var(--accent);
+  color: var(--accent-deep);
 }
 
 .steps__list {
@@ -1562,8 +1590,8 @@ p {
   margin: 0 0 0.75rem;
   padding: 0.3125rem 0.6875rem;
   border-radius: 999px;
-  background: var(--accent);
-  color: var(--on-accent-sm);
+  background: var(--cream);
+  color: var(--on-cream);
   font-size: 0.8125rem;
   font-weight: 700;
   line-height: 1;
@@ -2011,7 +2039,7 @@ p {
 }
 
 .steps__tab[aria-selected='true'] .steps__tab-num {
-  color: var(--accent);
+  color: var(--accent-deep);
 }
 
 /* All panels share one grid cell, so the container is as tall as the tallest
@@ -2051,8 +2079,8 @@ p {
   margin: 0 0 0.75rem;
   padding: 0.3125rem 0.6875rem;
   border-radius: 999px;
-  background: var(--accent);
-  color: var(--on-accent-sm);
+  background: var(--cream);
+  color: var(--on-cream);
   font-size: 0.8125rem;
   font-weight: 700;
   line-height: 1;
@@ -2312,7 +2340,7 @@ p {
 .shift__title em {
   font-style: normal;
   font-weight: 500;
-  color: var(--accent);
+  color: var(--accent-deep);
 }
 
 .shift__pair {
@@ -2336,6 +2364,19 @@ p {
   box-shadow: inset 0 0 0 1px var(--rule);
 }
 
+/* Blue on the Hoshii side only. Matched by the art it contains rather than by
+   a variant class, since both cards share .shift__card and the composition
+   inside is what tells them apart. The legacy card stays plain paper: the
+   comparison is matte against lit, and giving both the same fill would flatten
+   it.
+   A pale mix, not the accent at full strength: the art panel inside already
+   runs to full --accent at its corner, so a card at the same value would
+   swallow it. At 26% the card reads blue and the panel still sits on top of it
+   as the brighter surface. Body copy is #574b45, 7.2:1 here. */
+.shift__card:has(.shift__art--flow) {
+  background: color-mix(in srgb, var(--accent) 26%, #ffffff);
+}
+
 /* The art sits in its own well inside the card, as Corgi's does. Both wells
    carry the same aspect ratio so the two shapes are compared rather than their
    framing, and cqw units inside let each composition scale as one drawing
@@ -2355,10 +2396,18 @@ p {
 /* The same frosted room as the step scenes. The hourglass is drawn as two
    blurred wings in the SVG rather than stacked CSS radial gradients: the pinch
    at the waist is a shape, and layered gradients could only approximate it. */
+/* Filled with the accent rather than near-white. Built with color-mix off
+   --accent instead of three hardcoded blues, so swapping the accent token
+   carries the card with it. */
 .shift__art--flow {
   isolation: isolate;
-  background: linear-gradient(158deg, #ffffff 0%, #fbfbfa 46%, #f3f3f1 100%);
-  box-shadow: inset 0 0 0 1px rgba(42, 35, 32, 0.06);
+  background: linear-gradient(
+    158deg,
+    color-mix(in srgb, var(--accent) 48%, #ffffff) 0%,
+    color-mix(in srgb, var(--accent) 74%, #ffffff) 46%,
+    var(--accent) 100%
+  );
+  box-shadow: inset 0 0 0 1px rgba(42, 35, 32, 0.09);
 }
 
 .shift__art--flow::before {
@@ -2367,9 +2416,9 @@ p {
   inset: -12%;
   z-index: -2;
   background:
-    radial-gradient(42% 66% at 4% 50%, rgba(59, 36, 31, 0.30), transparent 68%),
-    radial-gradient(42% 66% at 96% 50%, rgba(150, 179, 211, 0.42), transparent 68%),
-    radial-gradient(30% 40% at 50% 50%, rgba(255, 255, 255, 0.85), transparent 72%);
+    radial-gradient(42% 66% at 4% 50%, rgba(59, 36, 31, 0.18), transparent 68%),
+    radial-gradient(42% 66% at 96% 50%, rgba(120, 156, 196, 0.5), transparent 68%),
+    radial-gradient(34% 44% at 50% 50%, rgba(255, 255, 255, 0.9), transparent 72%);
 }
 
 .shift__label {
@@ -2449,14 +2498,16 @@ p {
 }
 
 /* Red, framed and filled: this is the side of the comparison that costs you
-   something, and it is the only colour the legacy card is allowed. */
+   something, and it is the only colour the legacy card is allowed. Pushed from
+   a muted brick to an actual red. The type still clears AA on the fill at
+   5.2:1, which matters here because these chips run at ~11px. */
 .today__chip {
   position: relative;
   padding: 1.9cqw 3.4cqw;
   border-radius: 999px;
-  background: #f3e6e1;
-  box-shadow: inset 0 0 0 1px rgba(140, 74, 58, 0.34);
-  color: #8c4a3a;
+  background: #fce4dd;
+  box-shadow: inset 0 0 0 1px rgba(177, 48, 26, 0.36);
+  color: #b1301a;
   font-size: max(0.6875rem, 3.4cqw);
   font-weight: 500;
   line-height: 1;
@@ -2471,7 +2522,7 @@ p {
   left: 100%;
   top: 50%;
   width: 3.4cqw;
-  border-top: 1px dashed rgba(140, 74, 58, 0.4);
+  border-top: 1px dashed rgba(177, 48, 26, 0.42);
 }
 
 .today__note {
@@ -2664,4 +2715,431 @@ p {
 .flow__mark {
   width: 7.2cqw;
   color: var(--ink);
+}
+
+/* --- Who it is for: role panels inside the slab --------------------------- */
+
+/* The six roles used to be their own band under the comparison. They are now
+   the slab's right column: the claim on the left says what Hoshii is, the
+   panels say who it is for, and hovering one makes the general claim specific.
+   The column the panels occupy is the old .pitch__art column, which was
+   already switched off, so nothing had to move to make room. */
+@media (min-width: 64em) {
+  .pitch__panel {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.04fr);
+    align-items: center;
+    gap: clamp(2rem, 4vw, 3.5rem);
+  }
+}
+
+/* The paragraph and its six replacements are stacked in one grid cell, so the
+   tallest of the seven sets the height once and the slab does not resize when
+   the text swaps. Absolute positioning would do the stacking but would take
+   them out of flow, and then the cell would collapse to the height of the
+   paragraph alone. */
+.pitch__lede {
+  display: grid;
+  align-items: start;
+}
+
+.pitch__lede > * {
+  grid-area: 1 / 1;
+  transition:
+    opacity 0.3s ease,
+    translate 0.3s ease;
+}
+
+/* The cue carries the accent, the same way .pitch__brand does in the resting
+   paragraph: one accent per state, in the same place. It needs its own size
+   because .pswap sets the big paragraph type that the clause below inherits. */
+/* Its own line above the clause, at the clause's own size. It was a small
+   label stacked over big type first, which read as a UI chip rather than as
+   the start of a sentence; keeping the full size is what makes the two lines
+   read as one statement broken over two. */
+.pswap__cue {
+  display: block;
+  margin-bottom: 0.15em;
+  color: var(--accent);
+}
+
+.pswap {
+  opacity: 0;
+  translate: 0 0.45rem;
+  pointer-events: none;
+}
+
+/* Resting paragraph leaves upward as the role text arrives from below. */
+.pitch__panel:has(.prole:hover) .pitch__text,
+.pitch__panel:has(.prole:focus-visible) .pitch__text {
+  opacity: 0;
+  translate: 0 -0.45rem;
+}
+
+.pitch__panel:has(.prole[data-role="1"]:hover) .pswap[data-role="1"],
+.pitch__panel:has(.prole[data-role="1"]:focus-visible) .pswap[data-role="1"] {
+  opacity: 1;
+  translate: 0 0;
+}
+.pitch__panel:has(.prole[data-role="2"]:hover) .pswap[data-role="2"],
+.pitch__panel:has(.prole[data-role="2"]:focus-visible) .pswap[data-role="2"] {
+  opacity: 1;
+  translate: 0 0;
+}
+.pitch__panel:has(.prole[data-role="3"]:hover) .pswap[data-role="3"],
+.pitch__panel:has(.prole[data-role="3"]:focus-visible) .pswap[data-role="3"] {
+  opacity: 1;
+  translate: 0 0;
+}
+.pitch__panel:has(.prole[data-role="4"]:hover) .pswap[data-role="4"],
+.pitch__panel:has(.prole[data-role="4"]:focus-visible) .pswap[data-role="4"] {
+  opacity: 1;
+  translate: 0 0;
+}
+.pitch__panel:has(.prole[data-role="5"]:hover) .pswap[data-role="5"],
+.pitch__panel:has(.prole[data-role="5"]:focus-visible) .pswap[data-role="5"] {
+  opacity: 1;
+  translate: 0 0;
+}
+.pitch__panel:has(.prole[data-role="6"]:hover) .pswap[data-role="6"],
+.pitch__panel:has(.prole[data-role="6"]:focus-visible) .pswap[data-role="6"] {
+  opacity: 1;
+  translate: 0 0;
+}
+
+/* --- The panels --- */
+
+.pitch__roles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.5rem, 1.1vw, 0.75rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.prole-cell {
+  display: flex;
+}
+
+/* A button, not a link: it changes what the slab says, it does not navigate.
+   That also makes the swap reachable by keyboard, which a hover-only
+   treatment would not be. */
+.prole {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: clamp(1.25rem, 3vw, 2rem);
+  width: 100%;
+  min-height: clamp(6.5rem, 11vw, 9rem);
+  padding: 0.875rem 0.9375rem 1rem;
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  color: var(--on-dark);
+  /* background-image is the seam for real photography: give a panel a --shot
+     and it becomes the reference's picture tile with no other change. */
+  background-color: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  cursor: pointer;
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    opacity 0.25s ease,
+    translate 0.25s ease;
+}
+
+/* The photograph, blurred. Two layers rather than one: the picture has to be
+   blurred and the label must not be, so the picture cannot sit on the element
+   itself.
+   The inset bleed is the point. A blur sampled inside the element's own bounds
+   has nothing but transparency to pull from at the edges, so the photo fades
+   into a pale halo along all four sides; bleeding it 14% past the box and
+   letting `overflow: hidden` clip the result keeps the blur solid to the
+   corners. */
+.prole::before {
+  content: '';
+  position: absolute;
+  inset: -14%;
+  z-index: -2;
+  background-image: var(--shot, none);
+  background-size: cover;
+  background-position: center;
+  filter: blur(var(--blur, 15px)) saturate(1.14) brightness(0.92);
+  transition: filter 0.32s ease;
+}
+
+/* Scrim over the picture, bottom-weighted. This is purely what buys the label
+   its contrast: over photography alone the white type lands on whatever
+   happens to be behind it, which differs per panel. It stops well short of the
+   top so the photograph still reads as a photograph. */
+.prole::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    to top,
+    rgba(18, 11, 7, 0.8) 0%,
+    rgba(18, 11, 7, 0.3) 44%,
+    rgba(18, 11, 7, 0) 80%
+  );
+  transition: opacity 0.25s ease;
+}
+
+.prole__ico {
+  display: block;
+  width: 1.375rem;
+  height: 1.375rem;
+  color: var(--on-dark);
+  opacity: 0.75;
+  transition:
+    opacity 0.25s ease,
+    color 0.25s ease;
+}
+
+.prole__label {
+  text-shadow: 0 1px 3px rgba(12, 7, 4, 0.55);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.prole:hover,
+.prole:focus-visible {
+  background-color: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.26);
+  translate: 0 -2px;
+}
+
+.prole:hover::before,
+.prole:focus-visible::before {
+  filter: blur(calc(var(--blur, 15px) * 0.4)) saturate(1.22) brightness(1.06);
+}
+
+.prole:hover .prole__ico,
+.prole:focus-visible .prole__ico {
+  color: var(--cream);
+  opacity: 1;
+}
+
+/* The hovered panel only reads as chosen if the other five step back. */
+.pitch__roles:has(.prole:hover) .prole:not(:hover),
+.pitch__roles:has(.prole:focus-visible) .prole:not(:focus-visible) {
+  opacity: 0.5;
+}
+
+/* Below the two-column break the panels sit under the paragraph. Three across
+   keeps them from becoming six tall rows on a phone. */
+@media (max-width: 63.999em) {
+  .pitch__roles {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 34em) {
+  .pitch__roles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* No hover to drive the swap on touch, so the six texts would be unreachable.
+   Show them as a plain list under the panels instead and let the paragraph
+   keep its place. */
+@media (hover: none) {
+  .pitch__lede {
+    display: block;
+  }
+
+  .pswap {
+    opacity: 1;
+    translate: 0 0;
+    margin-top: 1.25rem;
+    font-size: 1.0625rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--on-dark-dim);
+  }
+
+  .pitch__roles {
+    display: none;
+  }
+}
+
+/* --- Security: the European answer ---------------------------------------
+   A thin band, not a slab: no fill, no picture, 88rem shell and padding to
+   match .shift__inner and .steps__inner. The headline and the facts sit side
+   by side rather than stacked, which is what keeps the band short. */
+
+.trust {
+  /* Matches .steps and .shift, the other text bands, so the column hairline
+     runs straight through all three. The root 98rem is for the slab, and this
+     stopped being a slab: inheriting it put this band's rules further out than
+     the sequence directly above it, which only showed up on a wide screen
+     where the max() stops clamping to --slab-gutter. */
+  --guide-col: 88rem;
+  padding: clamp(2.25rem, 4.5vw, 3.5rem) 0;
+  background: var(--bone);
+}
+
+.trust__inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.25rem, 3vw, 2rem);
+  margin: 0 auto;
+  max-width: 88rem;
+  padding-inline: clamp(1.5rem, 4vw, 4rem);
+}
+
+@media (min-width: 64em) {
+  .trust__inner {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(2rem, 5vw, 4.5rem);
+  }
+}
+
+.trust__title {
+  margin: 0;
+  font-size: clamp(1.5rem, 1rem + 1.6vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.16;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+/* Coloured, not italic, like every other accent half on the page. */
+.trust__title em {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--accent-deep);
+}
+
+/* Spans both columns and sits under the copy row, so the band stays short and
+   the picture is wide rather than tall. */
+.trust__strip {
+  grid-column: 1 / -1;
+  margin: clamp(0.5rem, 1.5vw, 1.25rem) 0 0;
+  aspect-ratio: 1600 / 450;
+  overflow: hidden;
+}
+
+.trust__strip img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.trust__lead {
+  margin: 0;
+  max-width: 52ch;
+  color: var(--caption);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+/* --- The facts row ---
+   No fills. Cards read as patches stuck onto the band rather than part of it,
+   and six of them turned a calm strip into a form. One hairline holds the
+   group and the type does the rest. */
+
+.trust__facts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.125rem;
+  margin-top: clamp(1rem, 2vw, 1.375rem);
+  padding-top: clamp(0.75rem, 1.6vw, 1rem);
+  border-top: 1px solid rgba(38, 24, 20, 0.16);
+}
+
+/* Keys inline with their values, all on one line: that is what makes the row
+   thin rather than two stacked key/value pairs. */
+.trust__origin {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+/* Sentence case, not caps. The tracked-out uppercase treatment made these two
+   read as field labels on a form; they are just words in a line of text. */
+.origin__key {
+  color: var(--caption);
+  font-size: 0.9375rem;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.origin__val {
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.origin__arrow {
+  align-self: center;
+  display: grid;
+  place-items: center;
+  color: var(--accent-deep);
+}
+
+.trust__badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem 1.125rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 0.4375rem;
+}
+
+/* A hairline between neighbours rather than a frame around each. Only between
+   badges: the origin row and the badge row wrap onto separate lines at this
+   column width, so a divider on the list itself hung off the front of the
+   second line with nothing to its left. */
+.badge + .badge {
+  padding-left: 1.125rem;
+  border-left: 1px solid rgba(38, 24, 20, 0.16);
+}
+
+.badge__ico {
+  display: block;
+  flex: 0 0 auto;
+  width: 1.0625rem;
+  height: 1.0625rem;
+  color: var(--accent-deep);
+}
+
+.badge__ico .vox {
+  stroke-width: 1.6;
+}
+
+.badge__name {
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* Stays as legible as the standard's name: an unqualified SOC 2 or ISO 27001
+   claim would be a compliance assertion, and neither is certified. */
+.badge__note {
+  color: var(--caption);
+  font-size: 0.875rem;
+  line-height: 1.4;
 }
