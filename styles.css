@@ -60,47 +60,42 @@
 /* --- Tokens -------------------------------------------------------------- */
 
 :root {
-  /* LAB PALETTE — brown primary, brass accent, no OS chrome.
-     Token names keep the --green/--chrome shape so the rest of the sheet is
-     untouched; only the values changed. */
-  --green: #3b241f; /* Primary (brown) */
-  --ink: #1f1310; /* Type         */
-  --bone: #fcfcfb; /* Sec. ground (crisp white) */
-  --wash: #f1efec; /* Rare wash    */
-  --caption: #857065; /* Captions     */
-  --sage: #c4b7b0; /* Fills        */
+  /* Hoshii's own palette. The brown-and-blue exploration is out; the primary is
+     the brand sheet's deep green again, with its Rare Wash and Fills doing the
+     two jobs the blue accent had been split across. */
+  --green: #133021; /* Primary      */
+  --ink: #2a2320; /* Type         */
+  --bone: #fcfcfb; /* Sec. ground  */
+  --wash: #f1efec; /* Wash         */
+  --caption: #7e6f5c; /* Captions     */
+  --sage: #a4ac9b; /* Fills        */
   --white: #ffffff;
-  /* Deep rust. Chosen by measurement: of the non-blue candidates it is the
-     only one that clears both grounds on a single value — 4.57:1 on white,
-     3.07:1 on the espresso bands — so the accent is one token again rather
-     than a light/dark pair. */
-  /* Soft blue, replacing the vermillion. Two weights, because one pale colour
-     cannot do both jobs: #97bbe0 is 7.2-8.2:1 on the dark surfaces (slab, chat
-     band, closer) and only 1.95:1 on the bone bands, which fails even large
-     text. --accent-deep is the same hue taken down until it clears AA on bone
-     at 4.7:1, so accent type on light grounds stays legible. Bright on dark,
-     deep on light. */
-  --accent: #97bbe0;
-  --accent-deep: #3d76ab;
 
-  --green-deep: #24140f;
+  /* The brand orange. It sits mid-luminance, so it is merely adequate on both
+     grounds rather than strong on either: 3.32:1 on bone and 4.21:1 on the
+     green. That clears AA for large text on both, which is where nearly every
+     accent on this page lives, and it is a graphics-contrast pass for the marks
+     and tags. --accent-deep is the same hue taken down to 5.3:1 on bone, for
+     the handful of places the accent lands on small type. */
+  --accent: #fd4b00;
+  --accent-deep: #c23a00;
+
+  --green-deep: #0d2016;
 
   /* Text on dark */
   --on-dark: var(--bone);
-  --on-dark-dim: #d6c4ba;
+  --on-dark-dim: #c3cbbc;
 
   /* Near-black that clears AA on the accent at small sizes, where white
-     (3.41:1) does not. Used for the announcement bar. */
-  --on-accent-sm: #1b2b3a;
+     (3.40:1) does not. The value was left over from the blue accent; against
+     the orange it is a warm near-black at 5.0:1. */
+  --on-accent-sm: #2a1a12;
 
-  /* Cream, for highlight surfaces: the announcement banner and the upsell pill.
-     Taken from the brand sheet's "rare wash" — this direction's palette had
-     replaced that slot with a cool grey, so the warm cream was missing. The
-     division is deliberate: cream fills the surfaces, the accent stays on type.
-     Its own text is a warm near-black at ~13:1. Not the accent: #c44e2c on this
-     cream is 3.75:1, which fails AA at the 13px these both use. */
+  /* Highlight surfaces: the announcement banner and the upsell pill. Same value
+     as --accent now that both come from Rare Wash, kept as its own token
+     because they are different jobs and either could move. */
   --cream: #f0e7c0;
-  --on-cream: #2a1a12;
+  --on-cream: #21281c;
 
   /* Neutrals. The OS chrome is gone; these are now plain surface and rule
      values so the rest of the sheet keeps working. */
@@ -195,8 +190,8 @@ p {
   gap: 0.5rem;
   min-height: 2.125rem;
   padding: 0.375rem 2.5rem;
-  background: var(--cream);
-  color: var(--on-cream);
+  background: var(--accent);
+  color: #ffffff;
   text-align: center;
 }
 
@@ -345,20 +340,13 @@ p {
   justify-content: center;
 }
 
-.chip {
-  width: 1.125rem;
-  height: 1rem;
-  font-size: 0.625rem;
-  font-weight: 700;
-  line-height: 1;
-}
-
 .btn-os {
-  height: 2.625rem;
-  padding: 0 1.125rem;
-  gap: 0.75rem;
+  height: 2.375rem;
+  padding: 0 1rem;
+  gap: 0.625rem;
   border: 0;
-  border-radius: var(--pill);
+  /* Slightly rounded: square read as too hard next to the type at this size. */
+  border-radius: 0.4375rem;
   font: 600 0.9375rem/1 var(--font);
   letter-spacing: -0.005em;
   text-decoration: none;
@@ -384,10 +372,11 @@ p {
 .btn-os__go {
   display: grid;
   place-items: center;
-  width: 1.625rem;
-  height: 1.625rem;
-  margin-right: -0.5rem;
-  border-radius: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: -0.4375rem;
+  /* Rounded a touch less than the button, so the two curves nest. */
+  border-radius: 0.25rem;
   background: var(--bone);
   color: var(--green);
 }
@@ -409,8 +398,8 @@ p {
 }
 
 .btn-os--lg .btn-os__go {
-  width: 1.875rem;
-  height: 1.875rem;
+  width: 1.75rem;
+  height: 1.75rem;
 }
 
 /* Inverted on the dark grounds, so the CTA is always the highest-contrast
@@ -426,13 +415,13 @@ p {
   background: var(--white);
 }
 
-/* Hero size. */
+/* Hero size. Kept above 2.75rem so the primary CTA still clears the 44px
+   touch-target guideline on a phone. */
 .btn-os--lg {
-  height: 3.25rem;
-  padding: 0 1.625rem;
-  font-size: 1.0625rem;
+  height: 2.875rem;
+  padding: 0 1.375rem;
+  font-size: 1rem;
 }
-
 
 
 /* --- Mobile menu --------------------------------------------------------- */
@@ -519,8 +508,16 @@ p {
    none. Height is capped so the client strip is always on the first screen —
    --fold-reserve is the announcement bar, the title bar and that strip. */
 .hero {
-  --fold-reserve: 13.5rem;
+  /* Reserved below the hero so the social proof is on the first screen, not
+     just hinted at. Raised from 13.5rem after the proof band grew: the label
+     went from 17px to 22px and its padding went up, which left only 11px of the
+     logo belt above the fold on a 1440x810 Mac Chrome window. */
+  --fold-reserve: 19.25rem;
   background: var(--bone);
+  /* A clean cut at the foot of the picture. Above 64em the grid carries no
+     block padding, so the picture reaches the band's own bottom edge and this
+     line lands exactly on it. */
+  border-bottom: 1px solid var(--rule);
 }
 
 .hero__grid {
@@ -530,9 +527,14 @@ p {
   padding: clamp(2rem, 5vw, 3.5rem) var(--gutter) clamp(2.5rem, 5vw, 4rem);
 }
 
+/* Full-bleed hero: the picture spans the band and the copy sits over it.
+   The crop is the price and it is unavoidable: this photograph is 4:3, the band
+   is roughly 2.8:1, so a bit over half the height goes. It is framed on the
+   window band on purpose, which is the half worth keeping. */
 @media (min-width: 64em) {
   .hero__grid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    position: relative;
+    grid-template-columns: minmax(0, 1fr);
     /* The rule is the gap, so it has to close. */
     gap: 0;
     align-items: stretch;
@@ -552,13 +554,40 @@ p {
        (296px at 2000 wide, 576px at 2560) and is what made earlier nudges
        invisible on a large screen. This clamp tops out at 64px, so the whole
        range of movement is 51px to 64px. */
-    padding: 2rem clamp(2rem, 4vw, 4rem);
+    padding: 2rem clamp(2.25rem, 5vw, 4.75rem);
     /* One hairline: the split is stated, not implied. */
     border-right: 1px solid var(--rule);
   }
 
   .hero__demo {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
     padding: 0;
+  }
+
+  /* Held to the left third, so the picture reads across the rest. Centred on
+     this photograph the type landed straight on the lit window, which is both
+     the brightest and the busiest part of the frame, and the headline vanished
+     into it. The plain wall is on the left, so the copy stays there. */
+  .hero__demo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to right,
+      rgba(252, 252, 251, 0.96) 0%,
+      rgba(252, 252, 251, 0.9) 26%,
+      rgba(252, 252, 251, 0.55) 40%,
+      transparent 54%
+    );
+  }
+
+  .hero__copy {
+    position: relative;
+    z-index: 1;
+    max-width: 42rem;
+    border-right: 0;
   }
 }
 
@@ -574,7 +603,7 @@ p {
 .hero__title em {
   font-style: normal;
   font-weight: 500;
-  color: var(--accent-deep);
+  color: var(--accent);
 }
 
 .hero__sub {
@@ -588,151 +617,13 @@ p {
 
 /* --- The switch --- */
 
-/* The picture column is the containing block for the switch. */
-.hero__demo {
-  position: relative;
-}
-
 /* The switch: two labels in the white margin and two dots sitting on the seam.
    The divider hairline is the track — nothing extra is drawn for it, and the
    active dot carves a bone ring out of the line. No rotated type, no lozenge:
    the rotated labels are what made the first attempt feel clunky. */
-.hero__switch {
-  position: absolute;
-  z-index: 3;
-  left: clamp(0.875rem, 2vw, 1.25rem);
-  bottom: clamp(0.875rem, 2vw, 1.25rem);
-  display: flex;
-  gap: 0.25rem;
-  padding: 0.3125rem;
-  border-radius: var(--pill);
-  background: rgba(28, 18, 14, 0.42);
-  -webkit-backdrop-filter: blur(14px) saturate(1.3);
-  backdrop-filter: blur(14px) saturate(1.3);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
-}
-
-.hero__opt {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.4375rem 0.9375rem;
-  border: 0;
-  border-radius: var(--pill);
-  background: transparent;
-  color: rgba(255, 255, 255, 0.74);
-  font: 600 0.875rem/1 var(--font);
-  cursor: pointer;
-  transition: background-color 200ms var(--ease), color 200ms var(--ease);
-}
-
-.hero__opt:hover {
-  color: #fff;
-}
-
-.hero__opt[aria-pressed='true'] {
-  background: var(--bone);
-  color: var(--ink);
-}
-
 /* Once there is a seam, the control moves off the photograph entirely and
    lives in the white margin, hanging its dots on the rule. */
-@media (min-width: 64em) {
-  .hero__switch {
-    /* Low on the seam rather than centred: centred put it level with the
-       sub-copy and the two read as one cramped block. */
-    left: 0;
-    top: auto;
-    bottom: clamp(2.5rem, 6vw, 4.5rem);
-    translate: -100% 0;
-    --sw-row: 1.25rem;
-    --sw-gap: 1.5rem;
-    --sw-travel: calc(var(--sw-row) + var(--sw-gap));
-    flex-direction: column;
-    align-items: flex-end;
-    gap: var(--sw-gap);
-    padding: 0;
-    border-radius: 0;
-    background: none;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    box-shadow: none;
-  }
-
-  .hero__opt {
-    height: var(--sw-row);
-    gap: 0.9375rem;
-    padding: 0 0.9375rem 0 0;
-    border-radius: 0;
-    color: var(--caption);
-    font-size: 0.9375rem;
-    font-weight: 500;
-    letter-spacing: -0.005em;
-    transition: color 200ms var(--ease);
-  }
-
-  .hero__opt:hover {
-    color: var(--ink);
-  }
-
-  .hero__opt {
-    position: relative;
-  }
-
-  .hero__opt[aria-pressed='true'] {
-    background: none;
-    color: var(--ink);
-    font-weight: 700;
-  }
-
-  /* Hovering the photograph reveals a hollow mark at the position you are not
-     on, so the other state announces itself before you go looking for it.
-     Absolutely placed, so it costs the row no layout. */
-  .hero__opt::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 50%;
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
-    background: var(--bone);
-    box-shadow: 0 0 0 0.3125rem var(--bone), inset 0 0 0 1.5px rgba(38, 24, 20, 0.42);
-    translate: 50% -50%;
-    opacity: 0;
-    transition: opacity 200ms var(--ease);
-  }
-
-  /* Always visible on the position you are not on: the pair of marks is what
-     tells you there are two states before you touch anything. */
-  .hero__opt[aria-pressed='false']::after {
-    opacity: 1;
-  }
-
-  /* One indicator that travels, rather than two dots that light up: the
-     movement is what makes it read as a single control. Row height and gap are
-     explicit so the travel distance is exact and can be transitioned — grid
-     placement cannot animate. */
-  .hero__switch::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 0.375rem;
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
-    background: var(--green);
-    /* The ring cuts the rule around it — this is the carve. */
-    box-shadow: 0 0 0 0.3125rem var(--bone);
-    translate: 50% 0;
-    transition: translate 340ms var(--ease);
-  }
-
-  .hero__switch[data-active='hoshii']::after {
-    translate: 50% var(--sw-travel);
-  }
-}
-
-/* --- The two photographs --- */
+  /* --- The two photographs --- */
 
 /* Same table, same four people: one buried in paper, one clear. The switch
    cross-fades between them, which is the whole argument in one gesture. */
@@ -762,22 +653,7 @@ p {
      hard top and bottom. The subject sits a little above centre in both frames
      and the desk has to stay in shot under her, so the window is nudged up
      from the middle rather than centred. */
-  object-position: 50% 42%;
-  transition: opacity 460ms var(--ease);
-}
-
-.hero__shot--clear {
-  opacity: 0;
-}
-
-.hero__shots[data-show='hoshii'] .hero__shot--clear {
-  opacity: 1;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero__shot {
-    transition: none;
-  }
+  object-position: 50% 33%;
 }
 
 
@@ -834,9 +710,11 @@ p {
      card. Most of its height comes from the art column, which is why those
      two windows run side by side above 56em rather than stacked. */
   padding: clamp(1.5rem, 3vw, 2.5rem) clamp(2rem, 4vw, 3.75rem);
-  /* Warm near-black in the brown family, a shade under the title bar so the
-     two dark surfaces read as related rather than identical. */
-  background: #24170f;
+  /* The title bar's own brown. It used to sit a shade under it so the two dark
+     surfaces read as related rather than identical; they are the same surface
+     now, which is the stronger read once the page has two of them. */
+  background: var(--green);
+  border-radius: 0.4375rem;
   overflow: hidden;
 }
 
@@ -859,29 +737,6 @@ p {
   letter-spacing: -0.015em;
 }
 
-/* Marker highlight, after Corgi. clone keeps the padding on every wrapped
-   line instead of only the first and last. */
-
-/* In flow rather than absolutely positioned, which is what keeps them from
-   overlapping at any column width. Absolute placement only avoids a collision
-   at the one size it was tuned for.
-   Stacked is the narrow-screen case, where the art column is the full panel
-   width; side by side above 56em, because two stacked windows are what made
-   the slab tall. */
-.pitch__art {
-  display: none;
-}
-
-.pitch__art--was {
-  display: flex;
-  flex-direction: column;
-  /* Generous, because rotation is not accounted for in layout: a 2.5deg turn
-     on a 440px-wide window pushes its corner ~19px past the box the gap is
-     measured from, which ate almost all of a 20px gap at single-column
-     widths. */
-  gap: clamp(1.5rem, 3.5vw, 2.5rem);
-}
-
 /* Both renders are cropped tight to the window (dialog-*.png). The previous
    pair relied on `mix-blend-mode: lighten` to drop their black grounds, and
    that had two costs: the Learning render's white glow came through as a bright
@@ -899,56 +754,10 @@ p {
   filter: drop-shadow(0 12px 26px rgba(0, 0, 0, 0.5));
 }
 
-/* Sized well under the column so they read as illustration beside the claim,
-   not as the subject of the band. Staggered right then left, with a degree or
-   two of rotation, so the pair still has some life without colliding.
-   The px ceilings matter: the percentages are of the art column, so widening
-   the slab would otherwise scale these straight back up to the size they were
-   before being cut down. */
-.pitch__art-back {
-  align-self: flex-end;
-  width: 62%;
-  max-width: 20rem;
-  rotate: -2.5deg;
-}
-
-.pitch__art-front {
-  align-self: flex-start;
-  width: 54%;
-  max-width: 17.5rem;
-  rotate: 2deg;
-}
-
 @media (min-width: 56em) {
   .pitch__panel {
     grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
     gap: clamp(1.5rem, 3vw, 3.5rem);
-  }
-
-  /* Side by side once there is a column to do it in: stacked, the two windows
-     set the slab's height at ~450px, which read as a card rather than a band.
-     In a row the art is one window tall and the copy becomes the taller of the
-     two sides again. Offset vertically so the pair still steps rather than
-     sitting on one line. */
-  .pitch__art {
-  display: none;
-}
-
-.pitch__art--was {
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: clamp(1rem, 2vw, 1.5rem);
-  }
-
-  .pitch__art-back {
-    align-self: flex-start;
-    width: 48%;
-  }
-
-  .pitch__art-front {
-    align-self: flex-end;
-    width: 44%;
   }
 }
 
@@ -957,8 +766,37 @@ p {
 /* Sits inside the first view, so its height is budgeted — see --fold-reserve.
    No side padding: the marquee runs edge to edge and fades out via a mask. */
 .proof {
-  padding-block: clamp(1.5rem, 2.5vw, 2rem);
+  padding-block: clamp(1.75rem, 3vw, 2.5rem);
   background: var(--bone);
+}
+
+/* Centred over the belt. It was aligned to the content column while the belt
+   runs full bleed and fades at both edges, so a left-set caption had nothing to
+   line up with and read as a stray line above an unrelated strip. Centred, it
+   is the belt's caption. */
+.proof__label {
+  margin: 0 auto clamp(1.125rem, 2.4vw, 1.75rem);
+  max-width: 40rem;
+  padding-inline: var(--gutter);
+  color: var(--caption);
+  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: -0.012em;
+  text-align: center;
+  text-wrap: balance;
+}
+
+/* The only thing worth emphasising in the line is the count, so it takes the
+   weight and the accent and the rest of the sentence stays quiet. Tabular
+   figures so the number sits square rather than drifting on the 5.
+   The bright accent, not the deep one: this was darkened when the line ran at
+   17px, where 3.32:1 failed. At 22px bold it is large text by WCAG, so 3:1 is
+   the bar and the brand orange clears it. */
+.proof__count {
+  color: var(--accent);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Marquee. The track is duplicated in JS and the belt slides exactly -50%,
@@ -1046,28 +884,60 @@ p {
   opacity: 1;
 }
 
+/* Two treatments, because the files arrive two ways. A logo with real
+   transparency can simply be flattened to black. A logo that ships on a white
+   rectangle cannot: brightness(0) would paint the rectangle too, so those are
+   multiplied against the ground instead, which drops the white and leaves the
+   artwork behind. */
+.proof__logo--alpha {
+  filter: brightness(0);
+}
+
+.proof__logo--paper {
+  filter: grayscale(1) contrast(1.1);
+  mix-blend-mode: multiply;
+}
+
+/* A third case: a knockout logo, where the lettering is white inside a solid
+   shape. Multiply drops the white and leaves a bar with holes in it, and
+   brightness(0) fills the whole shape black. Desaturating alone is the only one
+   that keeps the shape and the lettering both. */
+.proof__logo--solid {
+  filter: grayscale(1) contrast(0.92);
+  opacity: 0.9;
+}
+
 /* Heights are tuned per logo, not shared: the set runs from a 1:1 lockup to a
-   15:1 wordmark, so one max-height would leave the wide ones hairline-thin and
+   wide wordmark, so one max-height would leave the wide ones hairline-thin and
    the square ones oversized. Matched on lettering size, not bounding box. */
+.proof__logo--casadelvino {
+  height: 2.5rem;
+}
+
+/* Both of these are a small amount of ink centred on a large square canvas, so
+   they need far more box height than the wordmarks to match their lettering. */
 .proof__logo--egger {
-  height: 2.75rem;
+  height: 5.5rem;
 }
+
 .proof__logo--schuetzengarten {
-  height: 2.25rem;
+  height: 3.875rem;
 }
-.proof__logo--staempfli {
-  height: 1.75rem;
-}
-.proof__logo--marinello {
-  /* Its ink fills only ~48% of a square canvas, so it needs more box height
-     than the others to match their lettering size. */
-  height: 3rem;
-}
+
 .proof__logo--safruits {
-  height: 0.875rem;
+  height: 6.5rem;
 }
-.proof__logo--kellermann {
-  height: 1.25rem;
+
+.proof__logo--staempfli {
+  height: 2.375rem;
+}
+
+.proof__logo--stutzer {
+  height: 3.25rem;
+}
+
+.proof__logo--igp {
+  height: 2rem;
 }
 
 
@@ -1270,138 +1140,12 @@ p {
   z-index: 1;
 }
 
-/* --- Who it is for -------------------------------------------------------- */
-
-/* Six roles, six symptoms. The job of this band is recognition: the visitor
-   should find their own day described in one of the cards and stop reading the
-   others. Card idiom matches the comparison band so the two read as one system. */
-.roles {
-  --guide-col: 88rem;
-  padding: clamp(3.5rem, 7vw, 6rem) var(--gutter);
-  background: var(--bone);
-}
-
-.roles__inner {
-  margin: 0 auto;
-  max-width: 88rem;
-  padding-inline: clamp(1.5rem, 4vw, 4rem);
-}
-
-.roles__head {
-  display: grid;
-  gap: clamp(1.5rem, 3vw, 2.5rem);
-  align-items: end;
-  margin-bottom: clamp(2rem, 4vw, 3rem);
-}
-
 /* The CTA moves beside the copy only when there is room for it to sit on the
    baseline of the lead rather than under a wrapped headline. */
 @media (min-width: 56em) {
   .roles__head {
     grid-template-columns: minmax(0, 1fr) auto;
   }
-}
-
-/* Claim then reach: the accent clause takes its own row so the both/and lands
-   as two beats rather than one long sentence. */
-.roles__title em {
-  display: block;
-}
-
-.roles__title {
-  margin: 0;
-  max-width: 26ch;
-  font-size: clamp(1.875rem, 1rem + 2.8vw, 3.25rem);
-  font-weight: 500;
-  line-height: 1.06;
-  letter-spacing: -0.03em;
-  text-wrap: balance;
-}
-
-.roles__title em {
-  font-style: normal;
-  font-weight: 500;
-  color: var(--accent-deep);
-}
-
-.roles__lead {
-  margin: clamp(0.875rem, 1.6vw, 1.25rem) 0 0;
-  max-width: 46ch;
-  color: var(--caption);
-  font-size: clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);
-  line-height: 1.55;
-  text-wrap: pretty;
-}
-
-.roles__cta {
-  justify-self: start;
-}
-
-/* Three across, two rows. auto-fit gave four on a wide screen, which leaves the
-   second row ragged; six items want an even grid. */
-.roles__grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(0.875rem, 1.8vw, 1.25rem);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-@media (min-width: 40em) {
-  .roles__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 64em) {
-  .roles__grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-.role {
-  padding: clamp(1.375rem, 2.4vw, 1.875rem);
-  background: var(--white);
-  border-radius: clamp(1rem, 2vw, 1.375rem);
-  box-shadow: inset 0 0 0 1px var(--rule);
-}
-
-/* A pixel icon on a small tile rather than the bullet dot: same desktop
-   language as the sequence, and it tells the reader whose card this is before
-   they read a word. */
-.role__tile {
-  display: grid;
-  place-items: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  margin-bottom: clamp(1.5rem, 3.5vw, 2.25rem);
-  border-radius: 0.75rem;
-  background: var(--bone);
-  box-shadow: inset 0 0 0 1px rgba(38, 24, 20, 0.10);
-}
-
-.role__ico {
-  display: block;
-  width: 1.5rem;
-  height: 1.5rem;
-  color: var(--green);
-}
-
-.role__name {
-  margin: 0 0 0.375rem;
-  font-size: 1.0625rem;
-  font-weight: 700;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-}
-
-.role__text {
-  margin: 0;
-  color: #574b45;
-  font-size: 0.9375rem;
-  line-height: 1.55;
-  text-wrap: pretty;
 }
 
 /* --- Testimonial --------------------------------------------------------- */
@@ -1444,7 +1188,7 @@ p {
 .quote__text em {
   font-style: normal;
   font-weight: 500;
-  color: var(--accent-deep);
+  color: var(--accent);
   white-space: nowrap;
 }
 
@@ -1497,145 +1241,6 @@ p {
   line-height: 1.3;
 }
 
-/* --- How it works — the sequence ----------------------------------------- */
-
-/* Last band, so the narrowest guide column: the slab is 100rem, the quote
-   88rem, this 74rem. The content container matches it exactly, which puts the
-   column rules on the content's own left and right edges — the same trick the
-   slab uses, and what stops the rules reading as unrelated lines floating out
-   near the viewport edge.
-   Broad, close to the slab's 94rem: this is the section that carries the most
-   content. The dead space that made an earlier wide version look shoved left is
-   handled by where the space goes, not by shrinking the column — see the
-   space-between on .steps__body. */
-.steps {
-  --guide-col: 88rem;
-  padding: clamp(3rem, 6vw, 5rem) var(--gutter);
-  background: var(--bone);
-}
-
-/* The container spans the guide column so the rules mark its edges, but the
-   content is padded in from those edges rather than sitting on them — Corgi
-   leaves the same breathing room between rule and headline, and flush against
-   the line the type reads as if it has been clamped to it. The inset applies to
-   the rail and the panel as well, so headline, list and content share one left
-   edge set in from the rule. */
-.steps__inner {
-  margin: 0 auto;
-  max-width: 88rem;
-  padding-inline: clamp(1.5rem, 4vw, 4rem);
-}
-
-.steps__head {
-  max-width: 42rem;
-  margin-bottom: clamp(2rem, 4vw, 3rem);
-}
-
-.steps__title {
-  margin: 0;
-  font-size: clamp(1.5rem, 1rem + 1.6vw, 2.25rem);
-  font-weight: 500;
-  line-height: 1.16;
-  letter-spacing: -0.025em;
-  text-wrap: balance;
-}
-
-/* Same italic-accent move as the hero headline: the half that carries the
-   repositioning is the half that gets the accent. */
-.steps__title em {
-  font-style: normal;
-  font-weight: 500;
-  color: var(--accent-deep);
-}
-
-.steps__list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-/* A rule between rows rather than around each one — the row separators are the
-   horizontal half of the same guide system. Ordered top to bottom because the
-   order is the argument: a grid or a set of tabs would imply these are
-   parallel options rather than a sequence. */
-.step {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(1.25rem, 3vw, 2rem);
-  align-items: center;
-  padding-block: clamp(1.75rem, 3.5vw, 2.75rem);
-  border-top: 1px solid var(--rule);
-}
-
-.step:last-child {
-  border-bottom: 1px solid var(--rule);
-}
-
-.step__meta {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.625rem;
-  margin-bottom: 0.625rem;
-  color: var(--caption);
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  line-height: 1.2;
-  text-transform: uppercase;
-}
-
-.step__num {
-  color: var(--ink);
-  font-variant-numeric: tabular-nums;
-}
-
-/* A step that is not part of the entry product says so with a mark, not with a
-   sentence of throat-clearing in front of the claim. */
-.step__tag {
-  display: inline-block;
-  margin: 0 0 0.75rem;
-  padding: 0.3125rem 0.6875rem;
-  border-radius: 999px;
-  background: var(--cream);
-  color: var(--on-cream);
-  font-size: 0.8125rem;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0.01em;
-}
-
-.step__claim {
-  margin: 0;
-  max-width: 26ch;
-  font-size: clamp(1.25rem, 0.9rem + 1.1vw, 1.75rem);
-  font-weight: 500;
-  line-height: 1.22;
-  letter-spacing: -0.02em;
-  text-wrap: balance;
-}
-
-.step__body {
-  margin: 0.625rem 0 0;
-  max-width: 42ch;
-  color: #574b45;
-  font-size: 1rem;
-  line-height: 1.55;
-  text-wrap: pretty;
-}
-
-.step__art {
-  display: block;
-}
-
-@media (min-width: 56em) {
-  .step {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: clamp(2rem, 4vw, 4rem);
-  }
-
-}
-
 /* The voxel sprite: every cube icon defined once in <defs> and pulled in with
    <use>. Inlining 46 copies would have meant roughly 8,000 extra path nodes. */
 /* One stroke weight across every icon on the page. Geometry does the work;
@@ -1665,421 +1270,6 @@ p {
   stroke-width: 1.6;
 }
 
-/* --- Three scenes per step ------------------------------------------------ */
-
-/* Each claim is carried by three small pictures rather than one box of text:
-   a frosted plate, a bloom, and Windows 95 desktop icons arranged so the
-   relationship between them is the message. Sub-headline and one line sit
-   under each plate. */
-.minis {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr));
-  gap: clamp(1rem, 2.4vw, 1.75rem);
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.mini {
-  display: flex;
-  flex-direction: column;
-}
-
-/* The same lit-blue plate as the comparison card, at scene scale: a gradient
-   off --accent with a white core glow over it. Built with color-mix so the
-   eighteen scenes follow the accent token instead of eighteen frozen blues.
-   Squared, following the slab and its panels. */
-.mini__scene {
-  position: relative;
-  isolation: isolate;
-  aspect-ratio: 5 / 4;
-  margin-bottom: 0.875rem;
-  background: linear-gradient(
-    158deg,
-    color-mix(in srgb, var(--accent) 14%, #ffffff) 0%,
-    color-mix(in srgb, var(--accent) 32%, #ffffff) 52%,
-    color-mix(in srgb, var(--accent) 52%, #ffffff) 100%
-  );
-  box-shadow: inset 0 0 0 1px rgba(42, 35, 32, 0.09);
-  overflow: hidden;
-}
-
-/* The core glow. Bled past the plate so the falloff is never cut off at an
-   edge, and clipped back by the parent's overflow. */
-.mini__scene::before {
-  content: '';
-  position: absolute;
-  inset: -14%;
-  z-index: -1;
-  background:
-    radial-gradient(
-      44% 52% at var(--gx, 32%) var(--gy, 30%),
-      rgba(255, 255, 255, 0.96),
-      transparent 68%
-    ),
-    radial-gradient(
-      54% 62% at 92% 94%,
-      color-mix(in srgb, var(--accent) 78%, transparent),
-      transparent 70%
-    );
-}
-
-/* Three light positions, cycling across each step's three scenes, so the
-   eighteen plates are not one plate repeated. */
-.minis > .mini:nth-child(1) .mini__scene {
-  --gx: 26%;
-  --gy: 30%;
-}
-
-.minis > .mini:nth-child(2) .mini__scene {
-  --gx: 64%;
-  --gy: 24%;
-}
-
-.minis > .mini:nth-child(3) .mini__scene {
-  --gx: 38%;
-  --gy: 70%;
-}
-
-.mini__ico {
-  position: absolute;
-  left: var(--x);
-  top: var(--y);
-  display: block;
-  width: var(--s);
-  aspect-ratio: 1;
-  translate: -50% -50%;
-  color: var(--ink);
-  filter: blur(var(--b, 0px));
-}
-
-/* Hairlines from the one thing to the several, or the several to the one. */
-.mini__fan {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  width: 100%;
-  height: 100%;
-  stroke: color-mix(in srgb, var(--accent-deep) 42%, transparent);
-  stroke-width: 2.2;
-}
-
-/* The same app tile as the comparison card, at scene scale. */
-.mini__tile {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  display: grid;
-  place-items: center;
-  width: 26%;
-  aspect-ratio: 1;
-  border-radius: 26%;
-  background: var(--white);
-  color: var(--ink);
-  translate: -50% -50%;
-  box-shadow:
-    inset 0 0 0 1px rgba(42, 35, 32, 0.09),
-    0 6px 16px rgba(28, 40, 30, 0.18);
-}
-
-.mini__tile svg {
-  width: 38%;
-}
-
-/* Win95 progress well, reused at scene scale — the one piece of chrome that
-   still earns its place here, because the number is the point. */
-.mini__meter {
-  position: absolute;
-  left: 14%;
-  right: 14%;
-  bottom: 20%;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.mini__head {
-  margin: 0 0 0.25rem;
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-  text-wrap: balance;
-}
-
-.mini__text {
-  margin: 0;
-  color: #574b45;
-  font-size: 0.9375rem;
-  line-height: 1.5;
-  text-wrap: pretty;
-}
-
-/* --- Dialog, built in CSS ------------------------------------------------ */
-
-/* The same window as the renders in the explainer box, but as markup: the copy
-   stays editable, it is real text for search and selection, and it needs no
-   new render per step. Bevels are two-tone — light top-left, shadow
-   bottom-right — which a single border cannot express. */
-.dlg {
-  width: 100%;
-  max-width: 24rem;
-  background: var(--chrome-face);
-  padding: 3px;
-  box-shadow:
-    inset 2px 2px 0 var(--chrome-light),
-    inset -2px -2px 0 var(--chrome-shadow),
-    0 12px 26px rgba(42, 35, 32, 0.14);
-}
-
-.dlg__bar {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  height: 2rem;
-  padding: 0 0.25rem 0 0.5rem;
-  background: var(--green);
-}
-
-.dlg__title {
-  flex: 1 1 auto;
-  min-width: 0;
-  overflow: hidden;
-  color: var(--bone);
-  font-size: 0.875rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  line-height: 1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.dlg__ctls {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  flex: 0 0 auto;
-}
-
-.dlg__ctl {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.25rem;
-  height: 1.125rem;
-  background: var(--chrome-face);
-  box-shadow:
-    inset 1.5px 1.5px 0 var(--chrome-light),
-    inset -1.5px -1.5px 0 var(--chrome-shadow);
-}
-
-.dlg__ctl i {
-  display: block;
-  background: var(--ink);
-}
-
-.dlg__ctl--min i {
-  width: 8px;
-  height: 2px;
-  margin-top: 5px;
-}
-
-.dlg__ctl--max i {
-  width: 9px;
-  height: 8px;
-  background: transparent;
-  border: 1.5px solid var(--ink);
-  border-top-width: 3px;
-}
-
-/* Drawn rather than shipped as a glyph, so it inherits the ink colour. */
-.dlg__ctl--close i {
-  position: relative;
-  width: 9px;
-  height: 9px;
-  background: transparent;
-}
-
-.dlg__ctl--close i::before,
-.dlg__ctl--close i::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  height: 1.5px;
-  background: var(--ink);
-}
-
-.dlg__ctl--close i::before {
-  rotate: 45deg;
-}
-
-.dlg__ctl--close i::after {
-  rotate: -45deg;
-}
-
-.dlg__body {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.875rem;
-  padding: 1rem 1rem 0.875rem;
-}
-
-/* Lead line then three bullets, after Granola's brief card: the headline of
-   the moment, then the three facts behind it. */
-.dlg__icon {
-  flex: 0 0 auto;
-  width: 2rem;
-  height: 2rem;
-  margin-top: -1px;
-}
-
-.dlg__icon .pix {
-  width: 100%;
-  height: 100%;
-  filter: none;
-}
-
-/* The full dialog is not on the page right now — the step art moved to the
-   three scenes above — but it is a brand component and the chrome tokens it
-   defines are used by the progress well. Kept deliberately. */
-
-.dlg__meter {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  margin-top: 0.75rem;
-}
-
-/* Sunken well, the inverse bevel of the frame. */
-.dlg__well {
-  flex: 1 1 auto;
-  height: 0.5rem;
-  border-radius: var(--pill);
-  background: rgba(38, 24, 20, 0.13);
-  overflow: hidden;
-}
-
-.dlg__fill {
-  display: block;
-  height: 100%;
-  border-radius: var(--pill);
-  background: var(--green);
-  animation: dlg-fill 1100ms var(--ease) both;
-}
-
-@keyframes dlg-fill {
-  from {
-    width: 0%;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .dlg__fill {
-    animation: none;
-  }
-}
-
-.dlg__pct {
-  flex: 0 0 auto;
-  color: var(--ink);
-  font-size: 0.875rem;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-}
-
-.dlg__foot {
-  display: flex;
-  justify-content: flex-end;
-  padding: 0.625rem 1rem 0.875rem;
-  border-top: 1px solid var(--chrome-shadow);
-}
-
-.dlg__btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 2rem;
-  padding: 0 0.875rem;
-  background: var(--chrome-face);
-  color: var(--ink);
-  font-size: 0.875rem;
-  font-weight: 700;
-  box-shadow:
-    inset 1.5px 1.5px 0 var(--chrome-light),
-    inset -1.5px -1.5px 0 var(--chrome-shadow);
-}
-
-/* The dotted inner ring is the Win95 default-button tell. */
-.dlg__btn > span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  padding: 0 0.125rem;
-  outline: 1px dotted rgba(42, 35, 32, 0.55);
-  outline-offset: -3px;
-}
-
-/* --- Sequence as tabs (progressive enhancement) --------------------------- */
-
-/* Five stacked rows ran to ~1290px of scroll. Collapsed to a rail of step
-   labels beside a single panel — after Granola — the same content sits in one
-   screen. The tab layout only engages once JS has added .steps--tabs and built
-   the rail; without JS the rows stay stacked, which reads fine and keeps all
-   five in the markup for search. */
-
-@media (min-width: 56em) {
-  .steps--tabs .steps__body {
-    display: grid;
-    /* Capped panel plus space-between: the rail stays on the left inset, the
-       panel keeps a sane measure, and the slack lands in the gap between them
-       instead of as dead space to the right of the content. */
-    grid-template-columns: minmax(9rem, 12rem) minmax(0, 46rem);
-    justify-content: space-between;
-    gap: clamp(2rem, 3.5vw, 3rem);
-    align-items: start;
-  }
-}
-
-/* Rail. Hairline under every item, the active one weighted in ink — the
-   difference is weight and colour, not a highlight block. */
-.steps__rail {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: clamp(1.75rem, 3vw, 0rem);
-}
-
-.steps__tab {
-  display: flex;
-  align-items: baseline;
-  gap: 0.625rem;
-  width: 100%;
-  padding: 0.875rem 0;
-  border: 0;
-  border-bottom: 1px solid var(--rule);
-  background: none;
-  color: var(--caption);
-  font: 500 1rem/1.3 var(--font);
-  text-align: left;
-  cursor: pointer;
-  transition: color 140ms var(--ease);
-}
-
-.steps__tab:hover {
-  color: var(--ink);
-}
-
-.steps__tab[aria-selected='true'] {
-  color: var(--ink);
-  border-bottom: 2px solid var(--ink);
-  padding-bottom: calc(0.875rem - 1px);
-}
-
 .steps__tab-num {
   color: var(--caption);
   font-size: 0.875rem;
@@ -2088,108 +1278,7 @@ p {
 }
 
 .steps__tab[aria-selected='true'] .steps__tab-num {
-  color: var(--accent-deep);
-}
-
-/* All panels share one grid cell, so the container is as tall as the tallest
-   and switching tabs cannot make the page jump. Inactive panels are hidden
-   with visibility rather than display, which keeps that height and still takes
-   them out of the accessibility tree. */
-.steps--tabs .steps__list {
-  display: grid;
-}
-
-.steps--tabs .step {
-  grid-area: 1 / 1;
-  grid-template-columns: minmax(0, 1fr);
-  gap: clamp(1.25rem, 2.5vw, 1.75rem);
-  padding-block: 0;
-  border: 0;
-  align-items: start;
-}
-
-.steps--tabs .step:last-child {
-  border-bottom: 0;
-}
-
-.steps--tabs .step--inactive {
-  visibility: hidden;
-}
-
-/* The rail already names the step, so the in-panel label would say it twice. */
-.steps--tabs .step__meta {
-  display: none;
-}
-
-.steps--tabs /* A step that is not part of the entry product says so with a mark, not with a
-   sentence of throat-clearing in front of the claim. */
-.step__tag {
-  display: inline-block;
-  margin: 0 0 0.75rem;
-  padding: 0.3125rem 0.6875rem;
-  border-radius: 999px;
-  background: var(--cream);
-  color: var(--on-cream);
-  font-size: 0.8125rem;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0.01em;
-}
-
-.step__claim {
-  max-width: 30ch;
-  font-size: clamp(1.5rem, 1.05rem + 1.5vw, 2.25rem);
-}
-
-.steps--tabs .step__body {
-  max-width: 46ch;
-  font-size: 1.0625rem;
-}
-
-
-
-/* --- Sequence: scroll-driven progression ---------------------------------- */
-
-/* The rail is also a scroll position. The panel sticks while a tall track
-   scrolls past behind it, and the active step is derived from how far through
-   that track you are — so the sequence advances as you read rather than only
-   when clicked. Clicking a rail item scrolls to that step's slice, which keeps
-   the two in agreement instead of letting a click fight the scroll handler.
-   --steps-slice is the scroll distance allotted per step; the track is that
-   times the number of steps, set from JS. */
-.steps--tabs .steps__track {
-  --steps-slice: 58vh;
-  height: calc(var(--steps-count, 5) * var(--steps-slice));
-}
-
-.steps--tabs .steps__stage {
-  position: sticky;
-  /* Clears the sticky title bar. */
-  top: 5.5rem;
-}
-
-/* Inside the pinned stage the heading is close company for the panel, so it
-   needs less room beneath it than it did as a section header. */
-.steps--tabs .steps__head {
-  margin-bottom: clamp(1.5rem, 2.5vw, 2rem);
-}
-
-@media (max-width: 55.999em) {
-  /* No pinning on small screens: a sticky panel plus a rail above it eats the
-     whole viewport, and the track would be pure dead scroll. */
-  .steps--tabs .steps__track {
-    height: auto;
-  }
-
-  .steps--tabs .steps__stage {
-    position: static;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .steps--tabs .steps__track {
-    --steps-slice: 42vh;
-  }
+  color: var(--accent);
 }
 
 /* --- Hoshii Chat band ----------------------------------------------------- */
@@ -2389,7 +1478,7 @@ p {
 .shift__title em {
   font-style: normal;
   font-weight: 500;
-  color: var(--accent-deep);
+  color: var(--accent);
 }
 
 .shift__pair {
@@ -2423,7 +1512,7 @@ p {
    swallow it. At 26% the card reads blue and the panel still sits on top of it
    as the brighter surface. Body copy is #574b45, 7.2:1 here. */
 .shift__card:has(.shift__art--flow) {
-  background: color-mix(in srgb, var(--accent) 26%, #ffffff);
+  background: color-mix(in srgb, var(--green) 8%, #ffffff);
 }
 
 /* The art sits in its own well inside the card, as Corgi's does. Both wells
@@ -2448,15 +1537,19 @@ p {
 /* Filled with the accent rather than near-white. Built with color-mix off
    --accent instead of three hardcoded blues, so swapping the accent token
    carries the card with it. */
+/* The brand green, not a tint of it. This is the "with Hoshii" side, so it wears
+   the product's own surface colour; the white tiles and the mark read straight
+   off it. Everything drawn on top had to flip light, since the panel went from
+   a pale ground to a dark one. */
 .shift__art--flow {
   isolation: isolate;
   background: linear-gradient(
     158deg,
-    color-mix(in srgb, var(--accent) 48%, #ffffff) 0%,
-    color-mix(in srgb, var(--accent) 74%, #ffffff) 46%,
-    var(--accent) 100%
+    color-mix(in srgb, var(--green) 82%, #ffffff) 0%,
+    var(--green) 52%,
+    color-mix(in srgb, var(--green) 82%, #000000) 100%
   );
-  box-shadow: inset 0 0 0 1px rgba(42, 35, 32, 0.09);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
 }
 
 .shift__art--flow::before {
@@ -2465,18 +1558,24 @@ p {
   inset: -12%;
   z-index: -2;
   background:
-    radial-gradient(42% 66% at 4% 50%, rgba(59, 36, 31, 0.18), transparent 68%),
-    radial-gradient(42% 66% at 96% 50%, rgba(120, 156, 196, 0.5), transparent 68%),
-    radial-gradient(34% 44% at 50% 50%, rgba(255, 255, 255, 0.9), transparent 72%);
+    radial-gradient(46% 70% at 6% 50%, rgba(0, 0, 0, 0.28), transparent 68%),
+    radial-gradient(46% 70% at 94% 50%, rgba(0, 0, 0, 0.22), transparent 68%),
+    radial-gradient(
+      38% 48% at 50% 48%,
+      color-mix(in srgb, var(--sage) 42%, transparent),
+      transparent 74%
+    );
 }
 
+/* Above the picture now, not under it: it names what you are about to look at
+   rather than captioning it afterwards, so it carries more weight. */
 .shift__label {
-  margin: 0 0 0.4375rem;
+  margin: 0 0 clamp(0.75rem, 1.6vw, 1.125rem);
   padding-inline: 0.375rem;
-  font-size: 1.0625rem;
+  font-size: clamp(1.1875rem, 1rem + 0.6vw, 1.5rem);
   font-weight: 700;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
 }
 
 /* The one bolded clause, after Corgi's "we are full-stack": the sentence that
@@ -2656,7 +1755,7 @@ p {
 
 .flow__lines path {
   fill: none;
-  stroke: rgba(42, 35, 32, 0.2);
+  stroke: rgba(255, 255, 255, 0.28);
   stroke-width: 1.1;
 }
 
@@ -2665,7 +1764,7 @@ p {
    reads as "in, decided, out". */
 .flow__pulses path {
   fill: none;
-  stroke: rgba(59, 36, 31, 0.85);
+  stroke: var(--accent);
   stroke-width: 1.6;
   stroke-linecap: round;
   /* The gap has to be far longer than the path, not equal to it. At `7 100`
@@ -2764,21 +1863,6 @@ p {
 .flow__mark {
   width: 7.2cqw;
   color: var(--ink);
-}
-
-/* --- Who it is for: role panels inside the slab --------------------------- */
-
-/* The six roles used to be their own band under the comparison. They are now
-   the slab's right column: the claim on the left says what Hoshii is, the
-   panels say who it is for, and hovering one makes the general claim specific.
-   The column the panels occupy is the old .pitch__art column, which was
-   already switched off, so nothing had to move to make room. */
-@media (min-width: 64em) {
-  .pitch__panel {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.04fr);
-    align-items: center;
-    gap: clamp(2rem, 4vw, 3.5rem);
-  }
 }
 
 /* The paragraph and its six replacements are stacked in one grid cell, so the
@@ -2891,6 +1975,8 @@ p {
      and it becomes the reference's picture tile with no other change. */
   background-color: rgba(255, 255, 255, 0.045);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  /* Slight, matching the buttons. */
+  border-radius: 0.4375rem;
   overflow: hidden;
   cursor: pointer;
   transition:
@@ -3113,7 +2199,7 @@ p {
 .trust__title em {
   font-style: normal;
   font-weight: 500;
-  color: var(--accent-deep);
+  color: var(--accent);
 }
 
 /* Spans both columns and sits under the copy row, so the band stays short and
@@ -3141,119 +2227,12 @@ p {
   text-wrap: pretty;
 }
 
-/* --- The facts row ---
-   No fills. Cards read as patches stuck onto the band rather than part of it,
-   and six of them turned a calm strip into a form. One hairline holds the
-   group and the type does the rest. */
-
-.trust__facts {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 1.125rem;
-  margin-top: clamp(1rem, 2vw, 1.375rem);
-  padding-top: clamp(0.75rem, 1.6vw, 1rem);
-  border-top: 1px solid rgba(38, 24, 20, 0.16);
-}
-
-/* Keys inline with their values, all on one line: that is what makes the row
-   thin rather than two stacked key/value pairs. */
-.trust__origin {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin: 0;
-}
-
-/* Sentence case, not caps. The tracked-out uppercase treatment made these two
-   read as field labels on a form; they are just words in a line of text. */
-.origin__key {
-  color: var(--caption);
-  font-size: 0.9375rem;
-  font-weight: 400;
-  line-height: 1.4;
-}
-
-.origin__val {
-  color: var(--ink);
-  font-size: 0.9375rem;
-  font-weight: 500;
-  line-height: 1.4;
-}
-
-.trust__badges {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.375rem 1.125rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.badge {
-  display: flex;
-  align-items: center;
-  gap: 0.4375rem;
-}
-
-/* A hairline between neighbours rather than a frame around each. */
-.badge + .badge {
-  padding-left: 1.125rem;
-  border-left: 1px solid rgba(38, 24, 20, 0.16);
-}
-
-/* Once the row wraps, every divider except the first line's lands at the start
-   of a line with nothing to its left, which is what made this look skewed on a
-   phone. Below the width where all three still fit, they stack and the
-   dividers come off entirely. */
-@media (max-width: 46em) {
-  .trust__badges {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.4375rem;
-  }
-
-  .badge + .badge {
-    padding-left: 0;
-    border-left: 0;
-  }
-}
-
 /* At 3.56:1 the strip is barely 100px tall on a phone and the towers stop
    reading. Squarer below the two-column break. */
 @media (max-width: 64em) {
   .trust__strip {
     aspect-ratio: 16 / 9;
   }
-}
-
-.badge__ico {
-  display: block;
-  flex: 0 0 auto;
-  width: 1.0625rem;
-  height: 1.0625rem;
-  color: var(--accent-deep);
-}
-
-.badge__ico .vox {
-  stroke-width: 1.6;
-}
-
-.badge__name {
-  color: var(--ink);
-  font-size: 0.9375rem;
-  font-weight: 500;
-  line-height: 1.4;
-}
-
-/* Stays as legible as the standard's name: an unqualified SOC 2 or ISO 27001
-   claim would be a compliance assertion, and neither is certified. */
-.badge__note {
-  color: var(--caption);
-  font-size: 0.875rem;
-  line-height: 1.4;
 }
 
 /* --- The industry panels' cursor -----------------------------------------
@@ -3311,18 +2290,1161 @@ p {
    sits on the bone ground, where that pill has almost no edge, so this one
    carries a hairline ring. Without it the button reads as floating text with a
    badge next to it. */
-.btn-os--light {
-  background: var(--white);
-  color: var(--green);
-  box-shadow: inset 0 0 0 1px rgba(38, 24, 20, 0.14);
+/* Filled, for the primary CTA on a light ground. Outlined, it read as a
+   secondary next to the nav's solid pill, which is backwards: this is the page's
+   main action.
+   White label, as asked. Worth knowing: white on this orange is 3.40:1, which
+   clears AA for large text but not for the 16px this label runs at. The badge
+   goes white with it, so the button is one orange object rather than an orange
+   fill with a dark disc stuck on it. */
+.btn-os--fill {
+  background: var(--accent);
+  color: #ffffff;
+  box-shadow: none;
 }
 
-.btn-os--light:hover {
-  background: var(--white);
-  box-shadow: inset 0 0 0 1px rgba(38, 24, 20, 0.3);
+.btn-os--fill:hover {
+  background: #e34400;
 }
 
-.btn-os--light .btn-os__go {
+.btn-os--fill .btn-os__go {
+  background: #ffffff;
+  color: var(--accent);
+}
+
+/* --- Hero on a phone: the picture scooped into the ground -----------------
+   Below the two-column break the picture is a band with the white band under
+   it, so its bottom edge can curve away instead of stopping square. Two things
+   do it: generous bottom corners, and a wide shallow ellipse masked out of the
+   bottom centre, so the photograph reads as flowing into the band under it. */
+@media (max-width: 63.999em) {
+  .hero__shots {
+    /* The arc is wider than the picture on purpose. At 74% its ends landed
+       inside the frame and met the bottom corners at a visible angle, so the
+       scoop read as a bite. Past 100% the ellipse crosses the bottom edge
+       outside the visible box, and what is left is one continuous curve from
+       corner to corner. No bottom radius needed: the arc is the corner now.
+       The opaque stop is the kept area, since a mask reads alpha, not colour. */
+    -webkit-mask-image: radial-gradient(
+      116% 2.5rem at 50% 100%,
+      transparent 99%,
+      #000 100%
+    );
+    mask-image: radial-gradient(
+      116% 2.5rem at 50% 100%,
+      transparent 99%,
+      #000 100%
+    );
+  }
+}
+
+/* --- Three capabilities -------------------------------------------------
+   Replaces the six-step sequence. Alternating copy/art rows, after Fyxer's
+   shape but in this palette and without the confetti: the art is a quiet piece
+   of interface doing one thing, closer to Harvey. Each row's animation runs on
+   a loop and freezes to a legible resting state under reduced motion. */
+
+.caps {
+  --guide-col: 88rem;
+  padding: clamp(3rem, 6vw, 5rem) 0;
+  background: var(--bone);
+}
+
+.caps__inner {
+  margin: 0 auto;
+  max-width: 88rem;
+  padding-inline: clamp(1.5rem, 4vw, 4rem);
+}
+
+/* Full width, not a 42rem measure. This headline is one sentence and it read as
+   bent when the column forced it onto two lines. */
+.caps__head {
+  margin-bottom: clamp(2rem, 5vw, 4rem);
+}
+
+.caps__title {
+  margin: 0;
+  max-width: none;
+  font-size: clamp(1.875rem, 1.1rem + 2.6vw, 3.25rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.032em;
+}
+
+/* The second sentence takes its own line. A width-driven break landed wherever
+   the column ran out, which put it mid-sentence. */
+.caps__title em {
+  display: block;
+  font-style: normal;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+/* --- One capability row --- */
+
+.cap {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.75rem, 4vw, 3rem);
+  align-items: center;
+  padding-block: clamp(2rem, 5vw, 3.5rem);
+  border-top: 1px solid var(--rule);
+}
+
+.cap:first-of-type {
+  border-top: 0;
+  padding-top: 0;
+}
+
+@media (min-width: 60em) {
+  .cap {
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1fr);
+    gap: clamp(2.5rem, 6vw, 5rem);
+  }
+
+  /* Art on the left for the middle row, so the page alternates instead of
+     running three identical rows down one side. */
+  .cap--flip .cap__copy {
+    order: 2;
+  }
+}
+
+.cap__copy {
+  max-width: 34rem;
+}
+
+.cap[data-tone='a'] .cap__dot {
+  background: var(--accent);
+}
+
+.cap[data-tone='b'] .cap__dot {
+  background: var(--sage);
+}
+
+.cap[data-tone='c'] .cap__dot {
+  background: var(--green);
+}
+
+.cap__head {
+  margin: 0;
+  font-size: clamp(1.625rem, 1rem + 2.1vw, 2.5rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.cap__lead {
+  margin: clamp(0.875rem, 2vw, 1.125rem) 0 0;
+  max-width: 46ch;
+  color: var(--caption);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.cap__points {
+  display: grid;
+  gap: clamp(0.875rem, 2vw, 1.25rem);
+  margin: clamp(1.375rem, 3vw, 2rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 40em) {
+  .cap__points {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.cap__point {
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--rule);
+}
+
+.cap__pname {
+  margin: 0 0 0.25rem;
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.cap__ptext {
+  margin: 0;
+  color: var(--caption);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+/* --- The art well: one shape for all three --- */
+
+.cap__art {
+  container-type: inline-size;
+  position: relative;
+  isolation: isolate;
+  border-radius: 0.4375rem;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  padding: clamp(1.25rem, 3vw, 2.25rem);
+  overflow: hidden;
+  background: linear-gradient(
+    158deg,
+    color-mix(in srgb, var(--sage) 16%, #ffffff) 0%,
+    color-mix(in srgb, var(--sage) 40%, #ffffff) 54%,
+    color-mix(in srgb, var(--sage) 64%, #ffffff) 100%
+  );
+  box-shadow: inset 0 0 0 1px rgba(42, 35, 32, 0.09);
+}
+
+/* The core glow, same device as the step scenes it replaces. */
+/* A fine hairline grid behind the art. The chevrons were a second subject and a
+   dot field was pure decoration; a grid is neither, it reads as the surface the
+   interface is laid out on. Two gradients rather than an asset, so it stays
+   crisp at any size, and the bloom over it keeps the middle clear. */
+.cap__art::before {
+  content: '';
+  position: absolute;
+  inset: -14%;
+  z-index: 0;
+  background-image:
+    linear-gradient(to right, rgba(42, 35, 32, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(42, 35, 32, 0.07) 1px, transparent 1px);
+  background-size: 2.25rem 2.25rem;
+}
+
+.cap__art::after {
+  content: '';
+  position: absolute;
+  inset: -14%;
+  z-index: 0;
+  background: radial-gradient(
+    52% 58% at 42% 38%,
+    color-mix(in srgb, var(--sage) 18%, #ffffff) 0%,
+    rgba(255, 255, 255, 0.86) 46%,
+    transparent 74%
+  );
+}
+
+
+/* --- 1. One inbox, three workspaces --------------------------------------
+   The mail is placed inside the lane it belongs to and enters from where the
+   inbox is, rather than being flown at a target from elsewhere. That is what
+   fixes the alignment: the resting position IS the lane, so nothing can drift
+   out of register with its label at any width. --from is how far sideways the
+   inbox sits from that lane, which is the only value that differs. */
+
+.sortart {
+  /* One row height, shared by the mails and by the Unibox body that holds
+     three of them. Derived once so the stack inside the panel is exact instead
+     of two clamps that happen to be close. */
+  --row: clamp(1.5rem, 5.4cqw, 2rem);
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: clamp(1.25rem, 6cqw, 2.5rem);
+  width: 100%;
+}
+
+/* The single point everything arrives at, drawn as an inbox rather than
+   labelled as one: a titled panel with unread lines in it. */
+.inbox {
+  justify-self: center;
+  /* Matched to a lane's inner width, so the mails fill the panel edge to edge
+     and read as its rows. Wider, they floated inside it with a margin on each
+     side, which is what made them look pasted in. */
+  width: 29%;
+  min-width: 8rem;
+  padding-bottom: clamp(0.3125rem, 1.4cqw, 0.5rem);
+  border-radius: 0.4375rem;
+  background: var(--white);
+  box-shadow:
+    inset 0 0 0 1px rgba(42, 35, 32, 0.1),
+    0 6px 16px rgba(28, 34, 26, 0.1);
+  overflow: hidden;
+}
+
+.inbox__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin: 0 0 clamp(0.3125rem, 1.4cqw, 0.5rem);
+  padding: clamp(0.3125rem, 1.4cqw, 0.4375rem) clamp(0.4375rem, 1.8cqw, 0.625rem);
+  background: var(--ink);
+  color: var(--bone);
+  font-size: clamp(0.5rem, 1.9cqw, 0.6875rem);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.inbox__logo {
+  display: grid;
+  place-items: center;
+  width: 0.625rem;
+  height: 0.625rem;
+  flex: 0 0 auto;
+  color: var(--bone);
+}
+
+.inbox__logo svg {
+  width: 100%;
+  height: auto;
+}
+
+/* Empty. The mails are the panel's rows, so there are no placeholder stripes
+   under them: this just holds the panel's height while they are away in their
+   lanes, instead of collapsing to the title bar. */
+/* Exactly three rows tall, so the panel holds its shape whether the mails are
+   in it or away in their lanes. */
+.inbox__body {
+  height: calc(3 * var(--row));
+}
+
+.lanes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.375rem, 1.8cqw, 0.75rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The lanes are the pattern. Three faint columns explain the layout, where a
+   decorative field behind it explained nothing. */
+.lane {
+  display: grid;
+  gap: clamp(0.375rem, 1.6cqw, 0.625rem);
+  padding: clamp(0.4375rem, 1.8cqw, 0.75rem);
+  border-radius: 0.4375rem;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: inset 0 0 0 1px rgba(42, 35, 32, 0.08);
+  animation: lane-hit 7s calc(var(--i) * 1.1s) infinite;
+}
+
+.lane__name {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(0.5rem, 1.9cqw, 0.6875rem);
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Holds the lane open so the columns stay level whether or not their mail is
+   currently in frame. */
+.lane__slot {
+  min-height: clamp(2.25rem, 9cqw, 3rem);
+}
+
+.lmail {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.375rem;
+  height: var(--row);
+  padding-inline: clamp(0.375rem, 1.6cqw, 0.5625rem);
+  background: var(--white);
+  opacity: 0;
+  /* Radius and shadow are animated, not fixed: in the Unibox these are flush
+     rows of a list, and in the lane the same element is a card. Fixed, they
+     read as three cards pasted over the panel. */
+  animation: lane-drop 7s calc(var(--i) * 1.1s) infinite;
+}
+
+.lmail__tag {
+  flex: 0 0 auto;
+  scale: 0;
+  transform-origin: right center;
+  animation: lmail-tag 7s calc(var(--i) * 1.1s) infinite;
+  padding: 0.15em 0.4em;
+  border-radius: 0.1875rem;
+  font-size: clamp(0.4375rem, 1.6cqw, 0.625rem);
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.lmail__tag--order {
+  background: var(--accent);
+  color: var(--on-accent-sm);
+}
+
+.lmail__tag--issue {
   background: var(--green);
   color: var(--bone);
+}
+
+.lmail__tag--new {
+  background: var(--sage);
+  color: var(--ink);
+}
+
+.lmail__who {
+  color: var(--ink);
+  font-size: clamp(0.5rem, 1.9cqw, 0.6875rem);
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@keyframes lane-drop {
+  /* A flush row inside the Unibox: square, and separated from its neighbour by
+     a hairline rather than by a gap. */
+  0% {
+    translate: var(--from) var(--fy);
+    opacity: 0;
+    border-radius: 0;
+    box-shadow: inset 0 -1px 0 rgba(42, 35, 32, 0.09);
+  }
+  8%,
+  38% {
+    translate: var(--from) var(--fy);
+    opacity: 1;
+    border-radius: 0;
+    box-shadow: inset 0 -1px 0 rgba(42, 35, 32, 0.09);
+  }
+  /* A card, once it is in its lane. */
+  58%,
+  88% {
+    translate: 0 0;
+    opacity: 1;
+    border-radius: 0.3125rem;
+    box-shadow:
+      inset 0 0 0 1px rgba(42, 35, 32, 0.08),
+      0 6px 16px rgba(28, 34, 26, 0.12);
+  }
+  96%,
+  100% {
+    translate: 0 0;
+    opacity: 0;
+    border-radius: 0.3125rem;
+    box-shadow:
+      inset 0 0 0 1px rgba(42, 35, 32, 0.08),
+      0 6px 16px rgba(28, 34, 26, 0.12);
+  }
+}
+
+/* The label lands while the mail is still sitting in the inbox, which is the
+   order the copy claims: classified before it is moved. */
+@keyframes lmail-tag {
+  0%,
+  20% {
+    scale: 0;
+  }
+  30%,
+  92% {
+    scale: 1;
+  }
+  97%,
+  100% {
+    scale: 0;
+  }
+}
+
+@keyframes lane-hit {
+  0%,
+  52% {
+    box-shadow: inset 0 0 0 1px rgba(42, 35, 32, 0.08);
+  }
+  62%,
+  80% {
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+  90%,
+  100% {
+    box-shadow: inset 0 0 0 1px rgba(42, 35, 32, 0.08);
+  }
+}
+
+/* --- 2. Context orbiting the mark, then pulled into it -------------------
+   Six sources circle the Hoshii mark and are gathered into it. The orbit is one
+   keyframe set of eight waypoints on a radius; each chip runs it with a negative
+   delay, which spaces the six evenly round the ring and keeps every label
+   upright, since only translate changes and nothing rotates.
+   The gather is a scale on the ring itself, so all six converge on its centre,
+   which is exactly where the mark sits. */
+
+.hub__mark {
+  width: 44%;
+}
+
+/* --- 2. Everything it reads, pulled into the mark ------------------------
+   No rings. Two concentric orbits meant the logos and the screenshots each had
+   their own radius, which never agreed at any width, and the labels drifted.
+   These are placed individually in percentages of the well, mixed rather than
+   sorted by kind, so nothing shares a radius with anything.
+
+   The cycle: items arrive one after another on a stagger, hold, then the whole
+   field is scaled into the mark at once. One duration drives both, so the
+   entrances and the pull can never fall out of phase. */
+
+.suckart {
+  --cycle: 13s;
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* The pull is a scale on the field, so every item converges on its centre,
+   which is exactly where the mark sits. One transition, so all seven go at
+   once however staggered their arrival was. */
+.suckart__field {
+  position: absolute;
+  inset: 0;
+  transition:
+    scale 0.75s cubic-bezier(0.5, 0, 0.3, 1),
+    opacity 0.75s ease;
+}
+
+.suckart.is-suck .suckart__field {
+  scale: 0.05;
+  opacity: 0;
+}
+
+.item {
+  position: absolute;
+  opacity: 0;
+  translate: 0 0.625rem;
+  scale: 0.94;
+  transition:
+    opacity 0.5s ease,
+    translate 0.5s ease,
+    scale 0.5s ease;
+  transition-delay: calc(var(--i) * 0.15s);
+}
+
+/* In, one after another. */
+.suckart.is-in .item {
+  opacity: 1;
+  translate: 0 0;
+  scale: 1;
+}
+
+/* Real product surfaces. */
+.shot {
+  padding: 0.25rem;
+  border-radius: 0.4375rem;
+  background: var(--white);
+  box-shadow:
+    inset 0 0 0 1px rgba(42, 35, 32, 0.08),
+    0 10px 26px rgba(28, 34, 26, 0.12);
+}
+
+.shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.3125rem;
+}
+
+.shot--knowledge {
+  top: 1%;
+  left: 0%;
+  width: 39%;
+}
+
+.shot--conn {
+  top: 2%;
+  right: 0%;
+  width: 25%;
+}
+
+.shot--chat {
+  bottom: 4%;
+  left: 15%;
+  width: 41%;
+}
+
+/* Source logos, deliberately interleaved with the screenshots rather than set
+   on a ring of their own. */
+.logo {
+  display: grid;
+  place-items: center;
+  width: clamp(1.5rem, 7cqw, 2.25rem);
+  aspect-ratio: 1;
+  padding: clamp(0.1875rem, 1cqw, 0.3125rem);
+  border-radius: 0.375rem;
+  background: var(--white);
+  box-shadow:
+    inset 0 0 0 1px rgba(42, 35, 32, 0.1),
+    0 5px 14px rgba(28, 34, 26, 0.12);
+}
+
+.logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.logo--a {
+  top: 40%;
+  left: 1%;
+}
+
+.logo--b {
+  top: 22%;
+  right: 30%;
+}
+
+.logo--c {
+  bottom: 33%;
+  right: 3%;
+}
+
+.logo--d {
+  bottom: 10%;
+  right: 31%;
+}
+
+/* Above the field, and outside it, so the pull happens into the mark rather
+   than taking the mark with it. */
+.mark {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: clamp(2.25rem, 10cqw, 3.25rem);
+  aspect-ratio: 1;
+  border-radius: 0.5rem;
+  background: var(--white);
+  color: var(--green);
+  box-shadow:
+    inset 0 0 0 1px rgba(42, 35, 32, 0.08),
+    0 8px 22px rgba(28, 34, 26, 0.16);
+  transition: scale 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Takes the hit as the field lands in it, then settles. */
+.suckart.is-suck .mark {
+  animation: mark-pulse 0.9s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+}
+
+@keyframes mark-pulse {
+  0% {
+    scale: 1;
+  }
+  34% {
+    scale: 1.18;
+  }
+  62% {
+    scale: 0.97;
+  }
+  100% {
+    scale: 1;
+  }
+}
+
+/* --- What it does with everything it just took in ---
+   The last beat: it answers. Same shape as the chat band, so the two read as
+   the same product rather than two ideas. */
+.answer {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  top: 58%;
+  translate: -50% 0.5rem;
+  width: min(78%, 15rem);
+  padding: clamp(0.5rem, 2cqw, 0.75rem) clamp(0.5625rem, 2.2cqw, 0.875rem);
+  border-radius: 0.4375rem;
+  background: var(--white);
+  box-shadow:
+    inset 0 0 0 1px rgba(42, 35, 32, 0.08),
+    0 10px 26px rgba(28, 34, 26, 0.14);
+  opacity: 0;
+  transition:
+    opacity 0.4s ease,
+    translate 0.4s ease;
+}
+
+.suckart.is-answer .answer {
+  opacity: 1;
+  translate: -50% 0;
+}
+
+/* Typed rather than faded in: clip-path in steps reads as characters arriving,
+   which is what the chat band does with its own question. */
+.answer__q {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(0.5625rem, 2.1cqw, 0.8125rem);
+  font-weight: 500;
+  line-height: 1.3;
+  clip-path: inset(0 100% 0 0);
+}
+
+.suckart.is-answer .answer__q {
+  transition: clip-path 1s steps(24, end) 0.2s;
+  clip-path: inset(0 0 0 0);
+}
+
+/* The work, between the question and the answer. Without it the reply looked
+   conjured; naming the two places it reads from is the whole trust argument. */
+.answer__think {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin: clamp(0.3125rem, 1.4cqw, 0.4375rem) 0 0;
+  color: var(--caption);
+  font-size: clamp(0.4375rem, 1.7cqw, 0.625rem);
+  line-height: 1.3;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.suckart.is-think .answer__think {
+  opacity: 1;
+}
+
+/* Collapses once the answer is in, so the card does not keep growing. */
+.suckart.is-result .answer__think {
+  opacity: 0;
+  height: 0;
+  margin: 0;
+  overflow: hidden;
+  transition:
+    opacity 0.25s ease,
+    height 0.3s ease,
+    margin 0.3s ease;
+}
+
+.answer__dots {
+  display: flex;
+  gap: 0.125rem;
+  flex: 0 0 auto;
+}
+
+.answer__dots i {
+  width: 0.1875rem;
+  height: 0.1875rem;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: think-dot 1.1s ease-in-out infinite;
+}
+
+.answer__dots i:nth-child(2) {
+  animation-delay: 0.18s;
+}
+
+.answer__dots i:nth-child(3) {
+  animation-delay: 0.36s;
+}
+
+@keyframes think-dot {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* The answer itself: rows, because the question asked which, not how many. */
+.answer__res {
+  display: grid;
+  gap: 0.1875rem;
+  margin: clamp(0.3125rem, 1.4cqw, 0.4375rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.answer__res li {
+  display: flex;
+  align-items: center;
+  gap: 0.3125rem;
+  padding-top: 0.1875rem;
+  border-top: 1px solid rgba(42, 35, 32, 0.08);
+  color: var(--ink);
+  font-size: clamp(0.4375rem, 1.7cqw, 0.625rem);
+  line-height: 1.3;
+  white-space: nowrap;
+  opacity: 0;
+  translate: 0 0.25rem;
+  transition:
+    opacity 0.32s ease,
+    translate 0.32s ease;
+}
+
+.answer__res li:nth-child(2) {
+  transition-delay: 0.11s;
+}
+
+.answer__res li:nth-child(3) {
+  transition-delay: 0.22s;
+}
+
+.suckart.is-result .answer__res li {
+  opacity: 1;
+  translate: 0 0;
+}
+
+.answer__ref {
+  flex: 0 0 auto;
+  padding: 0.1em 0.3em;
+  border-radius: 0.1875rem;
+  background: color-mix(in srgb, var(--sage) 40%, #ffffff);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.answer__res em {
+  margin-left: auto;
+  color: var(--accent-deep);
+  font-style: normal;
+  font-weight: 700;
+}
+
+.mark .hub__mark {
+  width: 44%;
+}
+
+/* --- 3. Corrections in, autonomy up ------------------------------------
+   Three attempts failed here, and the reason each time was the same: a
+   correction sticking is a single event, and "we learn" is not an event, it is a
+   direction. Before-and-after panels showed the event. A client file showed the
+   knowledge but not the movement. Neither could show compounding, which is the
+   actual claim.
+   So: the corrections stack up on the left of the frame and the autonomy rate
+   climbs underneath them. Cause above, consequence below, both in one view.
+   No figures on the axis. The trend is the claim, and the numbers behind it are
+   the customer's own once they are running. */
+
+.learnart {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-content: center;
+  gap: clamp(0.75rem, 3cqw, 1.375rem);
+  width: 100%;
+}
+
+/* --- The corrections, arriving one after another --- */
+
+.lfix {
+  display: grid;
+  gap: clamp(0.1875rem, 1cqw, 0.375rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lfix__row {
+  display: flex;
+  align-items: center;
+  gap: 0.4375rem;
+  padding: clamp(0.25rem, 1.2cqw, 0.4375rem) clamp(0.375rem, 1.5cqw, 0.5625rem);
+  border-radius: 0.3125rem;
+  background: var(--white);
+  box-shadow:
+    inset 0 0 0 1px rgba(42, 35, 32, 0.08),
+    0 4px 12px rgba(28, 34, 26, 0.08);
+  color: var(--ink);
+  font-size: clamp(0.4375rem, 1.75cqw, 0.625rem);
+  line-height: 1.3;
+  white-space: nowrap;
+  opacity: 0;
+  animation: lfix-in 9s calc(var(--i) * 2.4s) infinite;
+}
+
+/* A person, named, because the correction is made by hand. */
+.lfix__by {
+  display: grid;
+  place-items: center;
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--green);
+  color: var(--bone);
+  font-size: clamp(0.375rem, 1.3cqw, 0.4375rem);
+  font-weight: 700;
+}
+
+.lfix__what {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lfix__ok {
+  margin-left: auto;
+  flex: 0 0 auto;
+  padding: 0.12em 0.35em;
+  border-radius: 0.1875rem;
+  background: var(--accent);
+  color: var(--on-accent-sm);
+  font-size: clamp(0.375rem, 1.4cqw, 0.5rem);
+  font-weight: 700;
+}
+
+/* --- The trend the corrections produce --- */
+
+.lrate {
+  padding: clamp(0.5rem, 2cqw, 0.875rem);
+  border-radius: 0.4375rem;
+  background: var(--white);
+  box-shadow:
+    inset 0 0 0 1px rgba(42, 35, 32, 0.08),
+    0 6px 18px rgba(28, 34, 26, 0.1);
+}
+
+.lrate__cap {
+  margin: 0 0 clamp(0.3125rem, 1.4cqw, 0.5rem);
+  color: var(--ink);
+  font-size: clamp(0.4375rem, 1.75cqw, 0.625rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.lrate__bars {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(0.1875rem, 1cqw, 0.375rem);
+  height: clamp(2.5rem, 11cqw, 4rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Each bar grows to its own height in turn, so the chart builds left to right
+   as the corrections above it land. */
+.lrate__bars li {
+  flex: 1 1 0;
+  height: var(--h);
+  border-radius: 0.125rem 0.125rem 0 0;
+  background: color-mix(in srgb, var(--sage) 58%, #ffffff);
+  transform-origin: bottom;
+  scale: 1 0;
+  animation: bar-grow 9s calc(var(--i) * 0.62s) infinite;
+}
+
+/* The last stretch is where the compounding shows, so it carries the accent. */
+.lrate__bars li:nth-last-child(-n + 3) {
+  background: var(--accent);
+}
+
+@keyframes lfix-in {
+  0%,
+  2% {
+    opacity: 0;
+    translate: -0.4rem 0;
+  }
+  10%,
+  92% {
+    opacity: 1;
+    translate: 0 0;
+  }
+  98%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes bar-grow {
+  0%,
+  4% {
+    scale: 1 0;
+  }
+  14%,
+  92% {
+    scale: 1 1;
+  }
+  98%,
+  100% {
+    scale: 1 0;
+  }
+}
+
+/* --- Setup: white, quiet, hairlines ------------------------------------
+   Redone. The green panel with numbered steps read as an onboarding checklist,
+   which is the wrong register for the one claim on the page that is meant to
+   feel effortless. This uses the security band's language instead: white
+   ground, one hairline holding a row of facts, no fills and no step numbers. */
+
+.liveband {
+  --guide-col: 88rem;
+  padding: clamp(3rem, 6vw, 4.5rem) 0;
+  background: var(--bone);
+}
+
+.liveband__inner {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  margin: 0 auto;
+  max-width: 88rem;
+  padding-inline: clamp(1.5rem, 4vw, 4rem);
+}
+
+@media (min-width: 60em) {
+  .liveband__inner {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(2.5rem, 6vw, 5rem);
+  }
+}
+
+.liveband__title {
+  margin: 0;
+  font-size: clamp(1.5rem, 1rem + 1.7vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.028em;
+  text-wrap: balance;
+}
+
+.liveband__title em {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.liveband__lead {
+  margin: clamp(0.875rem, 2vw, 1.125rem) 0 0;
+  max-width: 44ch;
+  color: var(--caption);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+/* --- The two groups --- */
+
+.liveband__facts {
+  display: grid;
+  gap: clamp(1.125rem, 2.5vw, 1.75rem);
+}
+
+.liveband__group {
+  padding-top: clamp(0.75rem, 1.6vw, 1rem);
+  border-top: 1px solid var(--rule);
+}
+
+.liveband__label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0 0 clamp(0.625rem, 1.6vw, 0.875rem);
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.liveband__count {
+  color: var(--accent-deep);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.liveband__marks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.liveband__marks li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Two kinds of file in one row: square icons and wide wordmarks. A square box
+   shrinks a wordmark to nothing, so these size by height with a width cap. */
+.liveband__marks img {
+  display: block;
+  width: auto;
+  height: 1.25rem;
+  max-width: 5.5rem;
+  object-fit: contain;
+}
+
+/* The two sign-in marks sit as tiles beside the label, no names: the logos are
+   the recognition, and spelling them out as well was saying it twice. */
+.liveband__tiles {
+  display: inline-flex;
+  gap: 0.375rem;
+  vertical-align: middle;
+}
+
+.liveband__tile {
+  display: grid;
+  place-items: center;
+  width: 2.125rem;
+  height: 2.125rem;
+  border-radius: 0.4375rem;
+  background: var(--white);
+  box-shadow: inset 0 0 0 1px rgba(38, 24, 20, 0.12);
+}
+
+.liveband__tile img {
+  display: block;
+  width: 1.25rem;
+  height: 1.25rem;
+  object-fit: contain;
+}
+
+/* Everything resolves to the state the loop spends most of its time in, so the
+   art still reads as a finished picture with no motion at all. */
+@media (prefers-reduced-motion: reduce) {
+  .lane,
+  .lmail,
+  .lmail__tag,
+  .lfix__row,
+  .lrate__bars li {
+    animation: none;
+  }
+
+  .lfix__row {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  .lrate__bars li {
+    scale: 1 1;
+  }
+
+  /* No cycle at all: everything simply present. */
+  .item {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+    transition: none;
+  }
+
+  .lmail__tag {
+    scale: 1;
+  }
+
+  .lmail {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+
+}
+
+/* Once the row wraps, a divider lands at the start of a line with nothing to
+   its left. Same fix as the security badges. */
+@media (max-width: 30em) {
+  .stack__mark + .stack__mark {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .stack__marks {
+    gap: 0.375rem 0.875rem;
+  }
 }
