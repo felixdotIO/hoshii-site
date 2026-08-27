@@ -9,12 +9,15 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Hoshii" />
+    <meta property="og:locale" content="en_GB" />
     <meta property="og:title" content="Book a demo | Hoshii" />
     <meta property="og:description" content="Book 30 minutes with Hoshii. Bring one real order and watch it run." />
     <meta property="og:url" content="https://www.hoshii.ai/demo/" />
     <meta property="og:image" content="https://www.hoshii.ai/assets/img/hero-slot.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="stylesheet" href="/styles.css?v=577" />
+    <link rel="preload" href="/assets/fonts/Satoshi-Regular.otf" as="font" type="font/otf" crossorigin />
+    <link rel="preload" href="/assets/fonts/Satoshi-Medium.otf" as="font" type="font/otf" crossorigin />
+    <link rel="stylesheet" href="/styles.css?v=588" />
   </head>
   <body>
     <header class="titlebar">
@@ -112,24 +115,24 @@
         <p class="doc__proofLabel">Trusted by 500+ B2B operations teams</p>
         <div class="belt" data-anim>
           <ul class="belt__track">
-            <li><img class="doc__mark doc__mark--paper" style="--h: 2.5rem" src="/assets/clients/n-casadelvino.png" alt="Casa del Vino" width="300" height="109" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--paper" style="--h: 2.375rem" src="/assets/clients/n-staempfli.png" alt="Stämpfli" width="300" height="134" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--paper" style="--h: 4rem" src="/assets/clients/n-chiefs.png" alt="Chiefs" width="480" height="300" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--alpha" style="--h: 3.25rem" src="/assets/clients/n-stutzer.png" alt="Stutzer" width="400" height="245" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--paper" style="--h: 2rem" src="/assets/clients/n-igp.png" alt="IGP Powder Coatings" width="300" height="114" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--solid" style="--h: 3.875rem" src="/assets/clients/n-schuetzengarten.png" alt="Schützengarten" width="300" height="165" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--paper" style="--h: 2.75rem" src="/assets/clients/n-egger.png" alt="Egger Gemüsebau" width="299" height="300" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--paper" style="--h: 2.75rem" src="/assets/clients/n-safruits.png" alt="Safruits" width="300" height="300" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--casadelvino proof__logo--paper" src="/assets/clients/n-casadelvino.png" alt="Casa del Vino" width="300" height="109" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--staempfli proof__logo--paper" src="/assets/clients/n-staempfli.png" alt="Stämpfli" width="300" height="134" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--chiefs proof__logo--paper" src="/assets/clients/n-chiefs.png" alt="Chiefs" width="480" height="300" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--stutzer proof__logo--alpha" src="/assets/clients/n-stutzer.png" alt="Stutzer" width="400" height="245" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--igp proof__logo--paper" src="/assets/clients/n-igp.png" alt="IGP Powder Coatings" width="300" height="114" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--schuetzengarten proof__logo--solid" src="/assets/clients/n-schuetzengarten.png" alt="Schützengarten" width="300" height="165" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--egger proof__logo--paper" src="/assets/clients/n-egger.png" alt="Egger Gemüsebau" width="299" height="300" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--safruits proof__logo--paper" src="/assets/clients/n-safruits.png" alt="Safruits" width="300" height="300" loading="lazy" /></li>
           </ul>
           <ul class="belt__track" aria-hidden="true">
-            <li><img class="doc__mark doc__mark--paper" style="--h: 2.5rem" src="/assets/clients/n-casadelvino.png" alt="" width="300" height="109" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--paper" style="--h: 2.375rem" src="/assets/clients/n-staempfli.png" alt="" width="300" height="134" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--paper" style="--h: 4rem" src="/assets/clients/n-chiefs.png" alt="" width="480" height="300" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--alpha" style="--h: 3.25rem" src="/assets/clients/n-stutzer.png" alt="" width="400" height="245" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--paper" style="--h: 2rem" src="/assets/clients/n-igp.png" alt="" width="300" height="114" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--solid" style="--h: 3.875rem" src="/assets/clients/n-schuetzengarten.png" alt="" width="300" height="165" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--paper" style="--h: 2.75rem" src="/assets/clients/n-egger.png" alt="" width="299" height="300" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--paper" style="--h: 2.75rem" src="/assets/clients/n-safruits.png" alt="" width="300" height="300" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--casadelvino proof__logo--paper" src="/assets/clients/n-casadelvino.png" alt="" width="300" height="109" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--staempfli proof__logo--paper" src="/assets/clients/n-staempfli.png" alt="" width="300" height="134" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--chiefs proof__logo--paper" src="/assets/clients/n-chiefs.png" alt="" width="480" height="300" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--stutzer proof__logo--alpha" src="/assets/clients/n-stutzer.png" alt="" width="400" height="245" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--igp proof__logo--paper" src="/assets/clients/n-igp.png" alt="" width="300" height="114" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--schuetzengarten proof__logo--solid" src="/assets/clients/n-schuetzengarten.png" alt="" width="300" height="165" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--egger proof__logo--paper" src="/assets/clients/n-egger.png" alt="" width="299" height="300" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--safruits proof__logo--paper" src="/assets/clients/n-safruits.png" alt="" width="300" height="300" loading="lazy" /></li>
           </ul>
         </div>
           </div>

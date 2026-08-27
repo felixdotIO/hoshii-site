@@ -58,21 +58,43 @@ SITEMAP = {
     "order-processing": ("2026-08-27", "monthly", "0.9"),
 }
 
-CSS_V = "577"
+CSS_V = "588"
 
 # Paths are relative, never root-relative: Pages serves this repo from
 # /hoshii-site/, so a leading slash would resolve above the site root. Each page
 # therefore carries how far up its own root is.
 
 # The h1 can be a full sentence; the browser tab and the search result cannot.
+# Only where the tab wants to say more than the page's own name does.
+# Everything else takes its h1, which is now always a plain page name.
 HEAD_TITLES = {
     "order-processing": "Order Processing Skill",
-    "about": "About",
-    "partners": "Become a partner",
-    "careers": "Careers",
-    # The page heading is a claim; the browser tab and the search result are not.
-    "customers": "Customer stories",
-    "pricing": "Pricing",
+    # The h1 stays the full sentence; these are the tab and the search result.
+    "max-schwarz": "Max Schwarz AG",
+    "stutzer-service": "Stutzer Service",
+    "egger-gemuesebau": "Egger Gem\u00fcsebau",
+}
+
+# One masthead shape, everywhere: the h1 is the page's name -- the same words as
+# the nav item that got you there -- and under it a single claim, with its second
+# clause carried on its own line in the accent. Before this, half the pages put
+# the claim in the h1 and a description under it, and half put the name in the h1
+# and a description under it, so no two mastheads read as the same component and
+# "Customer stories" appeared in the tab but nowhere on the page.
+#
+# The two halves are split on the pipe. The second is the accent clause; leave it
+# empty for a claim that does not have one. A page with no entry here keeps its
+# plain standfirst, which is what a policy or a case study wants: those are
+# documents with a description, not landing pages with a claim.
+SUBHEAD = {
+    "pricing": "Smooth operations,|for the price of two coffees a day.",
+    "customers": "Hoshii is clearing the inboxes|of Europe&rsquo;s busiest order desks.",
+    "partners": "Bring AI&#8209;driven order processing to your customers,|powered by you.",
+    "about": "The inbox was never built to run a business.|We are building the one that is.",
+    "careers": "Come build the inbox|B2B operations runs on.",
+    "order-processing": "Every inbound order, read and prepared,|before anyone opens it.",
+    "resources": "Guides, answers and the documents|worth reading before you commit.",
+    "faq": "How Hoshii works, what it connects to, where your data lives,|and what it takes to start.",
 }
 
 DOCS = [
@@ -83,12 +105,12 @@ DOCS = [
     ("policies", "sls", "Service Level Specifications"),
     (".", "faq", "Questions"),
     (".", "demo", "Book a demo"),
-    (".", "partners", "Bring AI&#8209;driven order processing to your customers, powered by you."),
-    (".", "order-processing", "Order processing,<span class=\"doc__line\"><span class=\"doc__accent\">handled.</span></span>"),
-    (".", "about", "Built in Z&uuml;rich."),
-    (".", "careers", "Come build the inbox B2B operations runs on."),
+    (".", "partners", "Become a partner"),
+    (".", "order-processing", "Order processing"),
+    (".", "about", "About"),
+    (".", "careers", "Careers"),
     (".", "resources", "Resources"),
-    (".", "customers", "Hoshii is clearing the inboxes<span class=\"doc__line\">of <span class=\"doc__accent\">Europe\u2019s busiest order desks.</span></span>"),
+    (".", "customers", "Customer stories"),
     (".", "pricing", "Pricing"),
     ("customers", "stutzer-service", "High-volume, multilingual order processing on Microsoft Dynamics"),
     ("customers", "egger-gemuesebau", "Voicemail and PDF orders, straight into the CSB ERP"),
@@ -116,15 +138,20 @@ def inline(t):
 # Card images, with a default for entries that have none of their own.
 POST_DIMS = {'post-cost': (540, 960), 'post-agent': (960, 720), 'post-inbox': (540, 960), 'default': (960, 540)}
 
+# The subpage belts render with the home page's own logo component, so the
+# treatment (how each file is knocked back to ink) and the height (tuned per
+# mark, because the set runs from a wide wordmark to a 1:1 lockup) both come
+# from .proof__logo--<key> in the stylesheet. There is one place a mark's
+# treatment is decided, and it is not here: this table only names them.
 BELT_MARKS = {
-    "casadelvino": ("Casa del Vino", "paper", "2.5rem"),
-    "staempfli": ("St\u00e4mpfli", "paper", "2.375rem"),
-    "chiefs": ("Chiefs", "paper", "4rem"),
-    "stutzer": ("Stutzer", "alpha", "3.25rem"),
-    "igp": ("IGP Powder Coatings", "paper", "2rem"),
-    "schuetzengarten": ("Sch\u00fctzengarten", "solid", "3.875rem"),
-    "egger": ("Egger Gem\u00fcsebau", "paper", "2.75rem"),
-    "safruits": ("Safruits", "paper", "2.75rem"),
+    "casadelvino": ("Casa del Vino", "paper"),
+    "staempfli": ("St\u00e4mpfli", "paper"),
+    "chiefs": ("Chiefs", "paper"),
+    "stutzer": ("Stutzer", "alpha"),
+    "igp": ("IGP Powder Coatings", "paper"),
+    "schuetzengarten": ("Sch\u00fctzengarten", "solid"),
+    "egger": ("Egger Gem\u00fcsebau", "paper"),
+    "safruits": ("Safruits", "paper"),
 }
 
 CLIENT_DIMS = {'egger': (299, 300), 'staempfli': (300, 134), 'stutzer': (400, 245), 'schuetzengarten': (300, 165), 'casadelvino': (300, 109), 'chiefs': (480, 300), 'safruits': (300, 300), 'igp': (300, 114)}
@@ -480,11 +507,11 @@ def render(block, fold=False, up="."):
                 hidden = ' aria-hidden="true"' if copy else ""
                 out.append(f'          <ul class="belt__track"{hidden}>')
                 for k in keys:
-                    alt, treat, h = BELT_MARKS[k]
+                    alt, treat = BELT_MARKS[k]
                     w, hh = CLIENT_DIMS[k]
                     out.append(
-                        f'            <li><img class="doc__mark doc__mark--{treat}" '
-                        f'style="--h: {h}" src="{up}/assets/clients/n-{k}.png" '
+                        f'            <li><img class="proof__logo proof__logo--{k} '
+                        f'proof__logo--{treat}" src="{up}/assets/clients/n-{k}.png" '
                         f'alt="{"" if copy else alt}" width="{w}" height="{hh}" '
                         'loading="lazy" /></li>'
                     )
@@ -572,13 +599,15 @@ def render(block, fold=False, up="."):
             out.append(f'            <p class="doc__propWhy">{inline(why)}</p>')
             out.append("          </li>")
         elif kind == "LEDE":
-            # The pricing masthead's headline and deck. Two halves and a deck:
-            # the accent clause is a separate cell so it always takes its own
-            # line, the same device .closer__title and .hero__title use.
-            head, tail, deck = rest.split("|", 2)
-            out.append(f'          <h1 class="pricehead__title">{inline(head)} '
-                       f'<em>{inline(tail)}</em></h1>')
-            out.append(f'          <p class="pricehead__deck">{inline(deck)}</p>')
+            # The pricing masthead: the page's name as the headline and the
+            # claim under it, and nothing else -- the same two levels every
+            # other masthead now carries, see SUBHEAD. The accent clause is a
+            # separate cell so it always takes its own line, the device
+            # .closer__title and .hero__title use.
+            title_, head, tail = rest.split("|", 2)
+            out.append(f'          <h1 class="pricehead__title">{inline(title_)}</h1>')
+            out.append(f'          <p class="pricehead__sub">{inline(head)} '
+                       f'<em>{inline(tail)}</em></p>')
         elif kind == "ACTS":
             label, href, alt, alt_href = rest.split("|", 3)
             out.append('          <p class="pricehead__acts">')
@@ -1249,7 +1278,6 @@ PRICE = {"pricing"}
 
 PRICE_MAIN = """      <div class="pricehead">
         <div class="pricehead__inner">
-          <p class="pricehead__eyebrow">{title}</p>
 {head}
         </div>
       </div>
@@ -1274,11 +1302,14 @@ PAGE = """<!DOCTYPE html>
     <link rel="icon" href="{up}/favicon.svg" type="image/svg+xml" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Hoshii" />
+    <meta property="og:locale" content="en_GB" />
     <meta property="og:title" content="{head_title} | Hoshii" />
     <meta property="og:description" content="{desc}" />
     <meta property="og:url" content="{site}{path}" />
     <meta property="og:image" content="{site}assets/img/hero-slot.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preload" href="{up}/assets/fonts/Satoshi-Regular.otf" as="font" type="font/otf" crossorigin />
+    <link rel="preload" href="{up}/assets/fonts/Satoshi-Medium.otf" as="font" type="font/otf" crossorigin />
     <link rel="stylesheet" href="{up}/styles.css?v={v}" />
 {head}  </head>
   <body>
@@ -1954,31 +1985,40 @@ CLOSER: Not sure which tier your volume lands in? We will work it out with you.|
 
 
 PRICING = """
-LEDE: Priced on what your inbox handles,|not on how many people look at it.|There is no public price list, because a desk taking forty orders a day and one taking four hundred are not doing the same work. Users are unlimited on every plan. The number comes from your own volume, and you can size it before you call us.
+LEDE: Pricing|Smooth operations,|for the price of two coffees a day.
 ACTS: Talk to sales|demo.html|Or write to us first|mailto:contact@hoshii.ai?subject=Pricing
 FACTS:
-FACT: Unlimited users, always
+FACT: One inbox and one system is enough to start
 FACT: Credits roll over, they never expire
 FACT: No implementation fee on the ERPs we already run
 ENDFACTS:
 BAND: drivers
 H2: What sets the number
-P: Four things, and nothing else. Bring rough figures for the first two and we can price your desk on the call.
+P: Four things you already know: how much mail lands, how many inboxes it lands in, which systems Hoshii writes into, and what your security review needs. Bring rough figures for the first two and we can price your desk on the call.
 DIALS:
 DIAL: Volume|How much lands each month, and in what form. A hundred clean PDFs is not the same job as a hundred voicemails, so the format counts as much as the count.
-DIAL: Inboxes|How many the desk runs, shared and personal. Because users are unlimited, this is the only headcount&#8209;shaped number in the quote, and it is inboxes rather than people.
+DIAL: Inboxes|How many the desk runs, shared and personal. One shared address behind a whole team is a different job from eight people each forwarding their own.
 DIAL: Systems|Reading your ERP is included on every plan. Writing back into it is scoped per system, which is where a partner integration costs less than a bespoke one.
 DIAL: Security review|The standard paperwork is included. Your own DPA, a vendor questionnaire or a custom review is scoped, because it is real work on our side.
 ENDDIALS:
 KIT: On every plan, at no extra charge
-KITITEM: Unlimited users, platform and analytics
 KITITEM: Read access to your ERP
 KITITEM: Every shipped Skill
 KITITEM: The Outlook and Gmail add&#8209;in
 KITITEM: EU hosting and email encryption
+KITITEM: Inbox and team analytics
 KITITEM: 25+ languages, typed, scanned or spoken
 ENDKIT:
 KITNOTE: The work itself is metered in credits on a monthly allowance, sized with you against an average month rather than a peak. Unused credits roll over, so a quiet month builds the balance that carries a busy one.
+BAND: talk
+H2: Who you will be talking to
+P: Thirty minutes, one real inbox, and the number for your own desk. Bring a message that landed this week: we run it live on your own mail, show you exactly what it would post to your ERP, and price it at your volume. **No proposal cycle, no discovery phase.**
+TEAM:
+PERSON: Daniel Nydegger|Head of GTM||daniel-nydegger
+PERSON: Jo&euml;l Heller|GTM Executive||joel-heller
+PERSON: Philipp Kuprecht|GTM Executive||philipp-kuprecht
+ENDTEAM:
+NOTE: Rather write first? [contact@hoshii.ai](mailto:contact@hoshii.ai?subject=Pricing) reaches the same three people.
 BAND: refs
 BELT: Quoted this way for 500+ B2B operations teams|casadelvino,staempfli,chiefs,stutzer,igp,schuetzengarten,egger,safruits
 H2: Desks already priced this way
@@ -1990,27 +2030,16 @@ REF: Egger Gem&uuml;sebau AG|CSB System|Voicemail and PDF orders arriving out of
 ENDREFS:
 BAND: faq
 H2: Common questions
-H3: How much does Hoshii cost?
-P: There is no list price. Pricing is set per desk on monthly volume, the number of inboxes, and which systems Hoshii writes into. A thirty&#8209;minute call on your own mail produces the number for your desk.
-H3: Is Hoshii priced per user?
-P: No. Every plan carries unlimited users. Charging per seat would price a team for looking at an inbox rather than for the work the inbox produces, and it would penalise exactly the people you want reading along.
+H3: What does Hoshii cost?
+P: Pricing is set per desk on four things: monthly volume, the number of inboxes, which systems Hoshii writes into, and what your security review needs. A thirty&#8209;minute call on your own mail produces the number for your desk.
 H3: How are credits counted?
 P: The work is metered in credits on a monthly allowance, sized with you against an average month. Unused credits roll over rather than expiring.
 H3: What is included in every plan?
-P: Unlimited users, read access to your ERP, every shipped Skill, and the Outlook and Gmail add&#8209;in. Writing into your ERP and a custom security review are scoped separately.
+P: Read access to your ERP, every shipped Skill, the Outlook and Gmail add&#8209;in, and EU hosting. Writing into your ERP and a custom security review are scoped separately.
 H3: Is there a free trial?
 P: Not a self&#8209;serve trial. Instead the first run is on your own mail, live on the call, so you see what Hoshii would post to your ERP before anything is signed.
 H3: What does it cost to start?
 P: One system and one inbox is enough to start. There is no minimum commitment and no implementation fee for the ERP systems we are already live with.
-BAND: talk
-H2: Who you will be talking to
-P: Thirty minutes, one real inbox, and the number for your own desk. Bring a message that landed this week: we run it live on your own mail, show you exactly what it would post to your ERP, and price it at your volume. **No proposal cycle, no discovery phase.**
-TEAM:
-PERSON: Daniel Nydegger|Head of GTM||daniel-nydegger
-PERSON: Jo&euml;l Heller|GTM Executive||joel-heller
-PERSON: Philipp Kuprecht|GTM Executive||philipp-kuprecht
-ENDTEAM:
-NOTE: Rather write first? [contact@hoshii.ai](mailto:contact@hoshii.ai?subject=Pricing) reaches the same three people.
 BAND: end
 CLOSER: Nobody leaves this call without a price.|Talk to sales|demo.html
 """
@@ -2018,8 +2047,8 @@ CLOSER: Nobody leaves this call without a price.|Talk to sales|demo.html
 CONTENT = {
     "pricing": (
         PRICING,
-        "Hoshii is priced on what your inbox handles, not per seat: unlimited users, credits that roll over, and a number set on your own volume in a 30-minute call.",
-        "Priced on what your inbox handles, not on how many people look at it.",
+        "Priced on four things: mail volume, number of inboxes, the systems Hoshii writes into, and your security review. Thirty minutes produces the number.",
+        "Priced on what your inbox handles.",
     ),
     "stutzer-service": (
         CASE_STUTZER_SERVICE,
@@ -2058,7 +2087,7 @@ CONTENT = {
     ),
     "order-processing": (
         ORDER_PROCESSING,
-        "The Hoshii Order Processing Skill reads inbound orders from PDF, email, Excel, voicemail and photos, matches every line to your ERP products and prepares a ready-to-post entry.",
+        "Reads inbound orders from PDF, email, Excel, voicemail and photos, matches every line to your ERP products, and prepares a ready-to-post entry.",
         "Inbound orders arrive in every format. This Skill reads each one, matches it to your "
         "products and prepares a clean entry, ready to post to the ERP you already run.",
     ),
@@ -2152,13 +2181,21 @@ def faq_schema(block):
 
 
 def build_main(slug, title, stand, body):
-    # A page can decline the standfirst: pricing is called Pricing and says the
-    # rest with the plans themselves. An empty one emits no element, rather than
-    # an empty paragraph holding open the space it would have filled.
+    # The line under the h1. A page listed in SUBHEAD gets its claim, set large
+    # with the accent clause on its own line; anything else keeps the plain
+    # descriptive standfirst, which is what a document wants. Either way it is
+    # one element under the title and never both, so the mastheads are the same
+    # component on every page. An empty one emits nothing rather than an empty
+    # paragraph holding open the space it would have filled.
     raw_stand = stand.strip()
-    stand = (
-        f'\n          <p class="doc__standfirst">{stand}</p>' if stand.strip() else ""
-    )
+    if slug in SUBHEAD:
+        head, _, tail = SUBHEAD[slug].partition("|")
+        em = f' <em>{tail}</em>' if tail else ""
+        stand = f'\n          <p class="doc__sub">{head}{em}</p>'
+    elif stand.strip():
+        stand = f'\n          <p class="doc__standfirst">{stand}</p>'
+    else:
+        stand = ""
     if slug in BOOK:
         head, sep, rest = body.partition("<!--HEAD-->")
         if not sep:
@@ -2186,7 +2223,7 @@ def build_main(slug, title, stand, body):
             kind, _, inner = chunk.partition("-->")
             bands.append(PRICE_BAND.format(kind=kind.strip(), body=inner.rstrip("\n")))
         return PRICE_MAIN.format(
-            title=title, head=head.rstrip(), bands="\n".join(bands).lstrip("\n")
+            head=head.rstrip(), bands="\n".join(bands).lstrip("\n")
         )
     if slug not in SPLIT:
         return PLAIN_MAIN.format(title=title, stand=stand, body=body)
@@ -2239,6 +2276,18 @@ def patch_index_head(origin, staging):
                   lambda m: m.group(1) + origin + "assets/img/hero-slot.jpg" + m.group(2),
                   page, count=1)
 
+    if 'property="og:locale"' not in page:
+        page = page.replace(
+            '    <meta property="og:site_name" content="Hoshii" />',
+            '    <meta property="og:site_name" content="Hoshii" />\n'
+            '    <meta property="og:locale" content="en_GB" />', 1)
+    if 'rel="preload"' not in page:
+        page = re.sub(
+            r'(    <link rel="stylesheet" href="/styles\.css)',
+            '    <link rel="preload" href="/assets/fonts/Satoshi-Regular.otf" as="font" type="font/otf" crossorigin />\n'
+            '    <link rel="preload" href="/assets/fonts/Satoshi-Medium.otf" as="font" type="font/otf" crossorigin />\n'
+            r'\1', page, count=1)
+
     # The robots meta is present only while staging, and sits immediately
     # before the canonical so the head reads the same way as a generated page.
     page = re.sub(r'[ \t]*<meta name="robots"[^>]*>\n', "", page)
@@ -2251,6 +2300,34 @@ def patch_index_head(origin, staging):
     if page != before:
         path.write_text(page, encoding="utf-8")
     return page != before
+
+
+def plain(t):
+    """Title as text: no tags, no entities. Schema values are not markup."""
+    return re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", "", t))).strip()
+
+
+def breadcrumbs(folder, slug, title, origin):
+    """BreadcrumbList JSON-LD, nested pages only.
+
+    Root-level pages would produce a two-item trail of Home plus themselves,
+    which tells a crawler nothing it cannot see from the URL.
+    """
+    if folder == ".":
+        return ""
+    trail = [("Home", origin)]
+    if folder == "customers":
+        trail.append(("Customer stories", origin + "customers/"))
+    trail.append((plain(HEAD_TITLES.get(slug, title)), origin + url_path_for(folder, slug)))
+    items = [
+        {"@type": "ListItem", "position": i, "name": name, "item": url}
+        for i, (name, url) in enumerate(trail, 1)
+    ]
+    doc = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": items}
+    body = json.dumps(doc, indent=2, ensure_ascii=False)
+    return ('    <script type="application/ld+json">\n'
+            + "\n".join("      " + l for l in body.split("\n"))
+            + "\n    </script>\n")
 
 
 def write_sitemap(origin):
@@ -2365,7 +2442,8 @@ def main():
             + (COUNT_JS if "STAT:" in block else "")
             + PATTERN_JS.replace("{up}", up),
             v=CSS_V,
-            head=faq_schema(block) if slug in SCHEMA_FAQ else "",
+            head=(faq_schema(block) if slug in SCHEMA_FAQ else "")
+            + breadcrumbs(folder, slug, title, origin),
             main=build_main(slug, title, stand, render(block, fold=slug in FOLD_QA, up=up)),
         )
         (out / "index.html").write_text(clean_urls(page, folder), encoding="utf-8")

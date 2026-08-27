@@ -4,17 +4,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Pricing | Hoshii</title>
-    <meta name="description" content="Hoshii is priced on what your inbox handles, not per seat: unlimited users, credits that roll over, and a number set on your own volume in a 30-minute call." />
+    <meta name="description" content="Priced on four things: mail volume, number of inboxes, the systems Hoshii writes into, and your security review. Thirty minutes produces the number." />
     <link rel="canonical" href="https://www.hoshii.ai/pricing/" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Hoshii" />
+    <meta property="og:locale" content="en_GB" />
     <meta property="og:title" content="Pricing | Hoshii" />
-    <meta property="og:description" content="Hoshii is priced on what your inbox handles, not per seat: unlimited users, credits that roll over, and a number set on your own volume in a 30-minute call." />
+    <meta property="og:description" content="Priced on four things: mail volume, number of inboxes, the systems Hoshii writes into, and your security review. Thirty minutes produces the number." />
     <meta property="og:url" content="https://www.hoshii.ai/pricing/" />
     <meta property="og:image" content="https://www.hoshii.ai/assets/img/hero-slot.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="stylesheet" href="/styles.css?v=577" />
+    <link rel="preload" href="/assets/fonts/Satoshi-Regular.otf" as="font" type="font/otf" crossorigin />
+    <link rel="preload" href="/assets/fonts/Satoshi-Medium.otf" as="font" type="font/otf" crossorigin />
+    <link rel="stylesheet" href="/styles.css?v=588" />
     <script type="application/ld+json">
     {
           "@context": "https://schema.org",
@@ -22,18 +25,10 @@
           "mainEntity": [
                 {
                       "@type": "Question",
-                      "name": "How much does Hoshii cost?",
+                      "name": "What does Hoshii cost?",
                       "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "There is no list price. Pricing is set per desk on monthly volume, the number of inboxes, and which systems Hoshii writes into. A thirty‑minute call on your own mail produces the number for your desk."
-                      }
-                },
-                {
-                      "@type": "Question",
-                      "name": "Is Hoshii priced per user?",
-                      "acceptedAnswer": {
-                            "@type": "Answer",
-                            "text": "No. Every plan carries unlimited users. Charging per seat would price a team for looking at an inbox rather than for the work the inbox produces, and it would penalise exactly the people you want reading along."
+                            "text": "Pricing is set per desk on four things: monthly volume, the number of inboxes, which systems Hoshii writes into, and what your security review needs. A thirty‑minute call on your own mail produces the number for your desk."
                       }
                 },
                 {
@@ -49,7 +44,7 @@
                       "name": "What is included in every plan?",
                       "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "Unlimited users, read access to your ERP, every shipped Skill, and the Outlook and Gmail add‑in. Writing into your ERP and a custom security review are scoped separately."
+                            "text": "Read access to your ERP, every shipped Skill, the Outlook and Gmail add‑in, and EU hosting. Writing into your ERP and a custom security review are scoped separately."
                       }
                 },
                 {
@@ -131,15 +126,14 @@
     <main class="doc page--pricing doc--wide">
       <div class="pricehead">
         <div class="pricehead__inner">
-          <p class="pricehead__eyebrow">Pricing</p>
-          <h1 class="pricehead__title">Priced on what your inbox handles, <em>not on how many people look at it.</em></h1>
-          <p class="pricehead__deck">There is no public price list, because a desk taking forty orders a day and one taking four hundred are not doing the same work. Users are unlimited on every plan. The number comes from your own volume, and you can size it before you call us.</p>
+          <h1 class="pricehead__title">Pricing</h1>
+          <p class="pricehead__sub">Smooth operations, <em>for the price of two coffees a day.</em></p>
           <p class="pricehead__acts">
             <a class="btn-os btn-os--accent btn-os--fill btn-os--lg" href="/demo/">Talk to sales<span class="btn-os__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg></span></a>
             <a class="pricehead__alt" href="mailto:contact@hoshii.ai?subject=Pricing">Or write to us first</a>
           </p>
           <ul class="pricehead__facts">
-            <li>Unlimited users, always</li>
+            <li>One inbox and one system is enough to start</li>
             <li>Credits roll over, they never expire</li>
             <li>No implementation fee on the ERPs we already run</li>
           </ul>
@@ -149,7 +143,7 @@
         <div class="doc__inner doc__body pband__inner">
 
         <h2 id="what-sets-the-number">What sets the number</h2>
-        <p>Four things, and nothing else. Bring rough figures for the first two and we can price your desk on the call.</p>
+        <p>Four things you already know: how much mail lands, how many inboxes it lands in, which systems Hoshii writes into, and what your security review needs. Bring rough figures for the first two and we can price your desk on the call.</p>
         <ol class="dials">
           <li class="dial">
             <span class="dial__n" aria-hidden="true">01</span>
@@ -159,7 +153,7 @@
           <li class="dial">
             <span class="dial__n" aria-hidden="true">02</span>
             <h3 class="dial__head">Inboxes</h3>
-            <p class="dial__body">How many the desk runs, shared and personal. Because users are unlimited, this is the only headcount&#8209;shaped number in the quote, and it is inboxes rather than people.</p>
+            <p class="dial__body">How many the desk runs, shared and personal. One shared address behind a whole team is a different job from eight people each forwarding their own.</p>
           </li>
           <li class="dial">
             <span class="dial__n" aria-hidden="true">03</span>
@@ -175,15 +169,50 @@
         <div class="kit">
           <h3 class="kit__head">On every plan, at no extra charge</h3>
           <ul class="kit__list">
-            <li>Unlimited users, platform and analytics</li>
             <li>Read access to your ERP</li>
             <li>Every shipped Skill</li>
             <li>The Outlook and Gmail add&#8209;in</li>
             <li>EU hosting and email encryption</li>
+            <li>Inbox and team analytics</li>
             <li>25+ languages, typed, scanned or spoken</li>
           </ul>
         </div>
           <p class="kit__note">The work itself is metered in credits on a monthly allowance, sized with you against an average month rather than a peak. Unused credits roll over, so a quiet month builds the balance that carries a busy one.</p>
+        </div>
+      </section>
+
+      <section class="pband pband--talk guides">
+        <div class="doc__inner doc__body pband__inner">
+
+        <h2 id="who-you-will-be-talking-to">Who you will be talking to</h2>
+        <p>Thirty minutes, one real inbox, and the number for your own desk. Bring a message that landed this week: we run it live on your own mail, show you exactly what it would post to your ERP, and price it at your volume. <strong>No proposal cycle, no discovery phase.</strong></p>
+        <ul class="doc__team">
+          <li class="doc__person">
+            <picture>
+              <source srcset="/assets/team/daniel-nydegger.avif" type="image/avif" />
+              <img class="doc__portrait" src="/assets/team/daniel-nydegger.jpg" alt="Daniel Nydegger" width="580" height="720" loading="lazy" />
+            </picture>
+            <p class="doc__personName">Daniel Nydegger</p>
+            <p class="doc__personRole">Head of GTM</p>
+          </li>
+          <li class="doc__person">
+            <picture>
+              <source srcset="/assets/team/joel-heller.avif" type="image/avif" />
+              <img class="doc__portrait" src="/assets/team/joel-heller.jpg" alt="Jo&euml;l Heller" width="580" height="720" loading="lazy" />
+            </picture>
+            <p class="doc__personName">Jo&euml;l Heller</p>
+            <p class="doc__personRole">GTM Executive</p>
+          </li>
+          <li class="doc__person">
+            <picture>
+              <source srcset="/assets/team/philipp-kuprecht.avif" type="image/avif" />
+              <img class="doc__portrait" src="/assets/team/philipp-kuprecht.jpg" alt="Philipp Kuprecht" width="580" height="720" loading="lazy" />
+            </picture>
+            <p class="doc__personName">Philipp Kuprecht</p>
+            <p class="doc__personRole">GTM Executive</p>
+          </li>
+        </ul>
+        <p class="doc__note">Rather write first? <a href="mailto:contact@hoshii.ai?subject=Pricing">contact@hoshii.ai</a> reaches the same three people.</p>
         </div>
       </section>
 
@@ -193,24 +222,24 @@
         <p class="doc__proofLabel">Quoted this way for 500+ B2B operations teams</p>
         <div class="belt" data-anim>
           <ul class="belt__track">
-            <li><img class="doc__mark doc__mark--paper" style="--h: 2.5rem" src="/assets/clients/n-casadelvino.png" alt="Casa del Vino" width="300" height="109" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--paper" style="--h: 2.375rem" src="/assets/clients/n-staempfli.png" alt="Stämpfli" width="300" height="134" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--paper" style="--h: 4rem" src="/assets/clients/n-chiefs.png" alt="Chiefs" width="480" height="300" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--alpha" style="--h: 3.25rem" src="/assets/clients/n-stutzer.png" alt="Stutzer" width="400" height="245" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--paper" style="--h: 2rem" src="/assets/clients/n-igp.png" alt="IGP Powder Coatings" width="300" height="114" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--solid" style="--h: 3.875rem" src="/assets/clients/n-schuetzengarten.png" alt="Schützengarten" width="300" height="165" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--paper" style="--h: 2.75rem" src="/assets/clients/n-egger.png" alt="Egger Gemüsebau" width="299" height="300" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--paper" style="--h: 2.75rem" src="/assets/clients/n-safruits.png" alt="Safruits" width="300" height="300" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--casadelvino proof__logo--paper" src="/assets/clients/n-casadelvino.png" alt="Casa del Vino" width="300" height="109" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--staempfli proof__logo--paper" src="/assets/clients/n-staempfli.png" alt="Stämpfli" width="300" height="134" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--chiefs proof__logo--paper" src="/assets/clients/n-chiefs.png" alt="Chiefs" width="480" height="300" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--stutzer proof__logo--alpha" src="/assets/clients/n-stutzer.png" alt="Stutzer" width="400" height="245" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--igp proof__logo--paper" src="/assets/clients/n-igp.png" alt="IGP Powder Coatings" width="300" height="114" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--schuetzengarten proof__logo--solid" src="/assets/clients/n-schuetzengarten.png" alt="Schützengarten" width="300" height="165" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--egger proof__logo--paper" src="/assets/clients/n-egger.png" alt="Egger Gemüsebau" width="299" height="300" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--safruits proof__logo--paper" src="/assets/clients/n-safruits.png" alt="Safruits" width="300" height="300" loading="lazy" /></li>
           </ul>
           <ul class="belt__track" aria-hidden="true">
-            <li><img class="doc__mark doc__mark--paper" style="--h: 2.5rem" src="/assets/clients/n-casadelvino.png" alt="" width="300" height="109" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--paper" style="--h: 2.375rem" src="/assets/clients/n-staempfli.png" alt="" width="300" height="134" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--paper" style="--h: 4rem" src="/assets/clients/n-chiefs.png" alt="" width="480" height="300" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--alpha" style="--h: 3.25rem" src="/assets/clients/n-stutzer.png" alt="" width="400" height="245" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--paper" style="--h: 2rem" src="/assets/clients/n-igp.png" alt="" width="300" height="114" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--solid" style="--h: 3.875rem" src="/assets/clients/n-schuetzengarten.png" alt="" width="300" height="165" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--paper" style="--h: 2.75rem" src="/assets/clients/n-egger.png" alt="" width="299" height="300" loading="lazy" /></li>
-            <li><img class="doc__mark doc__mark--paper" style="--h: 2.75rem" src="/assets/clients/n-safruits.png" alt="" width="300" height="300" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--casadelvino proof__logo--paper" src="/assets/clients/n-casadelvino.png" alt="" width="300" height="109" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--staempfli proof__logo--paper" src="/assets/clients/n-staempfli.png" alt="" width="300" height="134" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--chiefs proof__logo--paper" src="/assets/clients/n-chiefs.png" alt="" width="480" height="300" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--stutzer proof__logo--alpha" src="/assets/clients/n-stutzer.png" alt="" width="400" height="245" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--igp proof__logo--paper" src="/assets/clients/n-igp.png" alt="" width="300" height="114" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--schuetzengarten proof__logo--solid" src="/assets/clients/n-schuetzengarten.png" alt="" width="300" height="165" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--egger proof__logo--paper" src="/assets/clients/n-egger.png" alt="" width="299" height="300" loading="lazy" /></li>
+            <li><img class="proof__logo proof__logo--safruits proof__logo--paper" src="/assets/clients/n-safruits.png" alt="" width="300" height="300" loading="lazy" /></li>
           </ul>
         </div>
         <h2 id="desks-already-priced-this-way">Desks already priced this way</h2>
@@ -256,15 +285,9 @@
         <h2 id="common-questions">Common questions</h2>
         <details class="doc__fold">
           <summary class="doc__sum">
-            <h3>How much does Hoshii cost?</h3>
+            <h3>What does Hoshii cost?</h3>
           </summary>
-          <p>There is no list price. Pricing is set per desk on monthly volume, the number of inboxes, and which systems Hoshii writes into. A thirty&#8209;minute call on your own mail produces the number for your desk.</p>
-        </details>
-        <details class="doc__fold">
-          <summary class="doc__sum">
-            <h3>Is Hoshii priced per user?</h3>
-          </summary>
-          <p>No. Every plan carries unlimited users. Charging per seat would price a team for looking at an inbox rather than for the work the inbox produces, and it would penalise exactly the people you want reading along.</p>
+          <p>Pricing is set per desk on four things: monthly volume, the number of inboxes, which systems Hoshii writes into, and what your security review needs. A thirty&#8209;minute call on your own mail produces the number for your desk.</p>
         </details>
         <details class="doc__fold">
           <summary class="doc__sum">
@@ -276,7 +299,7 @@
           <summary class="doc__sum">
             <h3>What is included in every plan?</h3>
           </summary>
-          <p>Unlimited users, read access to your ERP, every shipped Skill, and the Outlook and Gmail add&#8209;in. Writing into your ERP and a custom security review are scoped separately.</p>
+          <p>Read access to your ERP, every shipped Skill, the Outlook and Gmail add&#8209;in, and EU hosting. Writing into your ERP and a custom security review are scoped separately.</p>
         </details>
         <details class="doc__fold">
           <summary class="doc__sum">
@@ -290,41 +313,6 @@
           </summary>
           <p>One system and one inbox is enough to start. There is no minimum commitment and no implementation fee for the ERP systems we are already live with.</p>
         </details>
-        </div>
-      </section>
-
-      <section class="pband pband--talk guides">
-        <div class="doc__inner doc__body pband__inner">
-
-        <h2 id="who-you-will-be-talking-to">Who you will be talking to</h2>
-        <p>Thirty minutes, one real inbox, and the number for your own desk. Bring a message that landed this week: we run it live on your own mail, show you exactly what it would post to your ERP, and price it at your volume. <strong>No proposal cycle, no discovery phase.</strong></p>
-        <ul class="doc__team">
-          <li class="doc__person">
-            <picture>
-              <source srcset="/assets/team/daniel-nydegger.avif" type="image/avif" />
-              <img class="doc__portrait" src="/assets/team/daniel-nydegger.jpg" alt="Daniel Nydegger" width="580" height="720" loading="lazy" />
-            </picture>
-            <p class="doc__personName">Daniel Nydegger</p>
-            <p class="doc__personRole">Head of GTM</p>
-          </li>
-          <li class="doc__person">
-            <picture>
-              <source srcset="/assets/team/joel-heller.avif" type="image/avif" />
-              <img class="doc__portrait" src="/assets/team/joel-heller.jpg" alt="Jo&euml;l Heller" width="580" height="720" loading="lazy" />
-            </picture>
-            <p class="doc__personName">Jo&euml;l Heller</p>
-            <p class="doc__personRole">GTM Executive</p>
-          </li>
-          <li class="doc__person">
-            <picture>
-              <source srcset="/assets/team/philipp-kuprecht.avif" type="image/avif" />
-              <img class="doc__portrait" src="/assets/team/philipp-kuprecht.jpg" alt="Philipp Kuprecht" width="580" height="720" loading="lazy" />
-            </picture>
-            <p class="doc__personName">Philipp Kuprecht</p>
-            <p class="doc__personRole">GTM Executive</p>
-          </li>
-        </ul>
-        <p class="doc__note">Rather write first? <a href="mailto:contact@hoshii.ai?subject=Pricing">contact@hoshii.ai</a> reaches the same three people.</p>
         </div>
       </section>
 

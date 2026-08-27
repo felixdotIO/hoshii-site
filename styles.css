@@ -3949,13 +3949,47 @@ p {
   max-width: 26rem;
 }
 
-.doc__title {
+/* Every page's h1 is its own name -- the same words as the nav item that got you
+   there -- so it is set once, at one size, on the light mastheads and the green
+   pricing one alike. The claim under it does the persuading; see .doc__sub. */
+.doc__title,
+.pricehead__title {
   margin: 0;
-  font-size: clamp(1.75rem, 1.1rem + 2vw, 2.5rem);
+  font-size: clamp(1.5rem, 1.05rem + 1.4vw, 2.125rem);
   font-weight: 500;
-  line-height: 1.1;
+  line-height: 1.05;
   letter-spacing: -0.03em;
   hyphens: none;
+}
+
+/* The claim. One per page, directly under the title, with its second clause on
+   its own line in the accent -- the device .closer__title and .hero__title
+   already use. It replaces two different things that used to sit here: a claim
+   promoted into the h1 on some pages and a plain descriptive standfirst on
+   others, which is why no two mastheads read as the same component. */
+.doc__sub,
+.pricehead__sub {
+  margin: clamp(0.875rem, 2vw, 1.375rem) 0 0;
+  max-width: 26ch;
+  font-size: clamp(1.5rem, 0.95rem + 2.3vw, 2.75rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.032em;
+  hyphens: none;
+}
+
+.doc__sub em,
+.pricehead__sub em {
+  display: block;
+  font-style: normal;
+  color: var(--accent);
+}
+
+/* On bone the accent is 3.32:1, which clears AA for large text and nothing else,
+   so this colour and the size above it are a pair. If the claim ever drops below
+   18.66px the accent has to become --accent-deep with it. */
+.doc__sub {
+  color: var(--ink);
 }
 
 .doc__standfirst,
@@ -4709,27 +4743,13 @@ p {
   min-height: 2.75rem;
 }
 
-.doc__mark {
-  width: auto;
-  height: var(--h, 2.5rem);
-  max-width: 100%;
-  object-fit: contain;
-  opacity: 0.72;
-}
-
-.doc__mark--alpha {
-  filter: brightness(0);
-}
-
-.doc__mark--paper {
-  filter: grayscale(1) contrast(1.1);
-  mix-blend-mode: multiply;
-}
-
-.doc__mark--solid {
-  filter: grayscale(1) contrast(0.92);
-  opacity: 0.9;
-}
+/* .doc__mark and its three treatments are gone. They were a second, drifting
+   copy of the home page's logo component: same three filters, but their own
+   heights passed in from the generator as an inline --h, which is why the
+   subpage belts rendered the square lockups at a third of the size the home
+   page gives them and left visible boxes behind two of the marks. The belts
+   emit .proof__logo now, so there is one treatment table and one set of
+   per-mark heights, both in this file. */
 
 /* --- The ask, on its own line ---------------------------------------------
    Closes the capabilities: rule above, rule below, nothing else in the row. It
@@ -6385,16 +6405,10 @@ a.story__card:focus-visible {
   max-width: 34rem;
 }
 
-@media (min-width: 64em) {
-  /* Title and deck abreast. The deck is one sentence and the title is three
-     words, so stacking them left a band mostly made of gap. */
-  .doc__head--intro .doc__lede {
-    display: grid;
-    grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
-    align-items: end;
-    gap: clamp(1.5rem, 4vw, 3.5rem);
-  }
-}
+/* The title and the claim used to sit abreast here, the h1 in a 20rem column
+   against the rest of the band -- which wrapped a five-word heading over four
+   short lines while its own deck floated in the middle of the space beside it.
+   They stack now, the same way they do on every other masthead. */
 
 /* The belt and the faces are supporting evidence in a header, not sections of
    their own, so they lose the section spacing they carry in the body. */
@@ -7147,9 +7161,10 @@ a.story__card:focus-visible {
    divided across the tile's columns. Stated directly now, so a tile comes out the
    same size on a 512px header as on a 1449px slab. */
 .doc__head .pat { --pat-mod: 44px; }
+.pricehead .pat { --pat-mod: 40px; }
 .askrow .pat { --pat-mod: 40px; }
 .closer .pat { --pat-mod: 56px; }
-.pitch__panel .pat { --pat-mod: 36px; }
+.pitch__panel .pat { --pat-mod: 28px; }
 .cap__art .pat { --pat-mod: 32px; }
 .shift__art--flow .pat { --pat-mod: 28px; }
 .docend .pat { --pat-mod: 44px; }
@@ -7212,15 +7227,6 @@ a.story__card:focus-visible {
   margin-top: clamp(0.875rem, 2vw, 1.125rem);
 }
 
-
-/* The intro band already sets title and standfirst in two columns, which suits a
-   one-word title: "Pricing" left, the claim beside it. Only the claim's own
-   setting changes -- capped at 40 characters and a step up in size, so it reads
-   as the page's answer rather than as a caption under a headline. */
-.page--pricing .doc__head--intro .doc__standfirst {
-  max-width: 40ch;
-  font-size: clamp(1.0625rem, 1.3vw, 1.25rem);
-}
 
 
 /* --- Landing pages: pricing and the Skill pages ---------------------------
@@ -7330,15 +7336,31 @@ a.story__card:focus-visible {
   right: 0;
   bottom: 0;
   z-index: 0;
-  width: min(42%, 34rem);
-  opacity: 0.2;
+  width: min(46%, 38rem);
+  opacity: 0.26;
   pointer-events: none;
   background-image: url('assets/pattern.svg');
-  background-size: 320px auto;
+  background-size: 240px auto;
   background-position: right top;
   background-repeat: repeat;
-  -webkit-mask-image: linear-gradient(to bottom left, #000 0%, #000 12%, transparent 74%);
-  mask-image: linear-gradient(to bottom left, #000 0%, #000 12%, transparent 74%);
+  /* A bloom out of the corner, not a diagonal wipe. The subpage mastheads fade
+     on `to bottom left`, which works because those bands are short: the gradient
+     reaches transparent before it reaches the layer's own left edge. This band
+     is twice as tall, so the same mask was still half opaque where the layer
+     stopped and the pattern ended on a hard vertical seam down the middle of the
+     band. A radial anchored on the corner falls off in every direction at once,
+     so there is no boundary for it to end on.
+
+     Both radii stay under 100%, which is the part that actually matters: a
+     radial at `150% 130%` still had a sixth of its opacity left where the layer
+     stopped, and that residue is the seam. Reaching zero inside the box is what
+     removes it. */
+  -webkit-mask-image: radial-gradient(
+    86% 70% at 100% 0%, #000 0%, #000 22%, transparent 100%
+  );
+  mask-image: radial-gradient(
+    86% 70% at 100% 0%, #000 0%, #000 22%, transparent 100%
+  );
 }
 
 .pricehead__inner {
@@ -7349,42 +7371,10 @@ a.story__card:focus-visible {
   padding-inline: clamp(1.5rem, 4vw, 4rem);
 }
 
-.pricehead__eyebrow {
-  margin: 0;
-  color: var(--on-dark-dim);
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-}
-
-/* The page's one big statement. The accent half takes its own line the way
-   .closer__title's does, so it reads as claim over correction rather than as a
-   sentence that happens to change colour halfway. */
-.pricehead__title {
-  margin: clamp(1rem, 2.2vw, 1.625rem) 0 0;
-  max-width: 26ch;
-  font-size: clamp(2rem, 1rem + 3.4vw, 3.875rem);
-  font-weight: 500;
-  line-height: 1.05;
-  letter-spacing: -0.035em;
-  hyphens: none;
-}
-
-.pricehead__title em {
-  display: block;
-  font-style: normal;
-  color: var(--accent);
-}
-
-.pricehead__deck {
-  margin: clamp(1.25rem, 2.5vw, 1.75rem) 0 0;
-  max-width: 52ch;
-  color: var(--on-dark-dim);
-  font-size: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
-  line-height: 1.55;
-  text-wrap: pretty;
-}
+/* Title, claim and their scale are shared with every other masthead -- see
+   .doc__title and .doc__sub, which this page's two elements are listed in.
+   Only the ground differs here, so nothing else is set again.
+   .pricehead__deck went with the third paragraph it styled. */
 
 .pricehead__acts {
   display: flex;
@@ -7449,8 +7439,8 @@ a.story__card:focus-visible {
 
 @media (max-width: 47.999em) {
   .pricehead .pat {
-    width: 60%;
-    opacity: 0.24;
+    width: 64%;
+    opacity: 0.22;
   }
 
   .pricehead__facts {
@@ -7480,6 +7470,8 @@ a.story__card:focus-visible {
 
 .pband--refs {
   background: var(--wash);
+  /* The belt cells paint this behind the marks -- see .belt__track li. */
+  --belt-ground: var(--wash);
 }
 
 .pband__inner {
@@ -7640,13 +7632,16 @@ a.story__card:focus-visible {
    own: it explains how the number is metered, which nobody reads before they
    care what the number is. */
 .pband .doc__body .kit__note {
-  grid-column: 1 / -1;
-  margin: clamp(2rem, 4vw, 3rem) 0 0;
-  padding-top: clamp(1.125rem, 2.5vw, 1.625rem);
-  max-width: 74ch;
-  border-top: 1px solid var(--rule);
+  /* Under the slab, not under the band. It is the footnote to what is included
+     rather than to the whole section, and set full-width it needed a rule to
+     separate it -- which came out as a hairline stopping halfway across the
+     band, because the text was capped to a measure and the border followed the
+     box. */
+  grid-column: 2;
+  margin: clamp(1rem, 2vw, 1.25rem) 0 0;
+  max-width: none;
   color: var(--caption);
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   line-height: 1.6;
 }
 
@@ -7656,8 +7651,13 @@ a.story__card:focus-visible {
   }
 
   .dials,
-  .kit {
+  .kit,
+  .pband .doc__body .kit__note {
     grid-column: 1;
+  }
+
+  .pband .doc__body .kit__note {
+    max-width: 74ch;
   }
 
   .kit {
@@ -7836,4 +7836,80 @@ a.ref__card:hover .ref__go {
   .pband--talk .pband__inner > *:not(h2) {
     grid-column: 1;
   }
+}
+
+/* The questions are set to a measure rather than the band's full width: the
+   fold marker sits at the end of the row, and a 60rem row put it a hand's width
+   from the question it belongs to. */
+.pband--faq .doc__body .doc__fold {
+  max-width: 46rem;
+}
+
+/* The three faces run at the size a face has to be to be a face. The 2.75rem
+   avatars were sized for the booking page's narrow column, which this band is
+   not. */
+.pband--talk .doc__body .doc__team {
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  margin-top: clamp(1.75rem, 3.5vw, 2.5rem);
+  padding-top: clamp(1.5rem, 3vw, 2rem);
+  border-top: 1px solid var(--rule);
+}
+
+.pband--talk .doc__body .doc__person {
+  grid-template-columns: 3.25rem minmax(0, 1fr);
+  gap: 0 0.875rem;
+}
+
+.pband--talk .doc__body .doc__portrait {
+  width: 3.25rem;
+  height: 3.25rem;
+}
+
+.pband--talk .doc__body .doc__personName {
+  font-size: 1rem;
+}
+
+.pband--talk .doc__body .doc__note {
+  margin: clamp(1.25rem, 2.5vw, 1.75rem) 0 0;
+}
+
+/* The subpage belts run the home page's logo component through the document
+   marquee, so the two bands read as the same band. Only the things the marquee
+   itself owns are set here. */
+.doc__body .belt__track li,
+.book__pitch .belt__track li {
+  /* A floor, not a height: the per-mark rules run from 2rem to 6.5rem and the
+     tallest one sets the row. */
+  min-height: 4rem;
+}
+
+/* The ground, on every cell. .proof__logo--paper drops a mark's baked-in white
+   rectangle by multiplying it against what is behind it -- and behind it was
+   nothing: both marquees put a mask on an ancestor, which makes a stacking
+   context, and a blend inside one composites against transparency rather than
+   against the band. So every mark that shipped on a white plate kept its plate.
+   Painting the band's own colour on the cell gives multiply something to
+   multiply into. The two marks that still carry a grey block, IGP and
+   Schuetzengarten, are knockout artwork rather than a plate: their lettering is
+   reversed out of a solid shape and the shape is the logo. */
+.belt__track li,
+.proof__track li {
+  background: var(--belt-ground, var(--bone));
+}
+
+.belt__track li:hover .proof__logo {
+  opacity: 1;
+}
+
+/* The closing band carries nothing but the green slab, so it takes neither the
+   band's top rule nor its top padding: the rule would draw a hairline directly
+   onto the slab's edge, and the padding would stack with the slab's own margin.
+   The .guides column rules still run down beside it. */
+.pband--end {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.pband--end .doc__body .docend {
+  margin-top: 0;
 }
