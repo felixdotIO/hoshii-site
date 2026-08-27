@@ -72,7 +72,21 @@ def main():
     for rel in all_pages:
         own = url_of(rel)
         text = open(os.path.join(ROOT, rel), encoding="utf-8").read()
-        for attr, val in re.findall(r'\b(href|src)="([^"]*)"', text):
+        # href and src are the obvious ones. srcset carries the AVIF sources and
+        # style="--shot: url(...)" carries the panel photographs; both were
+        # missed once, and both failed quietly -- <picture> falls back to the
+        # JPG, so nine 404s showed nothing on the page at all.
+        found = [(a, v) for a, v in re.findall(r'\b(href|src)="([^"]*)"', text)]
+        for val in re.findall(r'\bsrcset="([^"]*)"', text):
+            for part in val.split(","):
+                bits = part.strip().split(None, 1)
+                if bits:
+                    found.append(("srcset", bits[0]))
+        for val in re.findall(r'\bstyle="([^"]*)"', text):
+            for _, url in re.findall(r"url\((['\"]?)([^)'\"]+)\1\)", val):
+                found.append(("style url()", url))
+
+        for attr, val in found:
             if not val or val.startswith(EXTERNAL):
                 continue
             if val.startswith("#"):

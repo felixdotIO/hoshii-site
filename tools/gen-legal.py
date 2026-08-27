@@ -55,6 +55,7 @@ SITEMAP = {
     "privacy-policy": ("2026-08-26", "yearly", "0.3"),
     "cookies-policy": ("2026-08-26", "yearly", "0.3"),
     "about": ("2026-08-27", "monthly", "0.7"),
+    "order-processing": ("2026-08-27", "monthly", "0.9"),
 }
 
 CSS_V = "571"
@@ -65,6 +66,7 @@ CSS_V = "571"
 
 # The h1 can be a full sentence; the browser tab and the search result cannot.
 HEAD_TITLES = {
+    "order-processing": "Order Processing Skill",
     "about": "About",
     "partners": "Become a partner",
     "careers": "Careers",
@@ -82,6 +84,7 @@ DOCS = [
     (".", "faq", "Questions"),
     (".", "demo", "Book a demo"),
     (".", "partners", "Bring AI&#8209;driven order processing to your customers, powered by you."),
+    (".", "order-processing", "Order processing,<span class=\"doc__line\"><span class=\"doc__accent\">handled.</span></span>"),
     (".", "about", "Built in Z&uuml;rich."),
     (".", "careers", "Come build the inbox B2B operations runs on."),
     (".", "resources", "Resources"),
@@ -286,10 +289,13 @@ def render(block, fold=False, up="."):
             out.append("            </blockquote>")
         elif kind == "SHOT":
             src, label = rest.split("|", 1)
+            # A bare filename still means /assets/customers, so the case studies
+            # are untouched; anything with a folder in it is taken as given.
+            path = src if "/" in src else f"customers/{src}"
             out.append('        <figure class="doc__shot">')
             out.append(
-                f'          <img src="{up}/assets/customers/{src}" alt="{inline(label)}" '
-                'width="1230" height="779" />'
+                f'          <img src="{up}/assets/{path}" alt="{inline(label)}" '
+                'width="1400" height="706" loading="lazy" />'
             )
             out.append("        </figure>")
         elif kind == "VIDEO":
@@ -630,12 +636,41 @@ def clean_url(val, link_base):
     return "/" + target + tail
 
 
+def clean_srcset(val, link_base):
+    """srcset is a comma-separated list of `url descriptor` pairs."""
+    out = []
+    for part in val.split(","):
+        bits = part.strip().split(None, 1)
+        if not bits:
+            continue
+        url = clean_url(bits[0], link_base)
+        out.append(url if len(bits) == 1 else f"{url} {bits[1]}")
+    return ", ".join(out)
+
+
 def clean_urls(page, link_base):
-    return re.sub(
+    page = re.sub(
         r'\b(href|src)="([^"]*)"',
         lambda m: f'{m.group(1)}="{clean_url(m.group(2), link_base)}"',
         page,
     )
+    page = re.sub(
+        r'\bsrcset="([^"]*)"',
+        lambda m: f'srcset="{clean_srcset(m.group(1), link_base)}"',
+        page,
+    )
+    # url() inside a style attribute, which is where the panel photographs and
+    # the pattern overlay live. Scoped to style="..." so nothing in a <script>
+    # or a <style> block is touched.
+    def fix_style(m):
+        body = re.sub(
+            r"url\((['\"]?)([^)'\"]+)\1\)",
+            lambda u: f"url({u.group(1)}{clean_url(u.group(2), link_base)}{u.group(1)})",
+            m.group(1),
+        )
+        return f'style="{body}"'
+
+    return re.sub(r'\bstyle="([^"]*)"', fix_style, page)
 
 
 def page_dir_for(folder, slug):
@@ -1029,7 +1064,7 @@ HEADER_CTA = {"demo": "Let&rsquo;s chat"}
 # the stripped bar, where a full nav would just be noise around a document.
 FULL_NAV = {
     "partners", "careers", "resources", "customers", "pricing", "demo", "about",
-    "stutzer-service", "egger-gemuesebau", "max-schwarz",
+    "stutzer-service", "egger-gemuesebau", "max-schwarz", "order-processing",
     # faq is an answer-engine landing page, not a legal document: organic traffic
     # arrives on it cold and needs somewhere to go next.
     "faq",
@@ -1042,7 +1077,7 @@ NOINDEX = {"msa", "sls"}
 
 # The careers page lays out a values grid and six portraits, which will not fit
 # a prose measure. Prose inside it stays capped so the reading column holds.
-WIDE = {"careers", "resources", "customers", "pricing", "about"}
+WIDE = {"careers", "resources", "customers", "about", "order-processing"}
 
 
 CASE_MAIN = """      <div class="doc__head">
@@ -1102,7 +1137,7 @@ CASE = {"stutzer-service", "egger-gemuesebau", "max-schwarz"}
 # The booking page has its own template: two columns from the top, split by a
 # single rule, with the form sticky in the right one. It stopped fitting the
 # document scaffolding once the argument moved above the fold.
-BOOK = {"demo"}
+BOOK = {"demo", "pricing"}
 
 BOOK_MAIN = """      <div class="book">
         <div class="book__grid">
@@ -1521,6 +1556,40 @@ CLOSER: Want to build this with us?|See open roles|careers.html
 """
 
 
+ORDER_PROCESSING = """
+SHOT: skill/order-form.jpg|An order form, a coffee and a handwritten note on a desk
+NOTE: Shipped Skill &middot; Automate &middot; Sales
+H2: It starts by reading almost any format.
+P: Your customers do not send clean data. They send PDFs, forwarded email threads, Excel sheets, voicemails and photographs of handwritten notes. The Skill reads the order out of all of them, in **any of the languages your desk works in**.
+CHECKS:
+CHECK: **PDF and scans**, including layouts that change every time
+CHECK: **Email text**, forwarded threads and the order buried three replies down
+CHECK: **Excel and CSV**, whatever the column order
+CHECK: **Voicemail and audio**, transcribed before anyone has to listen
+CHECK: **Photographs**, including handwriting
+ENDCHECKS:
+NOTE: A PDF reading &ldquo;bitte liefern Sie zur KW 22: 12&times; Palette Mehl Type 405, 8&times; Karton Rapsöl 10 L&rdquo; comes out as two lines, quantities attached. So does the voicemail that says the same thing out loud.
+H2: Matched to your products, posted in one click.
+P: Reading it is the easy half. Every extracted line is matched to the right product in your ERP and prepared as a clean, ready&#8209;to&#8209;post entry. Your team confirms. **No rekeying, no second screen.**
+TABLE: The same words, two customers|What arrived|What it means|SKU
+ROW: A. &amp; B. Rinderknecht|20&times; Schrauben, kurz|Hex bolt M8&times;18|4471
+ROW: Berger Industrietechnik|20&times; Schrauben, kurz|Wood screw 4&times;30|7720
+ENDTABLE:
+LIFT: The same three words meant two different products. Nobody had to write a rule for that.
+P: Every confirmation teaches the Skill what a given customer means, and it applies that from the next order on. This is procedural knowledge: not a model that guesses better in general, but one that knows **how your customers actually order**.
+SHOT: skill/dock.jpg|Pallets moving on a loading dock at first light
+H2: Inside the inbox your team already uses.
+P: The Skill does not need anyone to move. It runs as a native add&#8209;in for **Outlook and Gmail**, so the work appears where the mail already lands. No new tool, no migration, no second login.
+PANELS:
+PANEL: Tagged the moment it lands|Order, request for quote, complaint or noise, sorted as it arrives, in any format or language. Tags, Open or Done status, and folders, all inside Outlook.|prof-orderdesk.jpg|rgba(196, 78, 44, 0.28)
+PANEL: Processed in a pop&#8209;up|The order opens beside the mail, structured and ready to check. One confirmation posts it to the ERP and marks the thread done.|prof-service.jpg|rgba(148, 164, 140, 0.24)
+ENDPANELS:
+H2: What it is connected to.
+P: The Skill posts into the system you already run. We are live with 20+ ERP systems, over REST where there is an API and SFTP where there is not, so for most desks there is nothing to build. Where a system has no interface at all, we drive it the way a person would.
+CLOSER: Bring your most complex order. We will show you what happens to it, live, in 30 minutes.|Book a demo|demo.html
+"""
+
+
 PARTNERS = """
 PROPS:
 PROP: Bring Hoshii to your customers, integrated with the ERP and systems you already support.|You keep the relationship and the implementation. We never sell around you.
@@ -1766,23 +1835,30 @@ CLOSER: Not sure which tier your volume lands in? We will work it out with you.|
 
 PRICING = """
 P: No table, because a desk taking forty orders a day and one taking four hundred are not the same work. We look at your inbox, then quote.
-H2: What moves the number
-PROPS:
-PROP: Volume|How much lands, and in what form. The first thing we measure.
-PROP: Inboxes|How many the desk runs, shared and personal.
-PROP: Systems|Reading your ERP is included. Writing into it is scoped.
-PROP: Paperwork|A standard security review is included. A custom one is scoped.
-ENDPROPS:
-H2: What you never pay for
+TEAM:
+PERSON: Daniel Nydegger|Head of GTM||daniel-nydegger
+PERSON: Jo&euml;l Heller|GTM Executive||joel-heller
+PERSON: Philipp Kuprecht|GTM Executive||philipp-kuprecht
+ENDTEAM:
 CHECKS:
-CHECK: Users. Invite the whole company, at no extra cost.
-CHECK: All 25+ languages, and every system Hoshii reads from.
-CHECK: Corrections. Being wrong once is how it learns, not an extra.
+CHECK: Volume. How much lands, and in what form.
+CHECK: Inboxes. How many the desk runs, shared and personal.
+CHECK: Systems. Reading your ERP is included. Writing into it is scoped, as is a custom security review.
 ENDCHECKS:
+BELT: Quoted this way for 500+ B2B operations teams|casadelvino,staempfli,chiefs,stutzer,igp,schuetzengarten,egger,safruits
+ASIDE:
+RAW:             <p class="doc__caps">Talk to sales</p>
+RAW:             <p class="doc__prop">Thirty minutes, one real inbox, and the number for your own desk.</p>
+RAW:             <p class="doc__propWhy">Bring a message that landed this week. We run it live on your own mail, show you exactly what it would post to your ERP, and price it at your volume. No proposal cycle, no discovery phase.</p>
+RAW:             <p><a class="btn-os btn-os--accent btn-os--fill btn-os--lg" href="demo.html">Talk to sales<span class="btn-os__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg></span></a></p>
+RAW:             <p class="doc__standin">Rather write first? <a href="mailto:contact@hoshii.ai?subject=Pricing">contact@hoshii.ai</a> reaches the same three people.</p>
+AFTER:
 H2: How it starts
+RAW:         <figure class="doc__shot">
+RAW:           <img src="assets/img/hero-slot.jpg" alt="A letterbox slot set into a patterned wall, an order emerging from it, and a warehouse team at work behind" width="1672" height="941" loading="lazy" />
+RAW:         </figure>
 P: Read only. Hoshii prepares and proposes, and nothing leaves until someone approves it. Your own analytics then show which processes are worth automating, and the quote moves with the ones you pick. You never buy an automation you have not watched work.
 P: The work itself is metered in credits, on a monthly allowance we size to an average month with you. Unused credits roll over.
-CLOSER: Bring one real inbox. We will work out the number with you.|Book a demo|demo.html
 """
 
 CONTENT = {
@@ -1825,6 +1901,12 @@ CONTENT = {
         MSA,
         "The Master Subscription Agreement governing use of the Hoshii Platform.",
         "The agreement governing use of the Hoshii Platform and the services around it.",
+    ),
+    "order-processing": (
+        ORDER_PROCESSING,
+        "The Hoshii Order Processing Skill reads inbound orders from PDF, email, Excel, voicemail and photos, matches every line to your ERP products and prepares a ready-to-post entry.",
+        "Inbound orders arrive in every format. This Skill reads each one, matches it to your "
+        "products and prepares a clean entry, ready to post to the ERP you already run.",
     ),
     "about": (
         ABOUT,
@@ -1919,6 +2001,7 @@ def build_main(slug, title, stand, body):
     # A page can decline the standfirst: pricing is called Pricing and says the
     # rest with the plans themselves. An empty one emits no element, rather than
     # an empty paragraph holding open the space it would have filled.
+    raw_stand = stand.strip()
     stand = (
         f'\n          <p class="doc__standfirst">{stand}</p>' if stand.strip() else ""
     )
@@ -1935,7 +2018,7 @@ def build_main(slug, title, stand, body):
             + "\n        </div>\n      </div>"
         ) if after.strip() else ""
         return BOOK_MAIN.format(
-            title=title, stand=stand, body=left.rstrip(),
+            title=title, stand=raw_stand, body=left.rstrip(),
             aside=aside.strip(), after=block,
         )
     if slug in CASE:
