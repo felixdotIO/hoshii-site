@@ -1765,30 +1765,23 @@ CLOSER: Not sure which tier your volume lands in? We will work it out with you.|
 
 
 PRICING = """
-P: No table, on purpose. A desk taking forty orders a day on one ERP and one taking four hundred across three are not the same work, and any tier that fits both is wrong for one of them. So we look at your inbox first, and quote against that.
-H2: What sets your price
+P: No table, because a desk taking forty orders a day and one taking four hundred are not the same work. We look at your inbox, then quote.
+H2: What moves the number
 PROPS:
-PROP: What arrives, not who reads it|Orders, complaints, quotes, and everything else that lands by mail. Volume is the biggest factor and the first thing we measure. Your whole company can have access without moving the number.
-PROP: How many inboxes the desk runs|Shared inboxes for the team, personal ones for the people working out of them. Both count, and neither is capped by headcount.
-PROP: Where answers have to be written back|Reading from your ERP is included. Writing into it, and the order processing that depends on that, is scoped per system, because no two ERPs cost the same to write into safely.
-PROP: What your security review asks for|A standard review is included. A custom data processing agreement, works council documentation or a long questionnaire is scoped alongside it.
+PROP: Volume|How much lands, and in what form. The first thing we measure.
+PROP: Inboxes|How many the desk runs, shared and personal.
+PROP: Systems|Reading your ERP is included. Writing into it is scoped.
+PROP: Paperwork|A standard security review is included. A custom one is scoped.
 ENDPROPS:
-H2: What every workspace includes
+H2: What you never pay for
 CHECKS:
-CHECK: Every colleague, at no extra cost. Invite the whole company to comment and weigh in.
-CHECK: EU hosting, email encryption, and replies that still go out from your own address.
-CHECK: 25+ languages, dialect voicemail included.
-CHECK: Context pulled from your systems, drafts written in your voice, confirmations prepared.
-CHECK: A knowledge base that learns from every correction, per customer and across the company.
-CHECK: Partner ERP connections, an inbound webhook, and analytics on your own inbox.
+CHECK: Users. Invite the whole company, at no extra cost.
+CHECK: All 25+ languages, and every system Hoshii reads from.
+CHECK: Corrections. Being wrong once is how it learns, not an extra.
 ENDCHECKS:
-P: Single sign&#8209;on, team analytics, system write&#8209;back and the ERP order processing skill are scoped with the quote rather than bundled in, because each one depends on which systems you actually run.
-H2: How credits work
-P: The work Hoshii does is metered in credits, and your workspace carries a monthly allowance. Unused credits roll over, so a quiet month builds a balance that carries a busy one. We size the allowance to an average month with you, never to a peak.
-NOTE: Run low and you get a warning in the cockpit and by email. Run out and the platform keeps going: classification, routing and analytics carry on, and only the actions that spend credits pause. Nothing stops working because a balance reached zero.
-H2: How the number grows
-P: Hoshii starts read only. It reads, prepares and proposes, and nothing reaches a customer or one of your systems until someone approves it. That is the whole entry price: no automation you have not seen working.
-P: Then your own analytics show which processes are worth automating, ranked by what they actually cost you today. Those are the ones we automate, and the quote moves with them. You buy the next step on evidence out of your own inbox, not on a promise made before we met.
+H2: How it starts
+P: Read only. Hoshii prepares and proposes, and nothing leaves until someone approves it. Your own analytics then show which processes are worth automating, and the quote moves with the ones you pick. You never buy an automation you have not watched work.
+P: The work itself is metered in credits, on a monthly allowance we size to an average month with you. Unused credits roll over.
 CLOSER: Bring one real inbox. We will work out the number with you.|Book a demo|demo.html
 """
 
