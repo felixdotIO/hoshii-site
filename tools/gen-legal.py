@@ -58,7 +58,7 @@ SITEMAP = {
     "order-processing": ("2026-08-27", "monthly", "0.9"),
 }
 
-CSS_V = "588"
+CSS_V = "595"
 
 # Paths are relative, never root-relative: Pages serves this repo from
 # /hoshii-site/, so a leading slash would resolve above the site root. Each page
@@ -87,7 +87,7 @@ HEAD_TITLES = {
 # plain standfirst, which is what a policy or a case study wants: those are
 # documents with a description, not landing pages with a claim.
 SUBHEAD = {
-    "pricing": "Smooth operations,|for the price of two coffees a day.",
+    "pricing": "Smooth operations,|starting from two coffees a day.",
     "customers": "Hoshii is clearing the inboxes|of Europe&rsquo;s busiest order desks.",
     "partners": "Bring AI&#8209;driven order processing to your customers,|powered by you.",
     "about": "The inbox was never built to run a business.|We are building the one that is.",
@@ -598,16 +598,6 @@ def render(block, fold=False, up="."):
             out.append(f'            <p class="doc__prop">{inline(claim)}</p>')
             out.append(f'            <p class="doc__propWhy">{inline(why)}</p>')
             out.append("          </li>")
-        elif kind == "LEDE":
-            # The pricing masthead: the page's name as the headline and the
-            # claim under it, and nothing else -- the same two levels every
-            # other masthead now carries, see SUBHEAD. The accent clause is a
-            # separate cell so it always takes its own line, the device
-            # .closer__title and .hero__title use.
-            title_, head, tail = rest.split("|", 2)
-            out.append(f'          <h1 class="pricehead__title">{inline(title_)}</h1>')
-            out.append(f'          <p class="pricehead__sub">{inline(head)} '
-                       f'<em>{inline(tail)}</em></p>')
         elif kind == "ACTS":
             label, href, alt, alt_href = rest.split("|", 3)
             out.append('          <p class="pricehead__acts">')
@@ -669,6 +659,29 @@ def render(block, fold=False, up="."):
             out.append("              </span>")
             out.append("            </a>")
             out.append("          </li>")
+        elif kind == "FLOW":
+            # The home page's convergence diagram, lifted whole. Six formats
+            # arrive on the left, one mark in the middle, a prepared entry on the
+            # right, and the pulses run the wires. It replaces a stock photograph
+            # of a desk with a coffee on it, which illustrated nothing the page
+            # claims. The sprite travels with it: <use href="#ico-mail"> resolves
+            # inside its own document, so a page that draws the diagram has to
+            # carry the six symbols it references.
+            head, _, tail = rest.partition("|")
+            out.append('        <figure class="skillflow">')
+            out.append('          <svg class="iconsprite" aria-hidden="true" focusable="false">')
+            out.append("            <defs>")
+            for gid, d in FLOW_ICONS:
+                out.append(f'              <g id="{gid}">{d}</g>')
+            out.append("            </defs>")
+            out.append("          </svg>")
+            out.append(FLOW_ART)
+            if head.strip():
+                em = f' <em>{inline(tail)}</em>' if tail.strip() else ""
+                out.append(
+                    f'          <figcaption class="skillflow__cap">{inline(head)}{em}</figcaption>'
+                )
+            out.append("        </figure>")
         elif kind == "RAW":
             out.append(rest)
         elif kind == "CTA":
@@ -694,6 +707,102 @@ def render(block, fold=False, up="."):
         close_fold()
     return "\n".join(out)
 
+
+
+# The six symbols the flow diagram references, copied from index.html's sprite.
+# Drawn to one grid, one stroke weight and one corner radius, so they read as a
+# family at 20px. Kept here because a generated page has no sprite of its own and
+# <use> only resolves inside the document that draws it.
+FLOW_ICONS = [
+    ("ico-mail", '<rect x="3.25" y="6" width="17.5" height="12" rx="2.25"/><path d="M4.5 7.4 12 13l7.5-5.6"/>'),
+    ("ico-chat", '<rect x="3.25" y="5.25" width="17.5" height="11.5" rx="2.25"/><path d="M8.1 16.75v3.1l3.7-3.1"/>'),
+    ("ico-doc", '<path d="M6.25 3.5h7.1l4.4 4.4V20a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 4.75 20V5a1.5 1.5 0 0 1 1.5-1.5Z"/><path d="M13.35 3.5v4.4h4.4"/>'),
+    ("ico-search", '<circle cx="10.9" cy="10.9" r="6.4"/><path d="m15.5 15.5 5.25 5.25"/>'),
+    ("ico-drafted", '<rect x="4.75" y="3.5" width="14.5" height="18" rx="1.5"/><path d="M7.9 9h8.2M7.9 12.5h8.2M7.9 16h4.6"/>'),
+    ("ico-reply", '<path d="M9.4 6.6 4 12l5.4 5.4"/><path d="M4 12h8.6a8.15 8.15 0 0 1 8.15 8.15"/>'),
+]
+
+# Three inbound wires, the mark, three outbound. The pulse delays are staggered
+# so the six never fire together, and the .pat layer is appended by PATTERN_JS,
+# which already lists .shift__art--flow among its hosts.
+FLOW_ART = """          <div class="shift__art shift__art--flow" data-anim>
+            <div class="flow" aria-hidden="true">
+              <svg class="flow__glow" viewBox="0 0 400 285">
+                <defs>
+                  <linearGradient id="flow-in" x1="0" x2="1" y1="0" y2="0">
+                    <stop offset="0" stop-color="#fd4b00" stop-opacity=".1"/>
+                    <stop offset=".45" stop-color="#fd4b00" stop-opacity=".05"/>
+                    <stop offset="1" stop-color="#fd4b00" stop-opacity="0"/>
+                  </linearGradient>
+                  <linearGradient id="flow-out" x1="1" x2="0" y1="0" y2="0">
+                    <stop offset="0" stop-color="#133021" stop-opacity=".3"/>
+                    <stop offset=".45" stop-color="#133021" stop-opacity=".17"/>
+                    <stop offset="1" stop-color="#133021" stop-opacity="0"/>
+                  </linearGradient>
+                  <radialGradient id="flow-core">
+                    <stop offset="0" stop-color="#ffffff" stop-opacity=".95"/>
+                    <stop offset=".5" stop-color="#ffffff" stop-opacity=".45"/>
+                    <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+                  </radialGradient>
+                  <filter id="flow-soft" x="-25%" y="-35%" width="150%" height="170%" color-interpolation-filters="sRGB">
+                    <feGaussianBlur stdDeviation="9"/>
+                  </filter>
+                </defs>
+                <g filter="url(#flow-soft)">
+                  <path d="M-14 6c74 0 128 92 196 112v39C114 177 60 279-14 279Z" fill="url(#flow-in)"/>
+                  <path d="M414 6c-74 0-128 92-196 112v39c68 20 122 122 196 122Z" fill="url(#flow-out)"/>
+                  <ellipse cx="200" cy="142.5" rx="86" ry="50" fill="url(#flow-core)"/>
+                </g>
+              </svg>
+
+              <svg class="flow__wires" viewBox="0 0 400 285">
+                <g class="flow__lines">
+                  <path d="M87 57C124 57 130 142.5 161 142.5"/>
+                  <path d="M87 142.5H161"/>
+                  <path d="M87 228C124 228 130 142.5 161 142.5"/>
+                  <path d="M239 142.5C270 142.5 276 57 313 57"/>
+                  <path d="M239 142.5H313"/>
+                  <path d="M239 142.5C270 142.5 276 228 313 228"/>
+                </g>
+                <g class="flow__pulses">
+                  <path d="M87 57C124 57 130 142.5 161 142.5" style="--d: 0s" pathLength="100"/>
+                  <path d="M87 142.5H161" style="--d: 1.1s" pathLength="100"/>
+                  <path d="M87 228C124 228 130 142.5 161 142.5" style="--d: 2.2s" pathLength="100"/>
+                  <path d="M239 142.5C270 142.5 276 57 313 57" style="--d: .55s" pathLength="100"/>
+                  <path d="M239 142.5H313" style="--d: 1.65s" pathLength="100"/>
+                  <path d="M239 142.5C270 142.5 276 228 313 228" style="--d: 2.75s" pathLength="100"/>
+                </g>
+              </svg>
+
+              <p class="flow__tile flow__tile--i1">
+                <span class="flow__glyph"><svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-doc" transform="translate(12 12) scale(1.0266) translate(-11.25 -12.50)" stroke-width="1.461"/></svg></span>
+              </p>
+              <p class="flow__tile flow__tile--i2">
+                <span class="flow__glyph"><svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-mail" transform="translate(12 12) scale(1.0740) translate(-12.00 -12.00)" stroke-width="1.397"/></svg></span>
+              </p>
+              <p class="flow__tile flow__tile--i3">
+                <span class="flow__glyph"><svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-chat" transform="translate(12 12) scale(1.0000) translate(-12.00 -12.55)" stroke-width="1.500"/></svg></span>
+              </p>
+
+              <p class="flow__core">
+                <svg class="flow__mark" viewBox="0 0 1259 1756" fill="currentColor">
+                  <rect x="0" y="0" width="1259" height="413"/>
+                  <rect x="184" y="605" width="403" height="1151"/>
+                  <rect x="707" y="605" width="402" height="1151"/>
+                </svg>
+              </p>
+
+              <p class="flow__tile flow__tile--o1">
+                <span class="flow__glyph"><svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-search" transform="translate(12 12) scale(0.9917) translate(-12.62 -12.62)" stroke-width="1.513"/></svg></span>
+              </p>
+              <p class="flow__tile flow__tile--o2">
+                <span class="flow__glyph"><svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-drafted" transform="translate(12 12) scale(0.9862) translate(-12.00 -12.50)" stroke-width="1.521"/></svg></span>
+              </p>
+              <p class="flow__tile flow__tile--o3">
+                <span class="flow__glyph"><svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-reply" transform="translate(12 12) scale(1.0580) translate(-12.38 -13.37)" stroke-width="1.418"/></svg></span>
+              </p>
+            </div>
+          </div>"""
 
 
 SKIP_SCHEMES = ("http://", "https://", "//", "mailto:", "tel:", "data:", "#")
@@ -1278,6 +1387,7 @@ PRICE = {"pricing"}
 
 PRICE_MAIN = """      <div class="pricehead">
         <div class="pricehead__inner">
+          <h1 class="doc__title">{title}</h1>{stand}
 {head}
         </div>
       </div>
@@ -1699,7 +1809,7 @@ CLOSER: Want to build this with us?|See open roles|careers.html
 ORDER_PROCESSING = """
 NOTE: Shipped Skill &middot; live on 500+ order desks
 P: The Order Processing Skill turns an inbound order into a **ready&#8209;to&#8209;post ERP entry**. It reads the order out of whatever arrived, matches every line to your products, and hands your team one thing to confirm.
-SHOT: skill/order-form.jpg|An order form, a coffee and a handwritten note on a desk
+FLOW: Whatever arrives,|one entry ready to post.
 H2: It reads whatever arrived
 P: Your customers do not send clean data. The Skill reads the order out of **PDFs, forwarded email threads, Excel sheets, voicemails and photographs of handwriting**, in any of the languages your desk works in.
 CHECKS:
@@ -1779,6 +1889,9 @@ RAW:               });
 RAW:             })();
 RAW:           </script>
 RAW:         </div>
+AFTER:
+BELT: Already running on 500+ B2B order desks|casadelvino,staempfli,chiefs,stutzer,igp,schuetzengarten,egger,safruits
+CLOSER: Tell us which systems your customers run.|Book a call|demo.html
 """
 
 
@@ -1985,7 +2098,6 @@ CLOSER: Not sure which tier your volume lands in? We will work it out with you.|
 
 
 PRICING = """
-LEDE: Pricing|Smooth operations,|for the price of two coffees a day.
 ACTS: Talk to sales|demo.html|Or write to us first|mailto:contact@hoshii.ai?subject=Pricing
 FACTS:
 FACT: One inbox and one system is enough to start
@@ -2223,7 +2335,8 @@ def build_main(slug, title, stand, body):
             kind, _, inner = chunk.partition("-->")
             bands.append(PRICE_BAND.format(kind=kind.strip(), body=inner.rstrip("\n")))
         return PRICE_MAIN.format(
-            head=head.rstrip(), bands="\n".join(bands).lstrip("\n")
+            title=title, stand=stand, head=head.rstrip(),
+            bands="\n".join(bands).lstrip("\n"),
         )
     if slug not in SPLIT:
         return PLAIN_MAIN.format(title=title, stand=stand, body=body)

@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Order Processing Skill | Hoshii</title>
+    <meta name="description" content="Reads inbound orders from PDF, email, Excel, voicemail and photos, matches every line to your ERP products, and prepares a ready-to-post entry." />
+    <link rel="canonical" href="https://www.hoshii.ai/order-processing/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Hoshii" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:title" content="Order Processing Skill | Hoshii" />
+    <meta property="og:description" content="Reads inbound orders from PDF, email, Excel, voicemail and photos, matches every line to your ERP products, and prepares a ready-to-post entry." />
+    <meta property="og:url" content="https://www.hoshii.ai/order-processing/" />
+    <meta property="og:image" content="https://www.hoshii.ai/assets/img/hero-slot.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preload" href="/assets/fonts/Satoshi-Regular.otf" as="font" type="font/otf" crossorigin />
+    <link rel="preload" href="/assets/fonts/Satoshi-Medium.otf" as="font" type="font/otf" crossorigin />
+    <link rel="stylesheet" href="/styles.css?v=595" />
+    <script type="application/ld+json">
+    {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+                {
+                      "@type": "Question",
+                      "name": "What is the Order Processing Skill?",
+                      "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "It is a Hoshii Skill that reads inbound B2B orders from email, PDF, Excel, voicemail and photographs, matches each line to a product in your ERP, and prepares an entry your team confirms in one click."
+                      }
+                },
+                {
+                      "@type": "Question",
+                      "name": "Which formats can it read?",
+                      "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "PDFs and scans, email text and forwarded threads, Excel and CSV, audio and voicemail, and photographs including handwriting. Layout does not have to be consistent and the language does not have to be English."
+                      }
+                },
+                {
+                      "@type": "Question",
+                      "name": "Does it post into the ERP automatically?",
+                      "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Only once someone approves it. Reading your ERP is included; writing into it is switched on per area of work, and a person confirms the entry before it posts."
+                      }
+                },
+                {
+                      "@type": "Question",
+                      "name": "Which ERP systems does it work with?",
+                      "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Hoshii is live with 20+ ERP systems, over REST where there is an API and SFTP where there is not. Where a system has no interface at all, Hoshii drives it the way a person would."
+                      }
+                },
+                {
+                      "@type": "Question",
+                      "name": "How does it handle customers who order the same thing differently?",
+                      "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Every confirmation is training data for that customer. The same phrase can resolve to different products for different customers, and the Skill applies what it learned from the next order on."
+                      }
+                }
+          ]
+    }
+    </script>
+  </head>
+  <body>
+    <header class="titlebar">
+      <div class="titlebar__inner">
+        <a class="brand" href="/" aria-label="Hoshii home">
+          <svg
+            class="brand__mark"
+            viewBox="0 0 2596 2596"
+            width="2596"
+            height="2596"
+            aria-hidden="true"
+          >
+            <rect width="2596" height="2596" fill="var(--bone)" />
+            <g fill="var(--green)">
+              <rect x="673" y="428" width="1259" height="413" />
+              <rect x="857" y="1033" width="403" height="1151" />
+              <rect x="1380" y="1033" width="402" height="1151" />
+            </g>
+          </svg>
+          <img
+            class="brand__wordmark"
+            src="/assets/logo/wordmark-a.png"
+            alt="Hoshii"
+            width="1420"
+            height="425"
+          />
+        </a>
+
+        <nav class="nav" aria-label="Primary">
+          <a class="nav__btn" href="/#product">Product</a>
+          <a class="nav__btn" href="/customers/">Customer stories</a>
+          <a class="nav__btn" href="/pricing/">Pricing</a>
+        </nav>
+
+        <div class="titlebar__actions">
+          <a class="btn-os btn-os--accent" href="/demo/">Book a demo<span class="btn-os__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg></span></a>
+
+          <button
+            class="menu-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="mobile-nav"
+            aria-label="Menu"
+          >
+            <span class="menu-toggle__bar"></span>
+            <span class="menu-toggle__bar"></span>
+          </button>
+        </div>
+      </div>
+
+      <nav class="mobile-nav" id="mobile-nav" aria-label="Primary" hidden>
+        <a class="mobile-nav__link" href="/#product">Product</a>
+        <a class="mobile-nav__link" href="/customers/">Customer stories</a>
+        <a class="mobile-nav__link" href="/pricing/">Pricing</a>
+      </nav>
+    </header>
+
+    <main class="doc page--order-processing doc--wide">
+      <div class="doc__head">
+        <div class="doc__inner">
+          <h1 class="doc__title">Order processing</h1>
+          <p class="doc__sub">Every inbound order, read and prepared, <em>before anyone opens it.</em></p>
+        </div>
+      </div>
+
+      <div class="doc__band guides">
+        <div class="doc__inner doc__body">
+        <p class="doc__note">Shipped Skill &middot; live on 500+ order desks</p>
+        <p>The Order Processing Skill turns an inbound order into a <strong>ready&#8209;to&#8209;post ERP entry</strong>. It reads the order out of whatever arrived, matches every line to your products, and hands your team one thing to confirm.</p>
+        <figure class="skillflow">
+          <svg class="iconsprite" aria-hidden="true" focusable="false">
+            <defs>
+              <g id="ico-mail"><rect x="3.25" y="6" width="17.5" height="12" rx="2.25"/><path d="M4.5 7.4 12 13l7.5-5.6"/></g>
+              <g id="ico-chat"><rect x="3.25" y="5.25" width="17.5" height="11.5" rx="2.25"/><path d="M8.1 16.75v3.1l3.7-3.1"/></g>
+              <g id="ico-doc"><path d="M6.25 3.5h7.1l4.4 4.4V20a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 4.75 20V5a1.5 1.5 0 0 1 1.5-1.5Z"/><path d="M13.35 3.5v4.4h4.4"/></g>
+              <g id="ico-search"><circle cx="10.9" cy="10.9" r="6.4"/><path d="m15.5 15.5 5.25 5.25"/></g>
+              <g id="ico-drafted"><rect x="4.75" y="3.5" width="14.5" height="18" rx="1.5"/><path d="M7.9 9h8.2M7.9 12.5h8.2M7.9 16h4.6"/></g>
+              <g id="ico-reply"><path d="M9.4 6.6 4 12l5.4 5.4"/><path d="M4 12h8.6a8.15 8.15 0 0 1 8.15 8.15"/></g>
+            </defs>
+          </svg>
+          <div class="shift__art shift__art--flow" data-anim>
+            <div class="flow" aria-hidden="true">
+              <svg class="flow__glow" viewBox="0 0 400 285">
+                <defs>
+                  <linearGradient id="flow-in" x1="0" x2="1" y1="0" y2="0">
+                    <stop offset="0" stop-color="#fd4b00" stop-opacity=".1"/>
+                    <stop offset=".45" stop-color="#fd4b00" stop-opacity=".05"/>
+                    <stop offset="1" stop-color="#fd4b00" stop-opacity="0"/>
+                  </linearGradient>
+                  <linearGradient id="flow-out" x1="1" x2="0" y1="0" y2="0">
+                    <stop offset="0" stop-color="#133021" stop-opacity=".3"/>
+                    <stop offset=".45" stop-color="#133021" stop-opacity=".17"/>
+                    <stop offset="1" stop-color="#133021" stop-opacity="0"/>
+                  </linearGradient>
+                  <radialGradient id="flow-core">
+                    <stop offset="0" stop-color="#ffffff" stop-opacity=".95"/>
+                    <stop offset=".5" stop-color="#ffffff" stop-opacity=".45"/>
+                    <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+                  </radialGradient>
+                  <filter id="flow-soft" x="-25%" y="-35%" width="150%" height="170%" color-interpolation-filters="sRGB">
+                    <feGaussianBlur stdDeviation="9"/>
+                  </filter>
+                </defs>
+                <g filter="url(#flow-soft)">
+                  <path d="M-14 6c74 0 128 92 196 112v39C114 177 60 279-14 279Z" fill="url(#flow-in)"/>
+                  <path d="M414 6c-74 0-128 92-196 112v39c68 20 122 122 196 122Z" fill="url(#flow-out)"/>
+                  <ellipse cx="200" cy="142.5" rx="86" ry="50" fill="url(#flow-core)"/>
+                </g>
+              </svg>
+
+              <svg class="flow__wires" viewBox="0 0 400 285">
+                <g class="flow__lines">
+                  <path d="M87 57C124 57 130 142.5 161 142.5"/>
+                  <path d="M87 142.5H161"/>
+                  <path d="M87 228C124 228 130 142.5 161 142.5"/>
+                  <path d="M239 142.5C270 142.5 276 57 313 57"/>
+                  <path d="M239 142.5H313"/>
+                  <path d="M239 142.5C270 142.5 276 228 313 228"/>
+                </g>
+                <g class="flow__pulses">
+                  <path d="M87 57C124 57 130 142.5 161 142.5" style="--d: 0s" pathLength="100"/>
+                  <path d="M87 142.5H161" style="--d: 1.1s" pathLength="100"/>
+                  <path d="M87 228C124 228 130 142.5 161 142.5" style="--d: 2.2s" pathLength="100"/>
+                  <path d="M239 142.5C270 142.5 276 57 313 57" style="--d: .55s" pathLength="100"/>
+                  <path d="M239 142.5H313" style="--d: 1.65s" pathLength="100"/>
+                  <path d="M239 142.5C270 142.5 276 228 313 228" style="--d: 2.75s" pathLength="100"/>
+                </g>
+              </svg>
+
+              <p class="flow__tile flow__tile--i1">
+                <span class="flow__glyph"><svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-doc" transform="translate(12 12) scale(1.0266) translate(-11.25 -12.50)" stroke-width="1.461"/></svg></span>
+              </p>
+              <p class="flow__tile flow__tile--i2">
+                <span class="flow__glyph"><svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-mail" transform="translate(12 12) scale(1.0740) translate(-12.00 -12.00)" stroke-width="1.397"/></svg></span>
+              </p>
+              <p class="flow__tile flow__tile--i3">
+                <span class="flow__glyph"><svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-chat" transform="translate(12 12) scale(1.0000) translate(-12.00 -12.55)" stroke-width="1.500"/></svg></span>
+              </p>
+
+              <p class="flow__core">
+                <svg class="flow__mark" viewBox="0 0 1259 1756" fill="currentColor">
+                  <rect x="0" y="0" width="1259" height="413"/>
+                  <rect x="184" y="605" width="403" height="1151"/>
+                  <rect x="707" y="605" width="402" height="1151"/>
+                </svg>
+              </p>
+
+              <p class="flow__tile flow__tile--o1">
+                <span class="flow__glyph"><svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-search" transform="translate(12 12) scale(0.9917) translate(-12.62 -12.62)" stroke-width="1.513"/></svg></span>
+              </p>
+              <p class="flow__tile flow__tile--o2">
+                <span class="flow__glyph"><svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-drafted" transform="translate(12 12) scale(0.9862) translate(-12.00 -12.50)" stroke-width="1.521"/></svg></span>
+              </p>
+              <p class="flow__tile flow__tile--o3">
+                <span class="flow__glyph"><svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-reply" transform="translate(12 12) scale(1.0580) translate(-12.38 -13.37)" stroke-width="1.418"/></svg></span>
+              </p>
+            </div>
+          </div>
+          <figcaption class="skillflow__cap">Whatever arrives, <em>one entry ready to post.</em></figcaption>
+        </figure>
+        <h2 id="it-reads-whatever-arrived">It reads whatever arrived</h2>
+        <p>Your customers do not send clean data. The Skill reads the order out of <strong>PDFs, forwarded email threads, Excel sheets, voicemails and photographs of handwriting</strong>, in any of the languages your desk works in.</p>
+        <ul class="doc__checks">
+          <li><strong>PDF and scans</strong>, including layouts that change every time</li>
+          <li><strong>Email text</strong>, forwarded threads, the order buried three replies down</li>
+          <li><strong>Excel and CSV</strong>, whatever the column order</li>
+          <li><strong>Voicemail and audio</strong>, transcribed before anyone has to listen</li>
+          <li><strong>Photographs</strong>, including handwriting</li>
+        </ul>
+        <p class="doc__note">A PDF reading &ldquo;bitte liefern Sie zur KW 22: 12&times; Palette Mehl Type 405, 8&times; Karton Rapsöl 10 L&rdquo; comes out as two lines with quantities attached. So does the voicemail that says the same thing out loud.</p>
+        <h2 id="it-matches-lines-to-your-products">It matches lines to your products</h2>
+        <p>Reading it is the easy half. Every extracted line is matched to the right product in your ERP and prepared as a clean entry. Your team confirms. <strong>No rekeying, no second screen.</strong></p>
+        <div class="ptable__wrap">
+          <table class="ptable">
+            <thead><tr>
+              <th scope="col">The same words, two customers</th>
+              <th scope="col">What arrived</th>
+              <th scope="col">What it means</th>
+              <th scope="col">SKU</th>
+            </tr></thead>
+            <tbody>
+              <tr>
+                <th scope="row">A. &amp; B. Rinderknecht</th>
+                <td>20&times; Schrauben, kurz</td>
+                <td>Hex bolt M8&times;18</td>
+                <td>4471</td>
+              </tr>
+              <tr>
+                <th scope="row">Berger Industrietechnik</th>
+                <td>20&times; Schrauben, kurz</td>
+                <td>Wood screw 4&times;30</td>
+                <td>7720</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+            <blockquote class="lift">
+              <p class="lift__text">The same three words meant two different products. Nobody wrote a rule for that.</p>
+            </blockquote>
+        <h2 id="it-learns-what-each-customer-means">It learns what each customer means</h2>
+        <p>Every confirmation teaches the Skill how a given customer orders, and it applies that from the next order on. This is procedural knowledge: not a model that guesses better in general, but one that knows <strong>how your customers actually write</strong>.</p>
+        <figure class="doc__shot">
+          <img src="/assets/skill/dock.jpg" alt="Pallets moving on a loading dock at first light" width="1400" height="706" loading="lazy" />
+        </figure>
+        <h2 id="it-runs-inside-outlook-and-gmail">It runs inside Outlook and Gmail</h2>
+        <p>Nobody has to move. The Skill runs as a <strong>native add&#8209;in for Outlook and Gmail</strong>, so the work appears where the mail already lands. No new tool, no migration, no second login.</p>
+        <ul class="doc__panels">
+          <li class="doc__panel" style="--shot: url('/assets/img/prof-orderdesk.jpg'); --bloom: rgba(196, 78, 44, 0.28)">
+            <h3 class="doc__panelHead">Tagged the moment it lands</h3>
+            <p class="doc__panelBody">Order, request for quote, complaint or noise, sorted as it arrives, in any format or language. Tags, Open or Done status and folders, all inside Outlook.</p>
+          </li>
+          <li class="doc__panel" style="--shot: url('/assets/img/prof-service.jpg'); --bloom: rgba(148, 164, 140, 0.24)">
+            <h3 class="doc__panelHead">Processed in a pop&#8209;up</h3>
+            <p class="doc__panelBody">The order opens beside the mail, structured and ready to check. One confirmation posts it to the ERP and marks the thread done.</p>
+          </li>
+        </ul>
+        <h2 id="common-questions">Common questions</h2>
+        <details class="doc__fold">
+          <summary class="doc__sum">
+            <h3>What is the Order Processing Skill?</h3>
+          </summary>
+          <p>It is a Hoshii Skill that reads inbound B2B orders from email, PDF, Excel, voicemail and photographs, matches each line to a product in your ERP, and prepares an entry your team confirms in one click.</p>
+        </details>
+        <details class="doc__fold">
+          <summary class="doc__sum">
+            <h3>Which formats can it read?</h3>
+          </summary>
+          <p>PDFs and scans, email text and forwarded threads, Excel and CSV, audio and voicemail, and photographs including handwriting. Layout does not have to be consistent and the language does not have to be English.</p>
+        </details>
+        <details class="doc__fold">
+          <summary class="doc__sum">
+            <h3>Does it post into the ERP automatically?</h3>
+          </summary>
+          <p>Only once someone approves it. Reading your ERP is included; writing into it is switched on per area of work, and a person confirms the entry before it posts.</p>
+        </details>
+        <details class="doc__fold">
+          <summary class="doc__sum">
+            <h3>Which ERP systems does it work with?</h3>
+          </summary>
+          <p>Hoshii is live with 20+ ERP systems, over REST where there is an API and SFTP where there is not. Where a system has no interface at all, Hoshii drives it the way a person would.</p>
+        </details>
+        <details class="doc__fold">
+          <summary class="doc__sum">
+            <h3>How does it handle customers who order the same thing differently?</h3>
+          </summary>
+          <p>Every confirmation is training data for that customer. The same phrase can resolve to different products for different customers, and the Skill applies what it learned from the next order on.</p>
+        </details>
+        <aside class="docend">
+          <p class="docend__head">Bring your most complex order. We will show you what happens to it, live, in 30 minutes.</p>
+          <a class="btn-os btn-os--fill btn-os--lg" href="/demo/">Book a demo<span class="btn-os__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg></span></a>
+        </aside>
+        </div>
+      </div>
+    </main>
+
+    <footer class="foot">
+      <div class="foot__inner">
+        <div class="foot__brand">
+          <a class="brand brand--foot" href="/" aria-label="Hoshii home">
+            <svg class="brand__mark" viewBox="0 0 2596 2596" aria-hidden="true">
+              <rect width="2596" height="2596" fill="var(--green)" />
+              <g fill="var(--bone)">
+                <rect x="673" y="428" width="1259" height="413" />
+                <rect x="857" y="1033" width="403" height="1151" />
+                <rect x="1380" y="1033" width="402" height="1151" />
+              </g>
+            </svg>
+            <img
+              class="brand__wordmark"
+              src="/assets/logo/wordmark-b.png"
+              alt="Hoshii"
+              width="1420"
+              height="425"
+              loading="lazy"
+            />
+          </a>
+          <p class="foot__line">
+            The AI&#8209;native inbox for B2B operations. Built in Zurich for the teams
+            that keep goods moving.
+          </p>
+        </div>
+
+        <nav class="foot__nav" aria-label="Footer">
+          <div class="foot__col">
+            <h2 class="foot__head">Product</h2>
+            <a class="foot__link" href="/#product">Product</a>
+            <a class="foot__link" href="/pricing/">Pricing</a>
+            <a class="foot__link" href="/customers/">Customer stories</a>
+          </div>
+
+          <div class="foot__col">
+            <h2 class="foot__head">Company</h2>
+            <a class="foot__link" href="/resources/">Resources</a>
+            <a class="foot__link" href="/faq/">Questions</a>
+            <a class="foot__link" href="/careers/">Careers</a>
+            <a class="foot__link" href="/partners/">Become a partner</a>
+            <a class="foot__link" href="/about/">About</a>
+            <a class="foot__link" href="/demo/">Book a demo</a>
+          </div>
+
+          <div class="foot__col">
+            <h2 class="foot__head">Legal</h2>
+            <a class="foot__link" href="/policies/imprint/">Imprint</a>
+            <a class="foot__link" href="/policies/privacy-policy/">Privacy</a>
+            <a class="foot__link" href="/policies/cookies-policy/">Cookies</a>
+          </div>
+        </nav>
+      </div>
+
+      <p class="foot__base">
+        <span>&copy; 2026 Hoshii</span>
+        <span>Z&uuml;rich, Switzerland</span>
+      </p>
+    </footer>
+
+    <script>
+      // The only script these pages need: the mobile menu on the full header.
+      const toggle = document.querySelector('.menu-toggle');
+      const mobileNav = document.querySelector('.mobile-nav');
+      if (toggle && mobileNav) {{
+        toggle.addEventListener('click', () => {{
+          const open = toggle.getAttribute('aria-expanded') === 'true';
+          toggle.setAttribute('aria-expanded', String(!open));
+          mobileNav.hidden = open;
+        }});
+      }}
+    </script>
+
+
+    <script>
+      // The pattern layers. The CSS paints a repeating SVG into each one; all this
+      // has to do is put the boxes in place, since a background needs an element
+      // and these bands do not otherwise have one to spare.
+      (function () {
+        // Surfaces whose pattern is visible enough to be worth touching.
+        const REACT = new Set([
+          '.doc__head', '.pricehead', '.askrow', '.closer', '.docend'
+        ]);
+
+        const HOSTS = [
+          ['.doc__head', ['pat']],
+          ['.pricehead', ['pat']],
+          ['.askrow', ['pat--l', 'pat--r']],
+          ['.closer', ['pat']],
+          ['.pitch__panel', ['pat']],
+          ['.cap__art', ['pat']],
+          ['.shift__art--flow', ['pat']],
+          ['.docend', ['pat']],
+        ];
+        HOSTS.forEach(([sel, classes]) => {
+          document.querySelectorAll(sel).forEach((host) => {
+            classes.forEach((cls) => {
+              if (host.querySelector(':scope > .' + cls)) return;
+              const layer = document.createElement('div');
+              layer.className = cls === 'pat' ? 'pat' : 'pat ' + cls;
+              // Reactive only where the pattern reads: the page headers, the ask
+              // row and the two closing bands.
+              if (REACT.has(sel)) layer.classList.add('pat--react');
+              layer.setAttribute('aria-hidden', 'true');
+              host.appendChild(layer);
+            });
+          });
+        });
+      })();
+    </script>
+    <script>
+      // The pattern as real elements, so a tile can react on its own. A painted
+      // background has nothing for the browser to hit-test and nothing it can
+      // transform.
+      //
+      // Tiled, not stretched. One tile scaled to cover a layer made the module as
+      // wide as the layer over six, which on the wide bands came out enormous; so
+      // each layer is a grid of tiles at the module size its surface asks for, and
+      // the CSS lays them out.
+      //
+      // The gradient definitions go in once, into a hidden SVG, and every tile
+      // references them by id -- fill="url(#hp-d0)" resolves document-wide, so
+      // dozens of tiles share one set of eighteen.
+      (function () {
+        if (!matchMedia('(hover: hover)').matches) return;
+        // Only the surfaces where the pattern is actually visible and at cursor
+        // level. Tiling every layer came to 6,000 shapes and a 7,000-element
+        // document -- and most of that was the interior art panels, which mask the
+        // pattern to one corner at 0.12 opacity. Nobody hover-tilts a shape they
+        // cannot see, so those stay painted backgrounds.
+        const layers = document.querySelectorAll('.pat--react');
+        if (!layers.length) return;
+
+        fetch('/assets/pattern.svg')
+          .then((r) => (r.ok ? r.text() : Promise.reject(r.status)))
+          .then((text) => {
+            const doc = new DOMParser().parseFromString(text, 'image/svg+xml');
+            const root = doc.documentElement;
+            const defs = root.querySelector('defs');
+
+            if (defs) {
+              const holder = document.createElementNS(
+                'http://www.w3.org/2000/svg',
+                'svg'
+              );
+              holder.setAttribute('aria-hidden', 'true');
+              holder.setAttribute('width', '0');
+              holder.setAttribute('height', '0');
+              holder.style.position = 'absolute';
+              holder.appendChild(defs.cloneNode(true));
+              document.body.appendChild(holder);
+              defs.remove();
+            }
+
+            root.removeAttribute('width');
+            root.removeAttribute('height');
+            root.setAttribute('preserveAspectRatio', 'none');
+            root.setAttribute('aria-hidden', 'true');
+            const tile = root.outerHTML;
+
+            layers.forEach((layer) => {
+              const mod =
+                parseFloat(getComputedStyle(layer).getPropertyValue('--pat-mod')) || 48;
+              const r = layer.getBoundingClientRect();
+              if (!r.width || !r.height) return;
+              // Exactly enough tiles to cover, and the column count is handed to
+              // the CSS rather than left to auto-fill -- auto-fill only creates
+              // tracks that fit, so the tile covering a remainder at the right edge
+              // would have wrapped to a new row instead.
+              const cols = Math.ceil(r.width / (mod * 6));
+              const rows = Math.ceil(r.height / (mod * 4));
+              layer.style.setProperty('--pat-cols', String(cols));
+              layer.insertAdjacentHTML('afterbegin', tile.repeat(cols * rows));
+              layer.classList.add('pat--live');
+            });
+          })
+          .catch(() => {});
+      })();
+    </script>
+    <script>
+      // Where the cursor is, the pattern gains a little density. One listener for
+      // the whole page rather than one per layer: these bands are large, several
+      // of them overlap, and per-layer enter/leave fired in the wrong order where
+      // they nested.
+      //
+      // Only two custom properties are written per layer per frame -- the mask
+      // that reveals the doubled copy is entirely CSS, so nothing here touches
+      // layout or paints anything itself.
+      (function () {
+        if (!matchMedia('(hover: hover)').matches) return;
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        const layers = [...document.querySelectorAll('.pat')];
+        if (!layers.length) return;
+
+        let at = null;
+        let frame = null;
+
+        const paint = () => {
+          frame = null;
+          layers.forEach((el) => {
+            const r = el.getBoundingClientRect();
+            if (!r.width || !r.height) return;
+            const inside =
+              at &&
+              at.x >= r.left - 40 &&
+              at.x <= r.right + 40 &&
+              at.y >= r.top - 40 &&
+              at.y <= r.bottom + 40;
+            if (!inside) {
+              el.classList.remove('pat--near');
+              return;
+            }
+            // Percentages, so the mask keeps its position if the layer resizes
+            // between frames.
+            el.style.setProperty('--mx', (((at.x - r.left) / r.width) * 100).toFixed(2) + '%');
+            el.style.setProperty('--my', (((at.y - r.top) / r.height) * 100).toFixed(2) + '%');
+            el.classList.add('pat--near');
+          });
+        };
+
+        addEventListener(
+          'pointermove',
+          (e) => {
+            if (e.pointerType === 'touch') return;
+            at = { x: e.clientX, y: e.clientY };
+            if (frame !== null) return;
+            if (document.hidden) paint();
+            else frame = requestAnimationFrame(paint);
+          },
+          { passive: true }
+        );
+
+        addEventListener('pointerleave', () => {
+          at = null;
+          layers.forEach((el) => el.classList.remove('pat--near'));
+        });
+      })();
+    </script>
+  </body>
+</html>

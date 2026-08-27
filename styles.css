@@ -3952,8 +3952,7 @@ p {
 /* Every page's h1 is its own name -- the same words as the nav item that got you
    there -- so it is set once, at one size, on the light mastheads and the green
    pricing one alike. The claim under it does the persuading; see .doc__sub. */
-.doc__title,
-.pricehead__title {
+.doc__title {
   margin: 0;
   font-size: clamp(1.5rem, 1.05rem + 1.4vw, 2.125rem);
   font-weight: 500;
@@ -3967,8 +3966,7 @@ p {
    already use. It replaces two different things that used to sit here: a claim
    promoted into the h1 on some pages and a plain descriptive standfirst on
    others, which is why no two mastheads read as the same component. */
-.doc__sub,
-.pricehead__sub {
+.doc__sub {
   margin: clamp(0.875rem, 2vw, 1.375rem) 0 0;
   max-width: 26ch;
   font-size: clamp(1.5rem, 0.95rem + 2.3vw, 2.75rem);
@@ -3978,8 +3976,7 @@ p {
   hyphens: none;
 }
 
-.doc__sub em,
-.pricehead__sub em {
+.doc__sub em {
   display: block;
   font-style: normal;
   color: var(--accent);
@@ -3990,6 +3987,14 @@ p {
    18.66px the accent has to become --accent-deep with it. */
 .doc__sub {
   color: var(--ink);
+}
+
+/* The pricing masthead is the same two elements on a dark ground, so it takes
+   the colour from the band and nothing else changes. There is no
+   .pricehead__title or .pricehead__sub: a second pair of classes for the same
+   pair of jobs is how the two mastheads drifted apart the first time. */
+.pricehead .doc__sub {
+  color: inherit;
 }
 
 .doc__standfirst,
@@ -6805,6 +6810,21 @@ a.story__card:focus-visible {
   overflow: hidden;
 }
 
+/* Tiles laid from the right on the layers that are anchored there. The grid
+   covers the layer with `ceil(width / tile)` whole tiles, so unless the width
+   divides exactly there is always a remainder tile hanging past one edge, and
+   `overflow: hidden` cuts it mid-motif. Laid from the left, that cut landed on
+   the right edge -- which on these two layers is where the pattern is at full
+   strength and the mask has done nothing yet, so the field ended on a row of
+   sliced shapes. From the right, the same remainder falls on the left, where the
+   mask has already taken it to zero and there is nothing left to slice. The
+   painted fallback underneath has always used `background-position: right top`;
+   this is the live layer catching up with it. */
+.doc__head .pat--live,
+.pricehead .pat--live {
+  justify-content: end;
+}
+
 .pat svg {
   display: block;
   width: 100%;
@@ -7161,10 +7181,11 @@ a.story__card:focus-visible {
    divided across the tile's columns. Stated directly now, so a tile comes out the
    same size on a 512px header as on a 1449px slab. */
 .doc__head .pat { --pat-mod: 44px; }
-.pricehead .pat { --pat-mod: 40px; }
+/* The same module .doc__head takes. A masthead is a masthead. */
+.pricehead .pat { --pat-mod: 44px; }
 .askrow .pat { --pat-mod: 40px; }
 .closer .pat { --pat-mod: 56px; }
-.pitch__panel .pat { --pat-mod: 28px; }
+.pitch__panel .pat { --pat-mod: 36px; }
 .cap__art .pat { --pat-mod: 32px; }
 .shift__art--flow .pat { --pat-mod: 28px; }
 .docend .pat { --pat-mod: 44px; }
@@ -7294,8 +7315,35 @@ a.story__card:focus-visible {
    the prose measure. */
 .page--order-processing .doc__body > .doc__shot,
 .page--order-processing .doc__body > .doc__panels,
-.page--order-processing .doc__body > .ptable__wrap {
+.page--order-processing .doc__body > .ptable__wrap,
+.page--order-processing .doc__body > .doc__checks {
   margin-inline: 0;
+  max-width: none;
+}
+
+/* The format list is five short lines. In one column it was a narrow ladder down
+   the left of an empty band; in two it reads as the set it is, and the section
+   is half as tall. */
+@media (min-width: 62em) {
+  .page--order-processing .doc__body > .doc__checks {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(2rem, 4vw, 4rem);
+  }
+
+  /* The rule under a check runs to the end of its own column, so the last item
+     in a column of three would otherwise close the list twice. */
+  .page--order-processing .doc__body > .doc__checks li:last-child {
+    border-bottom: 0;
+  }
+}
+
+/* The section rule runs the band, not the heading. It was drawn as the h2's own
+   border-top with the h2 capped to 30 characters, so every section opened with a
+   hairline that stopped a third of the way across and floated free of the column
+   rules it should meet. The headings here are short enough to hold one line at
+   full width. */
+.page--order-processing .doc__body > h2 {
   max-width: none;
 }
 
@@ -7340,7 +7388,7 @@ a.story__card:focus-visible {
   opacity: 0.26;
   pointer-events: none;
   background-image: url('assets/pattern.svg');
-  background-size: 240px auto;
+  background-size: 264px auto;
   background-position: right top;
   background-repeat: repeat;
   /* A bloom out of the corner, not a diagonal wipe. The subpage mastheads fade
@@ -7912,4 +7960,134 @@ a.ref__card:hover .ref__go {
 
 .pband--end .doc__body .docend {
   margin-top: 0;
+}
+
+/* --- The flow diagram on a Skill page -------------------------------------
+   The same convergence diagram the home page runs, on a page that is otherwise
+   prose. It replaces a stock photograph of an order form, a coffee and a
+   handwritten note: a picture of the problem staged for a camera, where the
+   page needs a picture of what the Skill does. .shift__art--flow carries the
+   field, the glow and the pattern corner already; this is the frame around it
+   and the caption under it. */
+.doc__body .skillflow {
+  margin: clamp(1.5rem, 3.5vw, 2.5rem) 0 clamp(1.75rem, 4vw, 3rem);
+  max-width: none;
+}
+
+/* The diagram is drawn on a 400x285 field. Past about 44rem the tiles and the
+   mark grow without the wires gaining anything, so it stops there and sits left
+   with the prose rather than stretching across the band. */
+.doc__body .skillflow .shift__art {
+  margin-bottom: 0;
+  max-width: 44rem;
+}
+
+.skillflow__cap {
+  margin: clamp(0.875rem, 2vw, 1.125rem) 0 0;
+  max-width: 44rem;
+  color: var(--caption);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.skillflow__cap em {
+  font-style: normal;
+  font-weight: 700;
+  color: var(--accent-deep);
+}
+
+/* --- Partners -------------------------------------------------------------
+   The page had three real problems and they all came from borrowing components
+   built for somewhere else. The masthead is fixed above, with .doc__title and
+   .doc__sub. These are the other two. */
+
+/* The three claims, numbered. They were a claim in near-body weight over a grey
+   line two sizes down, which read as a heading with a caption stuck under it
+   rather than as three parallel offers -- and the grey line was capped at 52
+   characters inside a 34rem column, so it broke one word onto its own line every
+   time. Numbered and ruled, they read as the set they are: the same device the
+   pricing drivers use, which is the other page that has to make three or four
+   parallel claims in a column. */
+.page--partners .doc__body .doc__props {
+  counter-reset: prop;
+}
+
+.page--partners .doc__body .doc__props li {
+  counter-increment: prop;
+}
+
+.page--partners .doc__body .doc__prop::before {
+  content: counter(prop, decimal-leading-zero);
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--accent);
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.page--partners .doc__body .doc__propWhy {
+  max-width: none;
+  color: var(--caption);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+/* No photograph behind these two. The panel component blurs its shot to 15px and
+   lays a scrim at 0.88 over the foot of it, which on the home page is a stage
+   for type over a picture you can still read. Here it was two dark rectangles of
+   unresolvable mush, and the picture was of nothing in particular. A surface and
+   a hairline say the same amount and say it legibly. The order-processing page
+   keeps its photographs, where the shots are of the actual work. */
+.page--partners .doc__body .doc__panel {
+  aspect-ratio: auto;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  padding: clamp(1.25rem, 2.6vw, 1.75rem);
+  border-radius: 0;
+  background: var(--bone);
+  color: var(--ink);
+  box-shadow: 0 0 0 1px var(--rule);
+}
+
+.page--partners .doc__body .doc__panel::before,
+.page--partners .doc__body .doc__panel::after {
+  content: none;
+}
+
+.page--partners .doc__panelHead {
+  color: var(--ink);
+  text-shadow: none;
+}
+
+/* The orange square that marks a Hoshii list item, here as the panel's own
+   marker so the two cards have something to open on. */
+.page--partners .doc__panelHead::before {
+  content: '';
+  display: block;
+  width: 0.4375rem;
+  height: 0.4375rem;
+  margin-bottom: 0.75rem;
+  background: var(--accent);
+}
+
+.page--partners .doc__body .doc__panelBody {
+  color: var(--caption);
+  text-shadow: none;
+}
+
+/* The band under both columns. The page used to stop on a paragraph in the left
+   column with the form already finished above it, so it ended on a ragged edge
+   and about 150px of nothing. The proof belt and the ask close it across the
+   full width. */
+.page--partners .doc__band--after {
+  padding-top: clamp(2.5rem, 5vw, 4rem);
+}
+
+.page--partners .doc__band--after .doc__proofLabel {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
 }
