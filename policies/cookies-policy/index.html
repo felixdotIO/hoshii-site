@@ -5,21 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Cookies Policy | Hoshii</title>
     <meta name="description" content="Which cookies hoshii.ai sets, what they do, and how to turn them off." />
-    <link rel="canonical" href="https://www.hoshii.ai/policies/cookies-policy.html" />
-    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href="https://www.hoshii.ai/policies/cookies-policy/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Hoshii" />
     <meta property="og:title" content="Cookies Policy | Hoshii" />
     <meta property="og:description" content="Which cookies hoshii.ai sets, what they do, and how to turn them off." />
-    <meta property="og:url" content="https://www.hoshii.ai/policies/cookies-policy.html" />
+    <meta property="og:url" content="https://www.hoshii.ai/policies/cookies-policy/" />
     <meta property="og:image" content="https://www.hoshii.ai/assets/img/hero-slot.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="stylesheet" href="../styles.css?v=566" />
+    <link rel="stylesheet" href="/styles.css?v=571" />
   </head>
   <body>
     <header class="titlebar">
       <div class="titlebar__inner">
-        <a class="brand" href="../index.html" aria-label="Hoshii home">
+        <a class="brand" href="/" aria-label="Hoshii home">
           <svg
             class="brand__mark"
             viewBox="0 0 2596 2596"
@@ -36,7 +36,7 @@
           </svg>
           <img
             class="brand__wordmark"
-            src="../assets/logo/wordmark-a.png"
+            src="/assets/logo/wordmark-a.png"
             alt="Hoshii"
             width="1420"
             height="425"
@@ -44,7 +44,7 @@
         </a>
 
         <div class="titlebar__actions">
-          <a class="btn-os btn-os--accent" href="../index.html">Back to site<span class="btn-os__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg></span></a>
+          <a class="btn-os btn-os--accent" href="/">Back to site<span class="btn-os__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg></span></a>
         </div>
       </div>
     </header>
@@ -79,7 +79,7 @@
     <footer class="foot">
       <div class="foot__inner">
         <div class="foot__brand">
-          <a class="brand brand--foot" href="../index.html" aria-label="Hoshii home">
+          <a class="brand brand--foot" href="/" aria-label="Hoshii home">
             <svg class="brand__mark" viewBox="0 0 2596 2596" aria-hidden="true">
               <rect width="2596" height="2596" fill="var(--green)" />
               <g fill="var(--bone)">
@@ -90,7 +90,7 @@
             </svg>
             <img
               class="brand__wordmark"
-              src="../assets/logo/wordmark-b.png"
+              src="/assets/logo/wordmark-b.png"
               alt="Hoshii"
               width="1420"
               height="425"
@@ -106,25 +106,26 @@
         <nav class="foot__nav" aria-label="Footer">
           <div class="foot__col">
             <h2 class="foot__head">Product</h2>
-            <a class="foot__link" href="../index.html#product">Product</a>
-            <a class="foot__link" href="../pricing.html">Pricing</a>
-            <a class="foot__link" href="../customers.html">Customer stories</a>
+            <a class="foot__link" href="/#product">Product</a>
+            <a class="foot__link" href="/pricing/">Pricing</a>
+            <a class="foot__link" href="/customers/">Customer stories</a>
           </div>
 
           <div class="foot__col">
             <h2 class="foot__head">Company</h2>
-            <a class="foot__link" href="../resources.html">Resources</a>
-            <a class="foot__link" href="../careers.html">Careers</a>
-            <a class="foot__link" href="../partners.html">Become a partner</a>
-            <a class="foot__link" href="../about.html">About</a>
-            <a class="foot__link" href="../demo.html">Book a demo</a>
+            <a class="foot__link" href="/resources/">Resources</a>
+            <a class="foot__link" href="/faq/">Questions</a>
+            <a class="foot__link" href="/careers/">Careers</a>
+            <a class="foot__link" href="/partners/">Become a partner</a>
+            <a class="foot__link" href="/about/">About</a>
+            <a class="foot__link" href="/demo/">Book a demo</a>
           </div>
 
           <div class="foot__col">
             <h2 class="foot__head">Legal</h2>
-            <a class="foot__link" href="imprint.html">Imprint</a>
-            <a class="foot__link" href="privacy-policy.html">Privacy</a>
-            <a class="foot__link" href="cookies-policy.html">Cookies</a>
+            <a class="foot__link" href="/policies/imprint/">Imprint</a>
+            <a class="foot__link" href="/policies/privacy-policy/">Privacy</a>
+            <a class="foot__link" href="/policies/cookies-policy/">Cookies</a>
           </div>
         </nav>
       </div>
@@ -192,7 +193,7 @@
         const layers = document.querySelectorAll('.pat--react');
         if (!layers.length) return;
 
-        fetch('../assets/pattern.svg')
+        fetch('/assets/pattern.svg')
           .then((r) => (r.ok ? r.text() : Promise.reject(r.status)))
           .then((text) => {
             const doc = new DOMParser().parseFromString(text, 'image/svg+xml');

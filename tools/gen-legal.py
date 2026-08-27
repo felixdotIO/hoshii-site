@@ -18,16 +18,46 @@ Inline: [label](href) and **bold**.
 """
 
 
+import argparse
 import html
 import json
 import pathlib
+import posixpath
 import re
 
 SITE = pathlib.Path(__file__).resolve().parent.parent
-# The domain this site will serve from once hoshii.ai points here.
+# The domain this site will serve from once hoshii.ai points here. Overridable,
+# because the same build has to go up on a staging domain first and canonicals
+# that point at the wrong host are worse than no canonicals at all. Set by
+# --origin; --staging additionally noindexes every page, which is the whole
+# point of a staging host: if Google indexes it, you are competing with
+# yourself and it may pick the staging domain as canonical.
 ORIGIN = "https://www.hoshii.ai/"
+STAGING = False
 
-CSS_V = "566"
+# Per-page sitemap metadata, carried over verbatim from the hand-written
+# sitemap.xml this now replaces. Bump a lastmod when that page's content
+# actually changes -- Google ignores lastmod entirely if it finds it unreliable,
+# so a date that moves on every build is worth less than no date.
+SITEMAP = {
+    ".": ("2026-08-26", "weekly", "1.0"),
+    "demo": ("2026-08-26", "monthly", "0.9"),
+    "faq": ("2026-08-26", "monthly", "0.8"),
+    "resources": ("2026-08-26", "weekly", "0.8"),
+    "customers": ("2026-08-26", "monthly", "0.9"),
+    "pricing": ("2026-08-26", "monthly", "0.9"),
+    "stutzer-service": ("2026-08-26", "yearly", "0.7"),
+    "egger-gemuesebau": ("2026-08-26", "yearly", "0.7"),
+    "max-schwarz": ("2026-08-26", "yearly", "0.7"),
+    "partners": ("2026-08-26", "monthly", "0.7"),
+    "careers": ("2026-08-26", "weekly", "0.6"),
+    "imprint": ("2026-08-26", "yearly", "0.3"),
+    "privacy-policy": ("2026-08-26", "yearly", "0.3"),
+    "cookies-policy": ("2026-08-26", "yearly", "0.3"),
+    "about": ("2026-08-27", "monthly", "0.7"),
+}
+
+CSS_V = "571"
 
 # Paths are relative, never root-relative: Pages serves this repo from
 # /hoshii-site/, so a leading slash would resolve above the site root. Each page
@@ -556,14 +586,65 @@ def render(block, fold=False, up="."):
     return "\n".join(out)
 
 
-def docs_list(current):
-    rows = []
-    for slug, title in DOCS:
-        if slug == current:
-            rows.append(f'          <li><span aria-current="page">{title}</span></li>')
-        else:
-            rows.append(f'          <li><a href="{slug}.html">{title}</a></li>')
-    return "\n".join(rows)
+
+SKIP_SCHEMES = ("http://", "https://", "//", "mailto:", "tel:", "data:", "#")
+
+
+def clean_url(val, link_base):
+    """One link, rewritten to a root-relative extensionless URL.
+
+    `link_base` is the directory the page's links were authored against, which
+    is the folder the page used to live in, not the directory it is written to
+    now. Templates address `{up}/assets/...` and content addresses `demo.html`
+    or `../demo.html`, all of it relative to that original folder. Resolving
+    against the new nested directory instead sent pricing's CLOSER to
+    /pricing/demo/ and the policy cross-links to /msa/.
+
+    Root-relative rather than relative because extensionless URLs make relative
+    links fragile: /policies/imprint and /policies/imprint/ have different base
+    directories, so the same `../privacy-policy/` resolves to two places
+    depending on whether the visitor's URL carried a trailing slash. An absolute
+    path cannot be read two ways. The site is served from a domain root, so
+    there is no subpath for a leading slash to escape.
+    """
+    if not val or val.startswith(SKIP_SCHEMES):
+        return val
+    path, tail = re.match(r"^([^?#]*)(.*)$", val).groups()
+    if not path:
+        return val
+    if path.startswith("/"):
+        target = path.lstrip("/")
+    else:
+        base = "" if link_base in (".", "") else link_base
+        target = posixpath.normpath(posixpath.join(base, path))
+        if target == ".":
+            target = ""
+    if target.endswith(".html"):
+        stem = target[: -len(".html")]
+        # foo/index.html and index.html both address their directory.
+        if stem == "index":
+            stem = ""
+        elif stem.endswith("/index"):
+            stem = stem[: -len("/index")]
+        return "/" + (stem + "/" if stem else "") + tail
+    return "/" + target + tail
+
+
+def clean_urls(page, link_base):
+    return re.sub(
+        r'\b(href|src)="([^"]*)"',
+        lambda m: f'{m.group(1)}="{clean_url(m.group(2), link_base)}"',
+        page,
+    )
+
+
+def page_dir_for(folder, slug):
+    """Where a page's directory lives, so its URL needs no extension."""
+    return slug if folder == "." else f"{folder}/{slug}"
+
+
+def url_path_for(folder, slug):
+    return page_dir_for(folder, slug) + "/"
 
 
 MINIMAL_HEADER = """    <header class="titlebar">
@@ -817,7 +898,7 @@ PATTERN_JS = """
         const layers = document.querySelectorAll('.pat--react');
         if (!layers.length) return;
 
-        fetch('{up}/assets/pattern.svg')
+        fetch('/assets/pattern.svg')
           .then((r) => (r.ok ? r.text() : Promise.reject(r.status)))
           .then((text) => {
             const doc = new DOMParser().parseFromString(text, 'image/svg+xml');
@@ -949,6 +1030,9 @@ HEADER_CTA = {"demo": "Let&rsquo;s chat"}
 FULL_NAV = {
     "partners", "careers", "resources", "customers", "pricing", "demo", "about",
     "stutzer-service", "egger-gemuesebau", "max-schwarz",
+    # faq is an answer-engine landing page, not a legal document: organic traffic
+    # arrives on it cold and needs somewhere to go next.
+    "faq",
 }
 
 # Contract documents that have to exist at a stable URL -- an order form links
@@ -1097,6 +1181,7 @@ PAGE = """<!DOCTYPE html>
           <div class="foot__col">
             <h2 class="foot__head">Company</h2>
             <a class="foot__link" href="{dm}resources.html">Resources</a>
+            <a class="foot__link" href="{dm}faq.html">Questions</a>
             <a class="foot__link" href="{dm}careers.html">Careers</a>
             <a class="foot__link" href="{dm}partners.html">Become a partner</a>
             <a class="foot__link" href="{dm}about.html">About</a>
@@ -1353,9 +1438,9 @@ P: Two parts, running in parallel. Signing in takes minutes: single sign&#8209;o
 H3: Do you onboard and train our team?
 P: You do not need us in order to start, because the Unibox is built to be picked up without training. When you want it, hands&#8209;on onboarding is there, and it is usually worth taking: adopting Hoshii is more a change in how the desk works than a change of software. As your team works, Hoshii learns your rules and settles into the way you already operate.
 H3: Does my team have to change how they work?
-P: No. The work keeps arriving in the inbox they already use, and that is where Hoshii starts, preparing each message before anyone opens it. When the team wants more overview, the Unibox is there: one shared queue with owners, statuses and deadlines.
+P: No. The work keeps arriving in the inbox they already use, and that is where Hoshii starts, preparing each message before anyone opens it. When the team wants more overview, the Unibox is there: one shared inbox with owners, statuses and deadlines.
 H3: What does it cost?
-P: Our base price is EUR&nbsp;39 per user per month, connections included. Beyond that we grow together on a credit&#8209;based model, so you pay for what you process. Collaboration is free either way: invite your whole company to comment and weigh in at no extra cost.
+P: We quote per workspace, against how much lands in the inbox, how many inboxes it covers and which systems Hoshii writes into. Users are unlimited on every quote, so inviting your whole company to comment and weigh in costs nothing. The work itself is metered in credits, with an allowance we size to an average month with you. [How pricing works](pricing.html) sets out what moves the number.
 H3: How do I get started?
 P: Sign in and point Hoshii at one mailbox; you will see what it does with real work inside the hour. If you would rather be walked through it, book a demo and bring a real order, and we will show you exactly what our agents do with it, live, in 30 minutes.
 CLOSER: Still holding a question this page did not answer?|Talk to sales|demo.html
@@ -1523,6 +1608,7 @@ ENTRY: Industry|How Order Errors Drive Customer Churn in Wholesale Distribution|
 ENTRY: Operations|The Hidden Cost of Manual Order Processing in B2B|Most operations teams know manual order processing takes time. Few have counted what it costs. Here is what a typical day adds up to.|4 June 2026 &middot; 6 min|post-cost|https://www.hoshii.ai/blog-posts/the-hidden-cost-of-manual-order-processing-in-b2b
 ENDENTRIES:
 EMPTY: Nothing under that filter yet.
+P: Looking for the answers rather than the reading? [Questions](faq.html) covers how Hoshii works, what it connects to and where your data lives. The [privacy policy](policies/privacy-policy.html) and the [subscription agreement](policies/msa.html) are the documents worth having open before you commit.
 CLOSER: Rather see it running on your own mail than read about it?|Book a demo|demo.html
 """
 
@@ -1607,7 +1693,15 @@ P: Marc Adank on turning phone and PDF orders into clean ERP entries, without an
 # Overview" and "Credit Mechanics". Deliberately excluded: the internal credit
 # strategy notes, the PROPOSED 12x balance cap, and the three OPEN DECISIONS.
 # See the handover note rather than assuming they were missed.
-PRICING = """
+# Not published. The tier table below was transferred from
+# Pricing_Hoshii_August_2026_v2.xlsx and went up as three fixed plans at
+# 149/299/499 EUR a month. It came down on 2026-08-27 because it contradicted
+# how Hoshii is actually sold: entry deals land at 5-8k and grow from there, so
+# the top published tier annualised to less than an entry deal, and every
+# prospect who read it anchored 3-5x below the real number. Kept here because
+# the packaging logic is correct and a self-serve tier is a plausible future;
+# only the publishing was wrong. Not referenced by CONTENT, so it emits nothing.
+PRICING_INTERNAL = """
 TOGGLE:
 PLANS:
 PLAN: Workspace Launch||Prove it on one inbox.|149|178.80|&euro;1,788|2,000 credits a month ~ One shared inbox, two personal ~ Unlimited users ~ Partner ERPs and inbound webhook ~ Email support
@@ -1657,7 +1751,7 @@ ENDTABLE:
 P: Launch caps total connected inboxes at three. The personal inbox add&#8209;on rebalances the mix inside that cap; it does not raise it.
 H2: How credits work
 P: One credit is &euro;0.03 on every plan and every add&#8209;on. Your allowance is issued on your subscription anniversary and unused credits roll over, so a quiet month builds a balance that carries a busy one. Size your packs to an average month, not a peak.
-NOTE: Run low and you get a warning in the cockpit and by email; hit zero without auto top&#8209;up and there is a three business day grace window, long enough for SEPA to settle. Past that the platform still runs &mdash; classification, routing and analytics carry on. Only the actions that spend credits pause.
+NOTE: Run low and you get a warning in the cockpit and by email; hit zero without auto top&#8209;up and there is a three business day grace window, long enough for SEPA to settle. Past that the platform still runs. Classification, routing and analytics carry on. Only the actions that spend credits pause.
 H2: What each action costs
 TABLE: Action|Credits|At &euro;0.03
 ROW: Context lookup|7|&euro;0.21
@@ -1669,11 +1763,40 @@ P: ERP order processing does not include a separate context lookup: the 20 credi
 CLOSER: Not sure which tier your volume lands in? We will work it out with you.|Talk to sales|demo.html
 """
 
+
+PRICING = """
+P: No table, on purpose. A desk taking forty orders a day on one ERP and one taking four hundred across three are not the same work, and any tier that fits both is wrong for one of them. So we look at your inbox first, and quote against that.
+H2: What sets your price
+PROPS:
+PROP: What arrives, not who reads it|Orders, complaints, quotes, and everything else that lands by mail. Volume is the biggest factor and the first thing we measure. Your whole company can have access without moving the number.
+PROP: How many inboxes the desk runs|Shared inboxes for the team, personal ones for the people working out of them. Both count, and neither is capped by headcount.
+PROP: Where answers have to be written back|Reading from your ERP is included. Writing into it, and the order processing that depends on that, is scoped per system, because no two ERPs cost the same to write into safely.
+PROP: What your security review asks for|A standard review is included. A custom data processing agreement, works council documentation or a long questionnaire is scoped alongside it.
+ENDPROPS:
+H2: What every workspace includes
+CHECKS:
+CHECK: Every colleague, at no extra cost. Invite the whole company to comment and weigh in.
+CHECK: EU hosting, email encryption, and replies that still go out from your own address.
+CHECK: 25+ languages, dialect voicemail included.
+CHECK: Context pulled from your systems, drafts written in your voice, confirmations prepared.
+CHECK: A knowledge base that learns from every correction, per customer and across the company.
+CHECK: Partner ERP connections, an inbound webhook, and analytics on your own inbox.
+ENDCHECKS:
+P: Single sign&#8209;on, team analytics, system write&#8209;back and the ERP order processing skill are scoped with the quote rather than bundled in, because each one depends on which systems you actually run.
+H2: How credits work
+P: The work Hoshii does is metered in credits, and your workspace carries a monthly allowance. Unused credits roll over, so a quiet month builds a balance that carries a busy one. We size the allowance to an average month with you, never to a peak.
+NOTE: Run low and you get a warning in the cockpit and by email. Run out and the platform keeps going: classification, routing and analytics carry on, and only the actions that spend credits pause. Nothing stops working because a balance reached zero.
+H2: How the number grows
+P: Hoshii starts read only. It reads, prepares and proposes, and nothing reaches a customer or one of your systems until someone approves it. That is the whole entry price: no automation you have not seen working.
+P: Then your own analytics show which processes are worth automating, ranked by what they actually cost you today. Those are the ones we automate, and the quote moves with them. You buy the next step on evidence out of your own inbox, not on a promise made before we met.
+CLOSER: Bring one real inbox. We will work out the number with you.|Book a demo|demo.html
+"""
+
 CONTENT = {
     "pricing": (
         PRICING,
-        "Hoshii pricing: three plans from EUR 149 per month, unlimited users, credits that roll over and never expire.",
-        "",
+        "How Hoshii is priced: on what your inbox handles, not per seat. What sets the number, what every workspace includes, and how credits work.",
+        "Priced on what your inbox actually does, not on how many people look at it.",
     ),
     "stutzer-service": (
         CASE_STUTZER_SERVICE,
@@ -1718,7 +1841,7 @@ CONTENT = {
     ),
     "customers": (
         CUSTOMERS,
-        "How B2B operations teams run their order desks on Hoshii \u2014 in their own words, on live order volume.",
+        "How B2B operations teams run their order desks on Hoshii, in their own words, on live order volume.",
         "They all started in the same place: an inbox nobody could get to the bottom of. "
         "Here is what changed, in their own words.",
     ),
@@ -1847,24 +1970,144 @@ def build_main(slug, title, stand, body):
     )
 
 
+def patch_index_head(origin, staging):
+    """Bring index.html's head into line with the chosen origin.
+
+    index.html is the one page this script does not emit, so its canonical,
+    og:url and robots meta were outside the origin switch entirely -- meaning a
+    --staging build noindexed all sixteen generated pages and left the homepage
+    crawlable, canonicalised to the live domain. That is the exact failure the
+    staging flag exists to prevent, so the head is patched in place. The body
+    and the design stay hand-written; only these three lines are owned here.
+    """
+    path = SITE / "index.html"
+    page = path.read_text(encoding="utf-8")
+    before = page
+
+    # The homepage's own links are normalised by the same function that does
+    # the generated pages, so the two layouts cannot drift apart.
+    page = clean_urls(page, ".")
+    # And the one path that lives in JS, where the post-pass cannot see it.
+    page = page.replace("'assets/pattern.svg'", "'/assets/pattern.svg'")
+
+    page = re.sub(r'(<link rel="canonical" href=")[^"]*(")',
+                  lambda m: m.group(1) + origin + m.group(2), page, count=1)
+    page = re.sub(r'(<meta property="og:url" content=")[^"]*(")',
+                  lambda m: m.group(1) + origin + m.group(2), page, count=1)
+    page = re.sub(r'(<meta property="og:image" content=")[^"]*(")',
+                  lambda m: m.group(1) + origin + "assets/img/hero-slot.jpg" + m.group(2),
+                  page, count=1)
+
+    # The robots meta is present only while staging, and sits immediately
+    # before the canonical so the head reads the same way as a generated page.
+    page = re.sub(r'[ \t]*<meta name="robots"[^>]*>\n', "", page)
+    if staging:
+        page = page.replace(
+            '    <link rel="canonical"',
+            '    <meta name="robots" content="noindex, nofollow" />\n'
+            '    <link rel="canonical"', 1)
+
+    if page != before:
+        path.write_text(page, encoding="utf-8")
+    return page != before
+
+
+def write_sitemap(origin):
+    """sitemap.xml from DOCS, so a new page cannot be forgotten in it.
+
+    NOINDEX pages are excluded by construction rather than by remembering: they
+    carry a robots meta telling crawlers to skip them, and listing them in the
+    sitemap would contradict it.
+    """
+    rows = ['<?xml version="1.0" encoding="UTF-8"?>',
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    entries = [(".", origin)] + [
+        (slug, origin + url_path_for(folder, slug))
+        for folder, slug, title in DOCS
+        if slug not in NOINDEX
+    ]
+    missing = [k for k, _ in entries if k not in SITEMAP]
+    if missing:
+        raise SystemExit(
+            "no sitemap metadata for: " + ", ".join(missing)
+            + "\nadd them to SITEMAP, or add the slug to NOINDEX to leave them out"
+        )
+    for key, loc in entries:
+        lastmod, changefreq, priority = SITEMAP[key]
+        rows += ["  <url>", f"    <loc>{loc}</loc>",
+                 f"    <lastmod>{lastmod}</lastmod>",
+                 f"    <changefreq>{changefreq}</changefreq>",
+                 f"    <priority>{priority}</priority>", "  </url>"]
+    rows.append("</urlset>")
+    (SITE / "sitemap.xml").write_text("\n".join(rows) + "\n", encoding="utf-8")
+    return len(entries)
+
+
+ROBOTS_LIVE = """User-agent: *
+Allow: /
+
+# Answer engines and AI crawlers are welcome: being cited is the point.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: {origin}sitemap.xml
+"""
+
+# A staging host that gets crawled competes with the real one for the same
+# content, and the crawler picks the winner, not you. Belt and braces: this
+# plus the noindex meta on every page.
+ROBOTS_STAGING = """# Staging. Not the live site.
+User-agent: *
+Disallow: /
+"""
+
+
 def main():
+    ap = argparse.ArgumentParser(description="Build the Hoshii site.")
+    ap.add_argument("--origin", default=ORIGIN,
+                    help="absolute origin for canonicals, og:url and the sitemap "
+                         "(default: %(default)s)")
+    ap.add_argument("--staging", action="store_true",
+                    help="noindex every page and disallow all crawling: for any "
+                         "host that is not the real domain")
+    args = ap.parse_args()
+
+    origin = args.origin if args.origin.endswith("/") else args.origin + "/"
+    global STAGING
+    STAGING = args.staging
+
     for folder, slug, title in DOCS:
         block, desc, stand = CONTENT[slug]
-        out = SITE / folder
+        # Each page is <dir>/index.html so its URL carries no extension.
+        # customers.html becomes customers/index.html and the case studies stay
+        # at customers/<slug>/index.html, which nests without colliding.
+        pdir = page_dir_for(folder, slug)
+        out = SITE / pdir
         out.mkdir(parents=True, exist_ok=True)
         up = ".." if folder != "." else "."
         dm = "../" if folder != "." else ""
         page = PAGE.format(
             main_cls=("book-page" if slug in BOOK else "doc"),
             robots=(
-                '    <meta name="robots" content="noindex, follow" />\n'
+                '    <meta name="robots" content="noindex, nofollow" />\n'
+                if STAGING
+                else '    <meta name="robots" content="noindex, follow" />\n'
                 if slug in NOINDEX
                 else ""
             ),
             title=title,
             head_title=HEAD_TITLES.get(slug, title),
-            site=ORIGIN,
-            path=(f"{folder}/{slug}.html" if folder != "." else f"{slug}.html"),
+            site=origin,
+            path=url_path_for(folder, slug),
             desc=desc,
             stand=stand,
             up=up,
@@ -1877,15 +2120,27 @@ def main():
             ),
             script=(MENU_JS if slug in FULL_NAV else "")
             + (FILTER_JS if slug == "resources" else "")
-            + (TOGGLE_JS if slug == "pricing" else "")
+            + (TOGGLE_JS if "TOGGLE:" in block else "")
             + (COUNT_JS if "STAT:" in block else "")
             + PATTERN_JS.replace("{up}", up),
             v=CSS_V,
             head=faq_schema(FAQ) if slug == "faq" else "",
             main=build_main(slug, title, stand, render(block, fold=slug == "faq", up=up)),
         )
-        (out / f"{slug}.html").write_text(page, encoding="utf-8")
-        print(f"{folder}/{slug}.html  {len(page) // 1024}KB")
+        (out / "index.html").write_text(clean_urls(page, folder), encoding="utf-8")
+        print(f"/{pdir}/  {len(page) // 1024}KB")
+
+    touched = patch_index_head(origin, STAGING)
+    print(f"index.html   head {'rewritten' if touched else 'already in step'}")
+    robots = ROBOTS_STAGING if STAGING else ROBOTS_LIVE.format(origin=origin)
+    (SITE / "robots.txt").write_text(robots, encoding="utf-8")
+    n = write_sitemap(origin)
+    print(f"sitemap.xml  {n} urls")
+    print(f"robots.txt   {'STAGING (disallow all)' if STAGING else 'live'}")
+    print(f"origin       {origin}")
+    if STAGING:
+        print("\nStaging build: every page carries noindex,nofollow and robots.txt")
+        print("disallows all crawling. Do not deploy this to the real domain.")
 
 
 if __name__ == "__main__":

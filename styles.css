@@ -2200,9 +2200,13 @@ p {
     0 1cqw 2.4cqw rgba(38, 24, 20, 0.13);
 }
 
+/* The diagram's own set is drawn at 1.5, not the 1.25 the page uses at larger
+   sizes: at 20px a 1.25 stroke on a 24 grid goes thin and the glyphs lose their
+   weight against the white tile. */
 .flow__glyph .vox {
-  width: 56%;
-  height: 56%;
+  width: 58%;
+  height: 58%;
+  stroke-width: 1.5;
 }
 
 /* Positions match the wire endpoints in the 400 × 260 viewBox above: inputs on

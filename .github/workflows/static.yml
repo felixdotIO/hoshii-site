@@ -1,43 +1,54 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+# Build verification. Not a deploy.
+#
+# Hostinger pulls the repository into public_html on push via its own webhook,
+# and runs no build step: the committed files are the files served. So there is
+# nothing for CI to publish, and two things for it to check, because both fail
+# silently otherwise.
+#
+# The previous version of this file deployed to GitHub Pages. That stopped
+# working when the site moved to root-relative URLs: Pages serves the repo from
+# /hoshii-site/, so a link to /pricing/ resolves above the site root. Hostinger
+# serves from a domain root, where root-relative is the robust choice for
+# extensionless URLs. Re-adding a Pages showcase would need a subpath build,
+# which is not worth carrying for a second copy of the site.
+name: Verify build
 
 on:
-  # Runs on pushes targeting the default branch
   push:
     branches: ["main"]
-
-  # Allows you to run this workflow manually from the Actions tab
+  pull_request:
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
 
 jobs:
-  # Single deploy job since we're just deploying
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  verify:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          # Upload entire repository
-          path: '.'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+
+      # 16 of the 17 pages come out of tools/gen-legal.py. If what is committed
+      # does not match what the generator produces, Hostinger serves the stale
+      # committed copy and the difference is invisible until someone notices
+      # wrong copy on the live site.
+      - name: Generated pages match the generator
+        run: |
+          python3 tools/gen-legal.py > /dev/null
+          if ! git diff --quiet; then
+            echo "::error::Committed files do not match tools/gen-legal.py output."
+            echo "Run 'python3 tools/gen-legal.py' and commit the result."
+            git --no-pager diff --stat
+            exit 1
+          fi
+
+      # index.html is hand-written and keeps its own copy of the shared chrome
+      # and the stylesheet version. All three have drifted before.
+      - name: index.html chrome and CSS version match the generator
+        run: python3 tools/check-chrome.py
+
+      # Every internal link is root-relative and extensionless, and every one
+      # of them has to resolve to a file on disk.
+      - name: Internal links resolve
+        run: python3 tools/check-links.py

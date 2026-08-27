@@ -1,0 +1,6 @@
+# tools/ is build tooling, not site content, but Hostinger's Git deploy copies
+# the whole repository into public_html. gen-legal.py contains every page's copy
+# and notes on what was deliberately left out of pricing, so deny it here as
+# well as in the root .htaccess: a directory-level rule does not depend on the
+# root file surviving a future edit.
+Require all denied

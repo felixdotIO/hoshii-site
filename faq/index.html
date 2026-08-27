@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Questions | Hoshii</title>
     <meta name="description" content="Answers on how Hoshii works, what it connects to, where your data lives and how to start." />
-    <link rel="canonical" href="https://www.hoshii.ai/faq.html" />
-    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href="https://www.hoshii.ai/faq/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Hoshii" />
     <meta property="og:title" content="Questions | Hoshii" />
     <meta property="og:description" content="Answers on how Hoshii works, what it connects to, where your data lives and how to start." />
-    <meta property="og:url" content="https://www.hoshii.ai/faq.html" />
+    <meta property="og:url" content="https://www.hoshii.ai/faq/" />
     <meta property="og:image" content="https://www.hoshii.ai/assets/img/hero-slot.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="stylesheet" href="./styles.css?v=566" />
+    <link rel="stylesheet" href="/styles.css?v=571" />
     <script type="application/ld+json">
     {
           "@context": "https://schema.org",
@@ -273,7 +273,7 @@
                       "name": "Does my team have to change how they work?",
                       "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "No. The work keeps arriving in the inbox they already use, and that is where Hoshii starts, preparing each message before anyone opens it. When the team wants more overview, the Unibox is there: one shared queue with owners, statuses and deadlines."
+                            "text": "No. The work keeps arriving in the inbox they already use, and that is where Hoshii starts, preparing each message before anyone opens it. When the team wants more overview, the Unibox is there: one shared inbox with owners, statuses and deadlines."
                       }
                 },
                 {
@@ -281,7 +281,7 @@
                       "name": "What does it cost?",
                       "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "Our base price is EUR 39 per user per month, connections included. Beyond that we grow together on a credit‑based model, so you pay for what you process. Collaboration is free either way: invite your whole company to comment and weigh in at no extra cost."
+                            "text": "We quote per workspace, against how much lands in the inbox, how many inboxes it covers and which systems Hoshii writes into. Users are unlimited on every quote, so inviting your whole company to comment and weigh in costs nothing. The work itself is metered in credits, with an allowance we size to an average month with you. How pricing works sets out what moves the number."
                       }
                 },
                 {
@@ -299,7 +299,7 @@
   <body>
     <header class="titlebar">
       <div class="titlebar__inner">
-        <a class="brand" href="./index.html" aria-label="Hoshii home">
+        <a class="brand" href="/" aria-label="Hoshii home">
           <svg
             class="brand__mark"
             viewBox="0 0 2596 2596"
@@ -316,17 +316,40 @@
           </svg>
           <img
             class="brand__wordmark"
-            src="./assets/logo/wordmark-a.png"
+            src="/assets/logo/wordmark-a.png"
             alt="Hoshii"
             width="1420"
             height="425"
           />
         </a>
 
+        <nav class="nav" aria-label="Primary">
+          <a class="nav__btn" href="/#product">Product</a>
+          <a class="nav__btn" href="/customers/">Customer stories</a>
+          <a class="nav__btn" href="/pricing/">Pricing</a>
+        </nav>
+
         <div class="titlebar__actions">
-          <a class="btn-os btn-os--accent" href="./index.html">Back to site<span class="btn-os__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg></span></a>
+          <a class="btn-os btn-os--accent" href="/demo/">Book a demo<span class="btn-os__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg></span></a>
+
+          <button
+            class="menu-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="mobile-nav"
+            aria-label="Menu"
+          >
+            <span class="menu-toggle__bar"></span>
+            <span class="menu-toggle__bar"></span>
+          </button>
         </div>
       </div>
+
+      <nav class="mobile-nav" id="mobile-nav" aria-label="Primary" hidden>
+        <a class="mobile-nav__link" href="/#product">Product</a>
+        <a class="mobile-nav__link" href="/customers/">Customer stories</a>
+        <a class="mobile-nav__link" href="/pricing/">Pricing</a>
+      </nav>
     </header>
 
     <main class="doc">
@@ -540,13 +563,13 @@
           <summary class="doc__sum">
             <h3>Does my team have to change how they work?</h3>
           </summary>
-          <p>No. The work keeps arriving in the inbox they already use, and that is where Hoshii starts, preparing each message before anyone opens it. When the team wants more overview, the Unibox is there: one shared queue with owners, statuses and deadlines.</p>
+          <p>No. The work keeps arriving in the inbox they already use, and that is where Hoshii starts, preparing each message before anyone opens it. When the team wants more overview, the Unibox is there: one shared inbox with owners, statuses and deadlines.</p>
         </details>
         <details class="doc__fold">
           <summary class="doc__sum">
             <h3>What does it cost?</h3>
           </summary>
-          <p>Our base price is EUR&nbsp;39 per user per month, connections included. Beyond that we grow together on a credit&#8209;based model, so you pay for what you process. Collaboration is free either way: invite your whole company to comment and weigh in at no extra cost.</p>
+          <p>We quote per workspace, against how much lands in the inbox, how many inboxes it covers and which systems Hoshii writes into. Users are unlimited on every quote, so inviting your whole company to comment and weigh in costs nothing. The work itself is metered in credits, with an allowance we size to an average month with you. <a href="/pricing/">How pricing works</a> sets out what moves the number.</p>
         </details>
         <details class="doc__fold">
           <summary class="doc__sum">
@@ -555,7 +578,7 @@
           <p>Sign in and point Hoshii at one mailbox; you will see what it does with real work inside the hour. If you would rather be walked through it, book a demo and bring a real order, and we will show you exactly what our agents do with it, live, in 30 minutes.</p>
         <aside class="docend">
           <p class="docend__head">Still holding a question this page did not answer?</p>
-          <a class="btn-os btn-os--fill btn-os--lg" href="demo.html">Talk to sales<span class="btn-os__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg></span></a>
+          <a class="btn-os btn-os--fill btn-os--lg" href="/demo/">Talk to sales<span class="btn-os__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg></span></a>
         </aside>
         </details>
         </div>
@@ -565,7 +588,7 @@
     <footer class="foot">
       <div class="foot__inner">
         <div class="foot__brand">
-          <a class="brand brand--foot" href="./index.html" aria-label="Hoshii home">
+          <a class="brand brand--foot" href="/" aria-label="Hoshii home">
             <svg class="brand__mark" viewBox="0 0 2596 2596" aria-hidden="true">
               <rect width="2596" height="2596" fill="var(--green)" />
               <g fill="var(--bone)">
@@ -576,7 +599,7 @@
             </svg>
             <img
               class="brand__wordmark"
-              src="./assets/logo/wordmark-b.png"
+              src="/assets/logo/wordmark-b.png"
               alt="Hoshii"
               width="1420"
               height="425"
@@ -592,25 +615,26 @@
         <nav class="foot__nav" aria-label="Footer">
           <div class="foot__col">
             <h2 class="foot__head">Product</h2>
-            <a class="foot__link" href="./index.html#product">Product</a>
-            <a class="foot__link" href="pricing.html">Pricing</a>
-            <a class="foot__link" href="customers.html">Customer stories</a>
+            <a class="foot__link" href="/#product">Product</a>
+            <a class="foot__link" href="/pricing/">Pricing</a>
+            <a class="foot__link" href="/customers/">Customer stories</a>
           </div>
 
           <div class="foot__col">
             <h2 class="foot__head">Company</h2>
-            <a class="foot__link" href="resources.html">Resources</a>
-            <a class="foot__link" href="careers.html">Careers</a>
-            <a class="foot__link" href="partners.html">Become a partner</a>
-            <a class="foot__link" href="about.html">About</a>
-            <a class="foot__link" href="demo.html">Book a demo</a>
+            <a class="foot__link" href="/resources/">Resources</a>
+            <a class="foot__link" href="/faq/">Questions</a>
+            <a class="foot__link" href="/careers/">Careers</a>
+            <a class="foot__link" href="/partners/">Become a partner</a>
+            <a class="foot__link" href="/about/">About</a>
+            <a class="foot__link" href="/demo/">Book a demo</a>
           </div>
 
           <div class="foot__col">
             <h2 class="foot__head">Legal</h2>
-            <a class="foot__link" href="policies/imprint.html">Imprint</a>
-            <a class="foot__link" href="policies/privacy-policy.html">Privacy</a>
-            <a class="foot__link" href="policies/cookies-policy.html">Cookies</a>
+            <a class="foot__link" href="/policies/imprint/">Imprint</a>
+            <a class="foot__link" href="/policies/privacy-policy/">Privacy</a>
+            <a class="foot__link" href="/policies/cookies-policy/">Cookies</a>
           </div>
         </nav>
       </div>
@@ -620,6 +644,19 @@
         <span>Z&uuml;rich, Switzerland</span>
       </p>
     </footer>
+
+    <script>
+      // The only script these pages need: the mobile menu on the full header.
+      const toggle = document.querySelector('.menu-toggle');
+      const mobileNav = document.querySelector('.mobile-nav');
+      if (toggle && mobileNav) {{
+        toggle.addEventListener('click', () => {{
+          const open = toggle.getAttribute('aria-expanded') === 'true';
+          toggle.setAttribute('aria-expanded', String(!open));
+          mobileNav.hidden = open;
+        }});
+      }}
+    </script>
 
 
     <script>
@@ -678,7 +715,7 @@
         const layers = document.querySelectorAll('.pat--react');
         if (!layers.length) return;
 
-        fetch('./assets/pattern.svg')
+        fetch('/assets/pattern.svg')
           .then((r) => (r.ok ? r.text() : Promise.reject(r.status)))
           .then((text) => {
             const doc = new DOMParser().parseFromString(text, 'image/svg+xml');

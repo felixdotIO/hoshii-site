@@ -1,0 +1,140 @@
+# Hostinger / LiteSpeed configuration.
+#
+# Hostinger's Git integration copies the repository into public_html and runs no
+# build step: what is committed is what is served. That has two consequences
+# this file exists to handle. Everything in the repo is web-reachable unless
+# denied, and there is no build to generate redirects, so they live here.
+#
+# LiteSpeed reads .htaccess natively, so standard Apache syntax applies.
+
+# ---------------------------------------------------------------------------
+# 1. Keep the non-site files out of the web root.
+#
+# tools/gen-legal.py holds the whole site's copy plus comments on what was
+# deliberately excluded from pricing. It must not be fetchable.
+# ---------------------------------------------------------------------------
+RedirectMatch 404 ^/\.git(/|$)
+RedirectMatch 404 ^/tools(/|$)
+RedirectMatch 404 ^/README\.md$
+RedirectMatch 404 ^/\.github(/|$)
+RedirectMatch 404 ^/\.gitignore$
+
+<FilesMatch "^\.(htaccess|htpasswd|gitignore|nojekyll|DS_Store)$">
+  Require all denied
+</FilesMatch>
+
+# ---------------------------------------------------------------------------
+# 2. One canonical origin, always over HTTPS.
+#
+# Two URLs serving identical bytes splits ranking signals between them, so pick
+# one host and one scheme and 301 everything else to it. The host is left to be
+# filled in at cutover rather than hardcoded, because the same file is deployed
+# to the staging domain first and a redirect to the live host there would send
+# every staging request to production.
+# ---------------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # HTTPS for every host, no hostname needed.
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+  # UNCOMMENT AT CUTOVER, and set the host you chose. Live hoshii.ai currently
+  # answers on www, so www is the safe default: switching to apex would move
+  # every existing URL for no gain.
+  # RewriteCond %{HTTP_HOST} !^www\.hoshii\.ai$ [NC]
+  # RewriteRule ^(.*)$ https://www.hoshii.ai/$1 [R=301,L]
+
+  # ---------------------------------------------------------------------------
+  # 3. URL shape.
+  #
+  # Every page is a directory index -- pricing/index.html served at /pricing/ --
+  # so extensionless URLs need no rewrite here. Apache serves the directory and
+  # 301s /pricing to /pricing/ by itself. Two leftovers do need handling.
+  # ---------------------------------------------------------------------------
+
+  # Anything still asking for the old flat .html URL goes to its directory. The
+  # site was never published at those URLs, so this is insurance for old
+  # bookmarks and pasted links rather than a migration, but it costs one rule.
+  # index.html addresses its own directory, so it must be handled before the
+  # general rule below, which would otherwise send /index.html to /index/.
+  # THE_REQUEST holds the client's original request line, so a redirect to
+  # /pricing/ cannot re-match and loop.
+  RewriteCond %{THE_REQUEST} \s/+(.*?)index\.html[\s?] [NC]
+  RewriteRule ^ /%1 [R=301,L]
+
+  RewriteCond %{THE_REQUEST} \s/+(.+?)\.html[\s?] [NC]
+  RewriteRule ^ /%1/ [R=301,L]
+
+  # /policies/ is a container, not a page: the five documents live under it and
+  # there is no index. Without this it is a 403, because Options -Indexes below
+  # denies the listing. Send it somewhere useful instead.
+  RewriteRule ^policies/?$ /faq/ [R=301,L]
+
+  # ---------------------------------------------------------------------------
+  # 4. Redirects carried over from the Framer site. FILL IN AT CUTOVER.
+  #
+  # Live hoshii.ai serves roughly 28 pages; this build has 17 and replaces only
+  # some of them. Every live URL that does not exist here needs a 301 to its
+  # nearest equivalent, or it becomes a 404 with no signal passed on. Get the
+  # list by crawling the live site before DNS moves -- do not work from memory.
+  #
+  # Two already-known cases, renamed in Framer and not yet published:
+  #   Redirect 301 /order-processing-skill /
+  #   Redirect 301 /ai-coworker /
+  # ---------------------------------------------------------------------------
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# 5. Caching. This is what retires the ?v=NNN query strings in the markup:
+# fingerprinted assets can be immutable, and HTML must never be.
+#
+# There is no ErrorDocument line yet because there is no 404 page. Add one when
+# there is, or Apache serves its own, which on a marketing site reads as broken
+# rather than as a missing page.
+# ---------------------------------------------------------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault                              "access plus 1 month"
+  ExpiresByType text/html                     "access plus 0 seconds"
+  ExpiresByType text/css                      "access plus 1 year"
+  ExpiresByType application/javascript        "access plus 1 year"
+  ExpiresByType image/jpeg                    "access plus 1 year"
+  ExpiresByType image/png                     "access plus 1 year"
+  ExpiresByType image/svg+xml                 "access plus 1 year"
+  ExpiresByType image/avif                    "access plus 1 year"
+  ExpiresByType image/webp                    "access plus 1 year"
+  ExpiresByType font/otf                      "access plus 1 year"
+  ExpiresByType font/woff2                    "access plus 1 year"
+</IfModule>
+
+<IfModule mod_headers.c>
+  # HTML is revalidated every time, so a deploy is visible immediately.
+  <FilesMatch "\.html$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+  # Fonts and images are addressed by name and replaced by rename, never edited.
+  <FilesMatch "\.(otf|woff2?|jpg|jpeg|png|svg|avif|webp)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # Modest, uncontroversial security headers. No CSP here: the site loads
+  # HubSpot and Wistia, so a policy written blind would break the demo form.
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header always unset X-Powered-By
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# 6. Compression. Fonts are .otf, which is not compressed by default and is the
+# single largest text-ish payload on the site until they are converted to woff2.
+# ---------------------------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml font/otf application/font-sfnt
+</IfModule>
+
+# Directory listings would expose assets/ wholesale.
+Options -Indexes
