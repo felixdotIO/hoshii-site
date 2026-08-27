@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Answer engines and AI crawlers are welcome: being cited is the point.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://www.hoshii.ai/sitemap.xml
