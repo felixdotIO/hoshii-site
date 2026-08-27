@@ -14,7 +14,7 @@
     <meta property="og:url" content="https://www.hoshii.ai/customers/" />
     <meta property="og:image" content="https://www.hoshii.ai/assets/img/hero-slot.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="stylesheet" href="/styles.css?v=571" />
+    <link rel="stylesheet" href="/styles.css?v=577" />
   </head>
   <body>
     <header class="titlebar">
@@ -72,7 +72,7 @@
       </nav>
     </header>
 
-    <main class="doc doc--wide">
+    <main class="doc page--customers doc--wide">
       <div class="doc__head">
         <div class="doc__inner">
           <h1 class="doc__title">Hoshii is clearing the inboxes<span class="doc__line">of <span class="doc__accent">Europe’s busiest order desks.</span></span></h1>
@@ -330,10 +330,13 @@
       // and these bands do not otherwise have one to spare.
       (function () {
         // Surfaces whose pattern is visible enough to be worth touching.
-        const REACT = new Set(['.doc__head', '.askrow', '.closer', '.docend']);
+        const REACT = new Set([
+          '.doc__head', '.pricehead', '.askrow', '.closer', '.docend'
+        ]);
 
         const HOSTS = [
           ['.doc__head', ['pat']],
+          ['.pricehead', ['pat']],
           ['.askrow', ['pat--l', 'pat--r']],
           ['.closer', ['pat']],
           ['.pitch__panel', ['pat']],

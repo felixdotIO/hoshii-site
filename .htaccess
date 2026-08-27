@@ -72,17 +72,52 @@ RedirectMatch 404 ^/\.gitignore$
   RewriteRule ^policies/?$ /faq/ [R=301,L]
 
   # ---------------------------------------------------------------------------
-  # 4. Redirects carried over from the Framer site. FILL IN AT CUTOVER.
+  # 4. Redirects for the live URLs this build renames.
   #
-  # Live hoshii.ai serves roughly 28 pages; this build has 17 and replaces only
-  # some of them. Every live URL that does not exist here needs a 301 to its
-  # nearest equivalent, or it becomes a 404 with no signal passed on. Get the
-  # list by crawling the live site before DNS moves -- do not work from memory.
+  # Inventory taken 2026-08-27 by crawling both live sitemaps: 68 live URLs (34
+  # English, 34 German), all returning 200, last published 8 July 2026. Of those,
+  # 8 already match a path here and need nothing. These 10 are renames.
   #
-  # Two already-known cases, renamed in Framer and not yet published:
-  #   Redirect 301 /order-processing-skill /
-  #   Redirect 301 /ai-coworker /
+  # The remaining 50 have no page here at all and are listed in section 4b.
+  # They are a content decision, not a redirect one, and the domain must not be
+  # pointed here until they are answered.
   # ---------------------------------------------------------------------------
+  RewriteRule ^blog/?$                      /resources/                 [R=301,L]
+  RewriteRule ^policies/privacy/?$          /policies/privacy-policy/   [R=301,L]
+  RewriteRule ^policies/impressum/?$        /policies/imprint/          [R=301,L]
+  RewriteRule ^policies/cookies/?$          /policies/cookies-policy/   [R=301,L]
+  RewriteRule ^policies/faq/?$              /faq/                       [R=301,L]
+  RewriteRule ^book-a-demo/?$               /demo/                      [R=301,L]
+  RewriteRule ^contact/?$                   /demo/                      [R=301,L]
+  RewriteRule ^become-a-partner/?$          /partners/                  [R=301,L]
+  # Two customer stories deliberately have no page of their own: their Framer
+  # Content field is empty, so both play on the customers index instead.
+  RewriteRule ^customers/adank-davos/?$     /customers/                 [R=301,L]
+  RewriteRule ^customers/marinello/?$       /customers/                 [R=301,L]
+
+  # ---------------------------------------------------------------------------
+  # 4b. NOT REDIRECTED, AND NOT BUILT. Pointing hoshii.ai here today 404s all
+  # of these. Do not uncomment a blanket catch-all: sending 50 indexed URLs to
+  # the homepage is a soft-404 pattern and loses their rankings anyway.
+  #
+  #   11 product pages, the site's whole SEO surface, and /order-processing-skill
+  #   is the live nav's primary product link:
+  #     /order-processing-skill  /email-triage-skill  /skill-library  /unibox
+  #     /outlook-add-in  /collaborate  /ai-coworker  /continuous-learning
+  #     /signals  /analytics  /erp-integration
+  #
+  #   5 blog posts, CMS-backed on Framer. /blog itself redirects above, but the
+  #   posts have no home here and no way to author the next one:
+  #     /blog/partnership-announcement-csb-system-x-hoshii
+  #     /blog/how-order-errors-drive-customer-churn-in-wholesale-distribution
+  #     /blog/what-happens-when-an-ai-agent-reads-your-customer-orders
+  #     /blog/how-b2b-wholesale-actually-works-in-2026-(it-still-starts-in-an-inbox)
+  #     /blog/the-hidden-cost-of-manual-order-processing-in-b2b
+  #
+  #   34 German URLs, the entire /de/ tree. Framer serves these as a locale over
+  #   the same page nodes; this build has no i18n of any kind.
+  # ---------------------------------------------------------------------------
+
 </IfModule>
 
 # ---------------------------------------------------------------------------

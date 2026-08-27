@@ -58,7 +58,7 @@ SITEMAP = {
     "order-processing": ("2026-08-27", "monthly", "0.9"),
 }
 
-CSS_V = "571"
+CSS_V = "577"
 
 # Paths are relative, never root-relative: Pages serves this repo from
 # /hoshii-site/, so a leading slash would resolve above the site root. Each page
@@ -163,7 +163,12 @@ def render(block, fold=False, up="."):
             kind = kind[:-1]
         if kind != "LI":
             flush()
-        if fold and kind in ("H2", "H3", "INDEX"):
+        # Everything except an answer's own body closes the open answer. It used
+        # to be only H2/H3/INDEX, which meant any other directive placed after
+        # the last question -- the logo belt on the pricing page -- was emitted
+        # *inside* that question's <details> and only appeared once a reader
+        # expanded it. A fold holds prose and nothing else.
+        if fold and kind not in ("P", "LI", "C"):
             close_fold()
         if kind == "H2":
             out.append(f'        <h2 id="{slug(rest)}">{inline(rest)}</h2>')
@@ -566,6 +571,75 @@ def render(block, fold=False, up="."):
             out.append(f'            <p class="doc__prop">{inline(claim)}</p>')
             out.append(f'            <p class="doc__propWhy">{inline(why)}</p>')
             out.append("          </li>")
+        elif kind == "LEDE":
+            # The pricing masthead's headline and deck. Two halves and a deck:
+            # the accent clause is a separate cell so it always takes its own
+            # line, the same device .closer__title and .hero__title use.
+            head, tail, deck = rest.split("|", 2)
+            out.append(f'          <h1 class="pricehead__title">{inline(head)} '
+                       f'<em>{inline(tail)}</em></h1>')
+            out.append(f'          <p class="pricehead__deck">{inline(deck)}</p>')
+        elif kind == "ACTS":
+            label, href, alt, alt_href = rest.split("|", 3)
+            out.append('          <p class="pricehead__acts">')
+            out.append(
+                f'            <a class="btn-os btn-os--accent btn-os--fill btn-os--lg" href="{href}">'
+                f'{inline(label)}<span class="btn-os__go" aria-hidden="true">'
+                '<svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg>'
+                "</span></a>"
+            )
+            out.append(f'            <a class="pricehead__alt" href="{alt_href}">{inline(alt)}</a>')
+            out.append("          </p>")
+        elif kind == "FACTS":
+            out.append('          <ul class="pricehead__facts">')
+        elif kind == "ENDFACTS":
+            out.append("          </ul>")
+        elif kind == "FACT":
+            out.append(f'            <li>{inline(rest)}</li>')
+        elif kind == "BAND":
+            # A band boundary. build_main splits the rendered body on these and
+            # wraps each run in its own full-bleed section, which is how the home
+            # page is built and what the prose scaffolding cannot express.
+            out.append(f"<!--BAND:{rest.strip()}-->")
+        elif kind == "DIALS":
+            out.append('        <ol class="dials">')
+        elif kind == "ENDDIALS":
+            out.append("        </ol>")
+        elif kind == "DIAL":
+            head, body = rest.split("|", 1)
+            n = sum(1 for line_ in out if 'class="dial"' in line_) + 1
+            out.append('          <li class="dial">')
+            out.append(f'            <span class="dial__n" aria-hidden="true">{n:02d}</span>')
+            out.append(f'            <h3 class="dial__head">{inline(head)}</h3>')
+            out.append(f'            <p class="dial__body">{inline(body)}</p>')
+            out.append("          </li>")
+        elif kind == "KIT":
+            out.append('        <div class="kit">')
+            out.append(f'          <h3 class="kit__head">{inline(rest)}</h3>')
+            out.append('          <ul class="kit__list">')
+        elif kind == "ENDKIT":
+            out.append("          </ul>")
+            out.append("        </div>")
+        elif kind == "KITITEM":
+            out.append(f"            <li>{inline(rest)}</li>")
+        elif kind == "KITNOTE":
+            out.append(f'          <p class="kit__note">{inline(rest)}</p>')
+        elif kind == "REFS":
+            out.append('        <ul class="refs">')
+        elif kind == "ENDREFS":
+            out.append("        </ul>")
+        elif kind == "REF":
+            co, erp, line_, href = rest.split("|", 3)
+            out.append('          <li class="ref">')
+            out.append(f'            <a class="ref__card" href="{up}/{href}">')
+            out.append(f'              <span class="ref__co">{inline(co)}</span>')
+            out.append(f'              <span class="ref__line">{inline(line_)}</span>')
+            out.append('              <span class="ref__foot">')
+            out.append(f'                <span class="ref__erp">{inline(erp)}</span>')
+            out.append('                <span class="ref__go" aria-hidden="true">&#8594;</span>')
+            out.append("              </span>")
+            out.append("            </a>")
+            out.append("          </li>")
         elif kind == "RAW":
             out.append(rest)
         elif kind == "CTA":
@@ -883,10 +957,13 @@ PATTERN_JS = """
       // and these bands do not otherwise have one to spare.
       (function () {
         // Surfaces whose pattern is visible enough to be worth touching.
-        const REACT = new Set(['.doc__head', '.askrow', '.closer', '.docend']);
+        const REACT = new Set([
+          '.doc__head', '.pricehead', '.askrow', '.closer', '.docend'
+        ]);
 
         const HOSTS = [
           ['.doc__head', ['pat']],
+          ['.pricehead', ['pat']],
           ['.askrow', ['pat--l', 'pat--r']],
           ['.closer', ['pat']],
           ['.pitch__panel', ['pat']],
@@ -1075,9 +1152,17 @@ FULL_NAV = {
 # and a robots meta telling crawlers to leave them out of the index.
 NOINDEX = {"msa", "sls"}
 
+# Pages that state a question and answer it directly get FAQPage JSON-LD, built
+# from the page's own H3/P pairs so the markup and the schema cannot disagree.
+# Answer engines quote the answer; the schema is what makes it quotable.
+SCHEMA_FAQ = {"faq", "pricing", "order-processing"}
+
+# Pages whose H3 pairs render as the site's accordion rather than as prose.
+FOLD_QA = SCHEMA_FAQ
+
 # The careers page lays out a values grid and six portraits, which will not fit
 # a prose measure. Prose inside it stays capped so the reading column holds.
-WIDE = {"careers", "resources", "customers", "about", "order-processing"}
+WIDE = {"careers", "resources", "customers", "about", "order-processing", "pricing"}
 
 
 CASE_MAIN = """      <div class="doc__head">
@@ -1137,7 +1222,7 @@ CASE = {"stutzer-service", "egger-gemuesebau", "max-schwarz"}
 # The booking page has its own template: two columns from the top, split by a
 # single rule, with the form sticky in the right one. It stopped fitting the
 # document scaffolding once the argument moved above the fold.
-BOOK = {"demo", "pricing"}
+BOOK = {"demo"}
 
 BOOK_MAIN = """      <div class="book">
         <div class="book__grid">
@@ -1153,6 +1238,30 @@ BOOK_MAIN = """      <div class="book">
         </div>
       </div>
 {after}"""
+
+# The pricing page is a landing page, not a document. It opens on a dark
+# masthead carrying the claim and the sales CTA, then runs a sequence of
+# full-bleed bands -- what sets the number, who is already paying it, the
+# questions, and who you will be talking to. The prose scaffolding set one
+# 39rem column against an 88rem band and left the rest of the page empty, which
+# is what made a pricing page read like a privacy policy.
+PRICE = {"pricing"}
+
+PRICE_MAIN = """      <div class="pricehead">
+        <div class="pricehead__inner">
+          <p class="pricehead__eyebrow">{title}</p>
+{head}
+        </div>
+      </div>
+{bands}"""
+
+PRICE_BAND = """
+      <section class="pband pband--{kind} guides">
+        <div class="doc__inner doc__body pband__inner">
+{body}
+        </div>
+      </section>"""
+
 
 PAGE = """<!DOCTYPE html>
 <html lang="en">
@@ -1557,35 +1666,46 @@ CLOSER: Want to build this with us?|See open roles|careers.html
 
 
 ORDER_PROCESSING = """
+NOTE: Shipped Skill &middot; live on 500+ order desks
+P: The Order Processing Skill turns an inbound order into a **ready&#8209;to&#8209;post ERP entry**. It reads the order out of whatever arrived, matches every line to your products, and hands your team one thing to confirm.
 SHOT: skill/order-form.jpg|An order form, a coffee and a handwritten note on a desk
-NOTE: Shipped Skill &middot; Automate &middot; Sales
-H2: It starts by reading almost any format.
-P: Your customers do not send clean data. They send PDFs, forwarded email threads, Excel sheets, voicemails and photographs of handwritten notes. The Skill reads the order out of all of them, in **any of the languages your desk works in**.
+H2: It reads whatever arrived
+P: Your customers do not send clean data. The Skill reads the order out of **PDFs, forwarded email threads, Excel sheets, voicemails and photographs of handwriting**, in any of the languages your desk works in.
 CHECKS:
 CHECK: **PDF and scans**, including layouts that change every time
-CHECK: **Email text**, forwarded threads and the order buried three replies down
+CHECK: **Email text**, forwarded threads, the order buried three replies down
 CHECK: **Excel and CSV**, whatever the column order
 CHECK: **Voicemail and audio**, transcribed before anyone has to listen
 CHECK: **Photographs**, including handwriting
 ENDCHECKS:
-NOTE: A PDF reading &ldquo;bitte liefern Sie zur KW 22: 12&times; Palette Mehl Type 405, 8&times; Karton Rapsöl 10 L&rdquo; comes out as two lines, quantities attached. So does the voicemail that says the same thing out loud.
-H2: Matched to your products, posted in one click.
-P: Reading it is the easy half. Every extracted line is matched to the right product in your ERP and prepared as a clean, ready&#8209;to&#8209;post entry. Your team confirms. **No rekeying, no second screen.**
+NOTE: A PDF reading &ldquo;bitte liefern Sie zur KW 22: 12&times; Palette Mehl Type 405, 8&times; Karton Rapsöl 10 L&rdquo; comes out as two lines with quantities attached. So does the voicemail that says the same thing out loud.
+H2: It matches lines to your products
+P: Reading it is the easy half. Every extracted line is matched to the right product in your ERP and prepared as a clean entry. Your team confirms. **No rekeying, no second screen.**
 TABLE: The same words, two customers|What arrived|What it means|SKU
 ROW: A. &amp; B. Rinderknecht|20&times; Schrauben, kurz|Hex bolt M8&times;18|4471
 ROW: Berger Industrietechnik|20&times; Schrauben, kurz|Wood screw 4&times;30|7720
 ENDTABLE:
-LIFT: The same three words meant two different products. Nobody had to write a rule for that.
-P: Every confirmation teaches the Skill what a given customer means, and it applies that from the next order on. This is procedural knowledge: not a model that guesses better in general, but one that knows **how your customers actually order**.
+LIFT: The same three words meant two different products. Nobody wrote a rule for that.
+H2: It learns what each customer means
+P: Every confirmation teaches the Skill how a given customer orders, and it applies that from the next order on. This is procedural knowledge: not a model that guesses better in general, but one that knows **how your customers actually write**.
 SHOT: skill/dock.jpg|Pallets moving on a loading dock at first light
-H2: Inside the inbox your team already uses.
-P: The Skill does not need anyone to move. It runs as a native add&#8209;in for **Outlook and Gmail**, so the work appears where the mail already lands. No new tool, no migration, no second login.
+H2: It runs inside Outlook and Gmail
+P: Nobody has to move. The Skill runs as a **native add&#8209;in for Outlook and Gmail**, so the work appears where the mail already lands. No new tool, no migration, no second login.
 PANELS:
-PANEL: Tagged the moment it lands|Order, request for quote, complaint or noise, sorted as it arrives, in any format or language. Tags, Open or Done status, and folders, all inside Outlook.|prof-orderdesk.jpg|rgba(196, 78, 44, 0.28)
+PANEL: Tagged the moment it lands|Order, request for quote, complaint or noise, sorted as it arrives, in any format or language. Tags, Open or Done status and folders, all inside Outlook.|prof-orderdesk.jpg|rgba(196, 78, 44, 0.28)
 PANEL: Processed in a pop&#8209;up|The order opens beside the mail, structured and ready to check. One confirmation posts it to the ERP and marks the thread done.|prof-service.jpg|rgba(148, 164, 140, 0.24)
 ENDPANELS:
-H2: What it is connected to.
-P: The Skill posts into the system you already run. We are live with 20+ ERP systems, over REST where there is an API and SFTP where there is not, so for most desks there is nothing to build. Where a system has no interface at all, we drive it the way a person would.
+H2: Common questions
+H3: What is the Order Processing Skill?
+P: It is a Hoshii Skill that reads inbound B2B orders from email, PDF, Excel, voicemail and photographs, matches each line to a product in your ERP, and prepares an entry your team confirms in one click.
+H3: Which formats can it read?
+P: PDFs and scans, email text and forwarded threads, Excel and CSV, audio and voicemail, and photographs including handwriting. Layout does not have to be consistent and the language does not have to be English.
+H3: Does it post into the ERP automatically?
+P: Only once someone approves it. Reading your ERP is included; writing into it is switched on per area of work, and a person confirms the entry before it posts.
+H3: Which ERP systems does it work with?
+P: Hoshii is live with 20+ ERP systems, over REST where there is an API and SFTP where there is not. Where a system has no interface at all, Hoshii drives it the way a person would.
+H3: How does it handle customers who order the same thing differently?
+P: Every confirmation is training data for that customer. The same phrase can resolve to different products for different customers, and the Skill applies what it learned from the next order on.
 CLOSER: Bring your most complex order. We will show you what happens to it, live, in 30 minutes.|Book a demo|demo.html
 """
 
@@ -1670,11 +1790,11 @@ CLOSER: Nothing here fits, but you think you should be here anyway?|Write to us|
 RESOURCES = """
 FILTERS: Everything | Operations | Industry | AI &amp; Automation | Product
 ENTRIES:
-ENTRY: AI &amp; Automation|What Happens When an AI Agent Reads Your Customer Orders|Your team already knows the inbox is the problem. Here is what actually happens when an AI agent takes over the order flow, step by step, from email to ERP.|18 June 2026 &middot; 5 min|post-agent|https://www.hoshii.ai/blog-posts/what-happens-when-an-ai-agent-reads-your-customer-orders
-ENTRY: Industry|How B2B Wholesale Actually Works in 2026|Digital transformation has reshaped how businesses talk about operations. It has not changed where most B2B orders actually arrive.|15 June 2026 &middot; 5 min|post-inbox|https://www.hoshii.ai/blog-posts/how-b2b-wholesale-actually-works-in-2026-(it-still-starts-in-an-inbox)
-ENTRY: Product|Partnership Announcement: CSB&#8209;System x Hoshii|How Hoshii and CSB&#8209;System bring email order processing directly into the ERP.|12 June 2026 &middot; 5 min|post-cost|https://www.hoshii.ai/blog-posts/partnership-announcement-csb-system-x-hoshii
-ENTRY: Industry|How Order Errors Drive Customer Churn in Wholesale Distribution|Why 75% of B2B buyers consider switching suppliers after repeated order mistakes, and how to stop the pattern.|10 June 2026 &middot; 6 min|post-inbox|https://www.hoshii.ai/blog-posts/how-order-errors-drive-customer-churn-in-wholesale-distribution
-ENTRY: Operations|The Hidden Cost of Manual Order Processing in B2B|Most operations teams know manual order processing takes time. Few have counted what it costs. Here is what a typical day adds up to.|4 June 2026 &middot; 6 min|post-cost|https://www.hoshii.ai/blog-posts/the-hidden-cost-of-manual-order-processing-in-b2b
+ENTRY: AI &amp; Automation|What Happens When an AI Agent Reads Your Customer Orders|Your team already knows the inbox is the problem. Here is what actually happens when an AI agent takes over the order flow, step by step, from email to ERP.|18 June 2026 &middot; 5 min|post-agent|https://www.hoshii.ai/blog/what-happens-when-an-ai-agent-reads-your-customer-orders
+ENTRY: Industry|How B2B Wholesale Actually Works in 2026|Digital transformation has reshaped how businesses talk about operations. It has not changed where most B2B orders actually arrive.|15 June 2026 &middot; 5 min|post-inbox|https://www.hoshii.ai/blog/how-b2b-wholesale-actually-works-in-2026-(it-still-starts-in-an-inbox)
+ENTRY: Product|Partnership Announcement: CSB&#8209;System x Hoshii|How Hoshii and CSB&#8209;System bring email order processing directly into the ERP.|12 June 2026 &middot; 5 min|post-cost|https://www.hoshii.ai/blog/partnership-announcement-csb-system-x-hoshii
+ENTRY: Industry|How Order Errors Drive Customer Churn in Wholesale Distribution|Why 75% of B2B buyers consider switching suppliers after repeated order mistakes, and how to stop the pattern.|10 June 2026 &middot; 6 min|post-inbox|https://www.hoshii.ai/blog/how-order-errors-drive-customer-churn-in-wholesale-distribution
+ENTRY: Operations|The Hidden Cost of Manual Order Processing in B2B|Most operations teams know manual order processing takes time. Few have counted what it costs. Here is what a typical day adds up to.|4 June 2026 &middot; 6 min|post-cost|https://www.hoshii.ai/blog/the-hidden-cost-of-manual-order-processing-in-b2b
 ENDENTRIES:
 EMPTY: Nothing under that filter yet.
 P: Looking for the answers rather than the reading? [Questions](faq.html) covers how Hoshii works, what it connects to and where your data lives. The [privacy policy](policies/privacy-policy.html) and the [subscription agreement](policies/msa.html) are the documents worth having open before you commit.
@@ -1834,38 +1954,72 @@ CLOSER: Not sure which tier your volume lands in? We will work it out with you.|
 
 
 PRICING = """
-P: No table, because a desk taking forty orders a day and one taking four hundred are not the same work. We look at your inbox, then quote.
+LEDE: Priced on what your inbox handles,|not on how many people look at it.|There is no public price list, because a desk taking forty orders a day and one taking four hundred are not doing the same work. Users are unlimited on every plan. The number comes from your own volume, and you can size it before you call us.
+ACTS: Talk to sales|demo.html|Or write to us first|mailto:contact@hoshii.ai?subject=Pricing
+FACTS:
+FACT: Unlimited users, always
+FACT: Credits roll over, they never expire
+FACT: No implementation fee on the ERPs we already run
+ENDFACTS:
+BAND: drivers
+H2: What sets the number
+P: Four things, and nothing else. Bring rough figures for the first two and we can price your desk on the call.
+DIALS:
+DIAL: Volume|How much lands each month, and in what form. A hundred clean PDFs is not the same job as a hundred voicemails, so the format counts as much as the count.
+DIAL: Inboxes|How many the desk runs, shared and personal. Because users are unlimited, this is the only headcount&#8209;shaped number in the quote, and it is inboxes rather than people.
+DIAL: Systems|Reading your ERP is included on every plan. Writing back into it is scoped per system, which is where a partner integration costs less than a bespoke one.
+DIAL: Security review|The standard paperwork is included. Your own DPA, a vendor questionnaire or a custom review is scoped, because it is real work on our side.
+ENDDIALS:
+KIT: On every plan, at no extra charge
+KITITEM: Unlimited users, platform and analytics
+KITITEM: Read access to your ERP
+KITITEM: Every shipped Skill
+KITITEM: The Outlook and Gmail add&#8209;in
+KITITEM: EU hosting and email encryption
+KITITEM: 25+ languages, typed, scanned or spoken
+ENDKIT:
+KITNOTE: The work itself is metered in credits on a monthly allowance, sized with you against an average month rather than a peak. Unused credits roll over, so a quiet month builds the balance that carries a busy one.
+BAND: refs
+BELT: Quoted this way for 500+ B2B operations teams|casadelvino,staempfli,chiefs,stutzer,igp,schuetzengarten,egger,safruits
+H2: Desks already priced this way
+P: Three of them, at three very different volumes, writing into three different systems. Each one was quoted on the four things above.
+REFS:
+REF: Stutzer Service AG|Microsoft Dynamics|Over 100 orders a day in German, French and Thai, typed and handwritten, prepared for the ERP automatically.|customers/stutzer-service.html
+REF: Max Schwarz AG|Fruchtmanager|A night of Swiss&#8209;German voicemails, transcribed and structured before the working day starts.|customers/max-schwarz.html
+REF: Egger Gem&uuml;sebau AG|CSB System|Voicemail and PDF orders arriving out of hours, in the ERP without anyone listening and retyping.|customers/egger-gemuesebau.html
+ENDREFS:
+BAND: faq
+H2: Common questions
+H3: How much does Hoshii cost?
+P: There is no list price. Pricing is set per desk on monthly volume, the number of inboxes, and which systems Hoshii writes into. A thirty&#8209;minute call on your own mail produces the number for your desk.
+H3: Is Hoshii priced per user?
+P: No. Every plan carries unlimited users. Charging per seat would price a team for looking at an inbox rather than for the work the inbox produces, and it would penalise exactly the people you want reading along.
+H3: How are credits counted?
+P: The work is metered in credits on a monthly allowance, sized with you against an average month. Unused credits roll over rather than expiring.
+H3: What is included in every plan?
+P: Unlimited users, read access to your ERP, every shipped Skill, and the Outlook and Gmail add&#8209;in. Writing into your ERP and a custom security review are scoped separately.
+H3: Is there a free trial?
+P: Not a self&#8209;serve trial. Instead the first run is on your own mail, live on the call, so you see what Hoshii would post to your ERP before anything is signed.
+H3: What does it cost to start?
+P: One system and one inbox is enough to start. There is no minimum commitment and no implementation fee for the ERP systems we are already live with.
+BAND: talk
+H2: Who you will be talking to
+P: Thirty minutes, one real inbox, and the number for your own desk. Bring a message that landed this week: we run it live on your own mail, show you exactly what it would post to your ERP, and price it at your volume. **No proposal cycle, no discovery phase.**
 TEAM:
 PERSON: Daniel Nydegger|Head of GTM||daniel-nydegger
 PERSON: Jo&euml;l Heller|GTM Executive||joel-heller
 PERSON: Philipp Kuprecht|GTM Executive||philipp-kuprecht
 ENDTEAM:
-CHECKS:
-CHECK: Volume. How much lands, and in what form.
-CHECK: Inboxes. How many the desk runs, shared and personal.
-CHECK: Systems. Reading your ERP is included. Writing into it is scoped, as is a custom security review.
-ENDCHECKS:
-BELT: Quoted this way for 500+ B2B operations teams|casadelvino,staempfli,chiefs,stutzer,igp,schuetzengarten,egger,safruits
-ASIDE:
-RAW:             <p class="doc__caps">Talk to sales</p>
-RAW:             <p class="doc__prop">Thirty minutes, one real inbox, and the number for your own desk.</p>
-RAW:             <p class="doc__propWhy">Bring a message that landed this week. We run it live on your own mail, show you exactly what it would post to your ERP, and price it at your volume. No proposal cycle, no discovery phase.</p>
-RAW:             <p><a class="btn-os btn-os--accent btn-os--fill btn-os--lg" href="demo.html">Talk to sales<span class="btn-os__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg></span></a></p>
-RAW:             <p class="doc__standin">Rather write first? <a href="mailto:contact@hoshii.ai?subject=Pricing">contact@hoshii.ai</a> reaches the same three people.</p>
-AFTER:
-H2: How it starts
-RAW:         <figure class="doc__shot">
-RAW:           <img src="assets/img/hero-slot.jpg" alt="A letterbox slot set into a patterned wall, an order emerging from it, and a warehouse team at work behind" width="1672" height="941" loading="lazy" />
-RAW:         </figure>
-P: Read only. Hoshii prepares and proposes, and nothing leaves until someone approves it. Your own analytics then show which processes are worth automating, and the quote moves with the ones you pick. You never buy an automation you have not watched work.
-P: The work itself is metered in credits, on a monthly allowance we size to an average month with you. Unused credits roll over.
+NOTE: Rather write first? [contact@hoshii.ai](mailto:contact@hoshii.ai?subject=Pricing) reaches the same three people.
+BAND: end
+CLOSER: Nobody leaves this call without a price.|Talk to sales|demo.html
 """
 
 CONTENT = {
     "pricing": (
         PRICING,
-        "How Hoshii is priced: on what your inbox handles, not per seat. What sets the number, what every workspace includes, and how credits work.",
-        "Priced on what your inbox actually does, not on how many people look at it.",
+        "Hoshii is priced on what your inbox handles, not per seat: unlimited users, credits that roll over, and a number set on your own volume in a 30-minute call.",
+        "Priced on what your inbox handles, not on how many people look at it.",
     ),
     "stutzer-service": (
         CASE_STUTZER_SERVICE,
@@ -2023,6 +2177,17 @@ def build_main(slug, title, stand, body):
         )
     if slug in CASE:
         return CASE_MAIN.format(title=title, stand=stand, body=body.rstrip())
+    if slug in PRICE:
+        # The masthead is everything before the first band marker; each marker
+        # after it opens a new full-bleed band named by the marker itself.
+        head, _, rest = body.partition("<!--BAND:")
+        bands = []
+        for chunk in rest.split("<!--BAND:"):
+            kind, _, inner = chunk.partition("-->")
+            bands.append(PRICE_BAND.format(kind=kind.strip(), body=inner.rstrip("\n")))
+        return PRICE_MAIN.format(
+            title=title, head=head.rstrip(), bands="\n".join(bands).lstrip("\n")
+        )
     if slug not in SPLIT:
         return PLAIN_MAIN.format(title=title, stand=stand, body=body)
     head, sep, rest = body.partition("<!--HEAD-->")
@@ -2172,7 +2337,7 @@ def main():
         up = ".." if folder != "." else "."
         dm = "../" if folder != "." else ""
         page = PAGE.format(
-            main_cls=("book-page" if slug in BOOK else "doc"),
+            main_cls=("book-page" if slug in BOOK else "doc") + f" page--{slug}",
             robots=(
                 '    <meta name="robots" content="noindex, nofollow" />\n'
                 if STAGING
@@ -2200,8 +2365,8 @@ def main():
             + (COUNT_JS if "STAT:" in block else "")
             + PATTERN_JS.replace("{up}", up),
             v=CSS_V,
-            head=faq_schema(FAQ) if slug == "faq" else "",
-            main=build_main(slug, title, stand, render(block, fold=slug == "faq", up=up)),
+            head=faq_schema(block) if slug in SCHEMA_FAQ else "",
+            main=build_main(slug, title, stand, render(block, fold=slug in FOLD_QA, up=up)),
         )
         (out / "index.html").write_text(clean_urls(page, folder), encoding="utf-8")
         print(f"/{pdir}/  {len(page) // 1024}KB")

@@ -6641,7 +6641,8 @@ a.story__card:focus-visible {
   font-size: 0.9375rem;
 }
 
-.book__pitch .doc__team {
+.book__pitch .doc__team,
+.page--pricing .doc__body .doc__team {
   display: flex;
   flex-wrap: wrap;
   /* Three of them now rather than two, so the gap comes down or the row wraps in
@@ -6652,7 +6653,8 @@ a.story__card:focus-visible {
   list-style: none;
 }
 
-.book__pitch .doc__person {
+.book__pitch .doc__person,
+.page--pricing .doc__body .doc__person {
   display: grid;
   grid-template-columns: 2.75rem minmax(0, 1fr);
   grid-template-rows: auto auto;
@@ -6662,12 +6664,14 @@ a.story__card:focus-visible {
   max-width: none;
 }
 
-.book__pitch .doc__person picture {
+.book__pitch .doc__person picture,
+.page--pricing .doc__body .doc__person picture {
   display: block;
   grid-row: span 2;
 }
 
-.book__pitch .doc__portrait {
+.book__pitch .doc__portrait,
+.page--pricing .doc__body .doc__portrait {
   width: 2.75rem;
   height: 2.75rem;
   max-width: none;
@@ -6676,7 +6680,8 @@ a.story__card:focus-visible {
   background: var(--wash);
 }
 
-.book__pitch .doc__personName {
+.book__pitch .doc__personName,
+.page--pricing .doc__body .doc__personName {
   margin: 0;
   align-self: end;
   font-size: 0.9375rem;
@@ -6684,7 +6689,8 @@ a.story__card:focus-visible {
   line-height: 1.2;
 }
 
-.book__pitch .doc__personRole {
+.book__pitch .doc__personRole,
+.page--pricing .doc__body .doc__personRole {
   margin: 0;
   align-self: start;
   color: var(--caption);
@@ -7204,4 +7210,630 @@ a.story__card:focus-visible {
 
 .case .pull__by {
   margin-top: clamp(0.875rem, 2vw, 1.125rem);
+}
+
+
+/* The intro band already sets title and standfirst in two columns, which suits a
+   one-word title: "Pricing" left, the claim beside it. Only the claim's own
+   setting changes -- capped at 40 characters and a step up in size, so it reads
+   as the page's answer rather than as a caption under a headline. */
+.page--pricing .doc__head--intro .doc__standfirst {
+  max-width: 40ch;
+  font-size: clamp(1.0625rem, 1.3vw, 1.25rem);
+}
+
+
+/* --- Landing pages: pricing and the Skill pages ---------------------------
+   These use the section grammar the home page uses, not the prose grammar the
+   legal documents use. An earlier attempt invented a heading rail, which is why
+   the pages read as a different product: the site has no such device anywhere.
+
+   So each h2 is a section title at the home page's scale, opening a band that a
+   full-width hairline separates from the one above -- the same device .guides
+   draws down the home page. The questions under them are the site's own
+   accordion, the component the home page and the FAQ page already share. */
+
+.page--pricing .doc__body > h2,
+.page--order-processing .doc__body > h2 {
+  margin: 0;
+  max-width: 30ch;
+  /* .setup__title's scale, a step down: these open a band inside a page rather
+     than a section of the home page. */
+  font-size: clamp(1.5rem, 1rem + 1.6vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.028em;
+  text-wrap: balance;
+}
+
+/* The band: a rule to the measure's edges, and air above it. The first one needs
+   neither -- the standfirst above already closes on the head band's own rule. */
+.page--pricing .doc__body > h2:not(:first-of-type),
+.page--order-processing .doc__body > h2:not(:first-of-type) {
+  margin-top: clamp(3rem, 6vw, 5rem);
+  padding-top: clamp(2.25rem, 4.5vw, 3.5rem);
+  border-top: 1px solid var(--rule);
+}
+
+.page--pricing .doc__body > h2 + p,
+.page--order-processing .doc__body > h2 + p {
+  margin-top: clamp(0.875rem, 1.8vw, 1.25rem);
+}
+
+/* The opening claim, set at lead size. Not `p:first-of-type` on the Skill page:
+   the eyebrow above it is also a paragraph. */
+.page--pricing .doc__body > p:first-of-type,
+.page--order-processing .doc__body > .doc__note:first-child + p {
+  max-width: 46ch;
+  font-size: clamp(1.125rem, 1.5vw, 1.4375rem);
+  font-weight: 400;
+  line-height: 1.42;
+  letter-spacing: -0.016em;
+  color: var(--ink);
+}
+
+/* The shipped-Skill marker: a label, not a paragraph. */
+.page--order-processing .doc__body > .doc__note:first-child {
+  margin: 0 0 clamp(0.875rem, 2vw, 1.25rem);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent-deep);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* Photographs and the wide evidence blocks run the band's full width, clear of
+   the prose measure. */
+.page--order-processing .doc__body > .doc__shot,
+.page--order-processing .doc__body > .doc__panels,
+.page--order-processing .doc__body > .ptable__wrap {
+  margin-inline: 0;
+  max-width: none;
+}
+
+
+/* --- Pricing --------------------------------------------------------------
+   A landing page, not a document. The page used to run through the same prose
+   scaffolding the privacy policy does: one 39rem column set left inside an 88rem
+   band, every question folded shut, and the client marks emitted *inside* the
+   last fold, so the reference logos only existed for a reader who happened to
+   expand "What does it cost to start?". It read as a policy page because it was
+   built as one.
+
+   So it is bands now, the same grammar the home page uses: a dark masthead
+   carrying the claim and the sales CTA, a band for what sets the number, a band
+   for who is already paying it, the questions, and the three people who answer
+   the call. Nothing here invents a device the rest of the site does not have --
+   the hairline rules, the orange accent half of a headline, the green slab and
+   the pattern corner are all borrowed from the home page.
+   ------------------------------------------------------------------------- */
+
+/* The masthead. Full-bleed green, left-set: the claim never crosses into the
+   right third, which is the half the pattern corner takes. */
+.pricehead {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(2.75rem, 6vw, 5rem) 0 0;
+  background: var(--green);
+  color: var(--on-dark);
+}
+
+/* Same corner the subpage mastheads take, a shade stronger: this band is taller
+   and the type stops well short of it. */
+.pricehead .pat {
+  position: absolute;
+  top: 0;
+  /* left: auto is load-bearing -- see .doc__head .pat for why. */
+  left: auto;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  width: min(42%, 34rem);
+  opacity: 0.2;
+  pointer-events: none;
+  background-image: url('assets/pattern.svg');
+  background-size: 320px auto;
+  background-position: right top;
+  background-repeat: repeat;
+  -webkit-mask-image: linear-gradient(to bottom left, #000 0%, #000 12%, transparent 74%);
+  mask-image: linear-gradient(to bottom left, #000 0%, #000 12%, transparent 74%);
+}
+
+.pricehead__inner {
+  position: relative;
+  z-index: 1;
+  margin: 0 auto;
+  max-width: 88rem;
+  padding-inline: clamp(1.5rem, 4vw, 4rem);
+}
+
+.pricehead__eyebrow {
+  margin: 0;
+  color: var(--on-dark-dim);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+/* The page's one big statement. The accent half takes its own line the way
+   .closer__title's does, so it reads as claim over correction rather than as a
+   sentence that happens to change colour halfway. */
+.pricehead__title {
+  margin: clamp(1rem, 2.2vw, 1.625rem) 0 0;
+  max-width: 26ch;
+  font-size: clamp(2rem, 1rem + 3.4vw, 3.875rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  hyphens: none;
+}
+
+.pricehead__title em {
+  display: block;
+  font-style: normal;
+  color: var(--accent);
+}
+
+.pricehead__deck {
+  margin: clamp(1.25rem, 2.5vw, 1.75rem) 0 0;
+  max-width: 52ch;
+  color: var(--on-dark-dim);
+  font-size: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.pricehead__acts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(1rem, 2.5vw, 1.75rem);
+  margin: clamp(1.75rem, 3.5vw, 2.5rem) 0 0;
+}
+
+.pricehead__alt {
+  color: var(--on-dark-dim);
+  font-size: 0.9375rem;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 0.2s var(--ease);
+}
+
+.pricehead__alt:hover {
+  color: var(--bone);
+}
+
+/* The three things that are true whatever the number turns out to be. A ruled
+   rail across the foot of the band, which is also what gives the masthead a
+   floor instead of stopping wherever the copy ends. */
+.pricehead__facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  margin: clamp(2.5rem, 5vw, 4rem) 0 0;
+  padding: 0;
+  border-top: 1px solid rgba(252, 252, 251, 0.18);
+  list-style: none;
+}
+
+.pricehead__facts li {
+  position: relative;
+  margin: 0;
+  padding: clamp(1.125rem, 2.2vw, 1.5rem) clamp(1rem, 2vw, 1.75rem)
+    clamp(1.75rem, 3.5vw, 2.75rem) 0;
+  color: var(--on-dark);
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+
+/* The rules between the cells, not around them: the outer two edges are the
+   band's own margin and do not want a line. */
+.pricehead__facts li + li {
+  padding-left: clamp(1rem, 2vw, 1.75rem);
+  border-left: 1px solid rgba(252, 252, 251, 0.18);
+}
+
+/* A square, not a tick. The wordmark is three rectangles; a checkmark would be
+   the first rounded shape on the page. */
+.pricehead__facts li::before {
+  content: '';
+  display: block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin: 0 0 0.75rem;
+  background: var(--accent);
+}
+
+@media (max-width: 47.999em) {
+  .pricehead .pat {
+    width: 60%;
+    opacity: 0.24;
+  }
+
+  .pricehead__facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pricehead__facts li + li {
+    padding-left: 0;
+    border-left: 0;
+    border-top: 1px solid rgba(252, 252, 251, 0.18);
+  }
+
+  .pricehead__facts li {
+    padding-bottom: 1.25rem;
+  }
+}
+
+/* --- The bands ----------------------------------------------------------- */
+
+/* Same column the rest of the site sets, so the .guides rules land on the
+   content edges rather than somewhere near them. */
+.pband {
+  --guide-col: 88rem;
+  padding: clamp(2.75rem, 5.5vw, 4.5rem) 0 clamp(3rem, 6vw, 5rem);
+  background: var(--bone);
+}
+
+.pband--refs {
+  background: var(--wash);
+}
+
+.pband__inner {
+  position: relative;
+}
+
+/* The landing-page h2 rule further up gives each heading its own top rule and
+   the air above it, because on a single-column page the heading *is* the band
+   boundary. Here the band is a real element with its own rule, so the heading
+   only has to be a heading. */
+.pband .doc__body > h2 {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+  max-width: 24ch;
+}
+
+/* And the lead paragraph is a lead in every band, not only the first one. */
+.pband .doc__body > p:first-of-type {
+  margin: clamp(0.875rem, 1.8vw, 1.25rem) 0 0;
+  max-width: 56ch;
+  color: var(--caption);
+  font-size: clamp(1rem, 0.95rem + 0.3vw, 1.0625rem);
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: 0;
+}
+
+/* --- What sets the number ------------------------------------------------ */
+
+/* The four drivers against the flat list beside them. Two columns, because the
+   page's whole argument is that one side moves and the other does not, and
+   stacking them makes that a claim you have to remember rather than see. */
+.pband--drivers .pband__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.85fr);
+  column-gap: clamp(2rem, 4vw, 4rem);
+  align-items: start;
+}
+
+.pband--drivers .pband__inner > h2,
+.pband--drivers .pband__inner > p:first-of-type {
+  grid-column: 1 / -1;
+}
+
+/* A quadrant, ruled rather than boxed. Cards would have made four objects; the
+   rules make one table of four readings, which is what a price driver is. */
+.dials {
+  grid-column: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin: clamp(2rem, 4vw, 3rem) 0 0;
+  padding: 0;
+  max-width: none;
+  list-style: none;
+}
+
+.doc__body .dial {
+  margin: 0;
+  max-width: none;
+  padding: clamp(1.125rem, 2.2vw, 1.625rem) clamp(1.25rem, 2.5vw, 2rem)
+    clamp(1.5rem, 3vw, 2.25rem) 0;
+  border-top: 1px solid var(--rule);
+}
+
+.doc__body .dial:nth-child(even) {
+  padding-right: 0;
+  padding-left: clamp(1.25rem, 2.5vw, 2rem);
+  border-left: 1px solid var(--rule);
+}
+
+/* 22px, so the brand orange clears AA as large text. There is no small orange
+   anywhere on bone for the same reason. */
+.dial__n {
+  display: block;
+  color: var(--accent);
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.pband .doc__body .dial__head {
+  margin: 0.75rem 0 0;
+  max-width: none;
+  font-size: clamp(1.0625rem, 1.4vw, 1.25rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.014em;
+}
+
+.pband .doc__body .dial__body {
+  margin: 0.5rem 0 0;
+  max-width: 44ch;
+  color: var(--caption);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+/* The counterweight: the same green slab the closing band uses, so "included"
+   reads as the product rather than as a second list of features. */
+.kit {
+  grid-column: 2;
+  margin: clamp(2rem, 4vw, 3rem) 0 0;
+  padding: clamp(1.5rem, 2.8vw, 2rem);
+  background: var(--green);
+  color: var(--on-dark);
+}
+
+.pband .doc__body .kit__head {
+  margin: 0;
+  max-width: none;
+  color: var(--bone);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.kit__list {
+  margin: clamp(0.875rem, 2vw, 1.25rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kit__list li {
+  position: relative;
+  margin: 0;
+  padding: 0.6875rem 0 0.6875rem 1.625rem;
+  border-top: 1px solid rgba(252, 252, 251, 0.14);
+  color: var(--on-dark);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.kit__list li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.kit__list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 1.0625rem;
+  width: 0.4375rem;
+  height: 0.4375rem;
+  background: var(--accent);
+}
+
+.kit__list li:first-child::before {
+  top: 0.375rem;
+}
+
+/* The credit mechanism, as a footnote to the band rather than a section of its
+   own: it explains how the number is metered, which nobody reads before they
+   care what the number is. */
+.pband .doc__body .kit__note {
+  grid-column: 1 / -1;
+  margin: clamp(2rem, 4vw, 3rem) 0 0;
+  padding-top: clamp(1.125rem, 2.5vw, 1.625rem);
+  max-width: 74ch;
+  border-top: 1px solid var(--rule);
+  color: var(--caption);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 61.999em) {
+  .pband--drivers .pband__inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dials,
+  .kit {
+    grid-column: 1;
+  }
+
+  .kit {
+    margin-top: clamp(1.75rem, 3.5vw, 2.5rem);
+  }
+}
+
+@media (max-width: 37.499em) {
+  .dials {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .doc__body .dial:nth-child(even) {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+/* --- Reference clients --------------------------------------------------- */
+
+/* The belt opens the band, so it needs neither the rule nor the air the label
+   carries when it follows a section of prose. */
+.pband--refs .doc__body .doc__proofLabel {
+  margin: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.pband--refs .doc__body .belt {
+  margin-bottom: clamp(2.25rem, 5vw, 3.5rem);
+}
+
+/* Named references, not just marks: a logo proves someone signed, a system and a
+   sentence prove what they signed for. Same hairline-as-shadow the customer
+   cards use, so neighbours share one rule. */
+.refs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1px;
+  margin: clamp(1.75rem, 3.5vw, 2.5rem) 0 0;
+  padding: 0;
+  max-width: none;
+  list-style: none;
+}
+
+.doc__body .ref {
+  display: flex;
+  margin: 0;
+  max-width: none;
+}
+
+.pband .doc__body a.ref__card {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: clamp(1.375rem, 2.6vw, 1.875rem);
+  background: var(--bone);
+  color: var(--ink);
+  text-decoration: none;
+  box-shadow: 0 0 0 1px var(--rule);
+  transition: background-color 0.2s var(--ease);
+}
+
+.pband .doc__body a.ref__card:hover {
+  background: var(--white);
+}
+
+.pband .doc__body a.ref__card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.ref__co {
+  font-size: clamp(1.0625rem, 1.5vw, 1.1875rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.012em;
+}
+
+.ref__line {
+  color: var(--caption);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+/* Ruled off and pushed to the foot, so cards with different sentence lengths
+   still line their systems up. */
+.ref__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: auto;
+  padding-top: clamp(0.875rem, 2vw, 1.125rem);
+  border-top: 1px solid var(--rule);
+}
+
+.ref__erp {
+  color: var(--accent-deep);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.ref__go {
+  color: var(--caption);
+  transition: transform 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+a.ref__card:hover .ref__go {
+  color: var(--accent);
+  transform: translateX(0.25rem);
+}
+
+/* --- Questions, and the three people who answer them --------------------- */
+
+/* Both closing bands set their heading in a rail beside the content. A single
+   column would have left the same empty right half the document template did,
+   and a section title is exactly the thing that can hold it. */
+.pband--faq .pband__inner,
+.pband--talk .pband__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 19rem) minmax(0, 1fr);
+  column-gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.pband--faq .pband__inner > h2,
+.pband--talk .pband__inner > h2 {
+  grid-column: 1;
+  position: sticky;
+  top: clamp(1.5rem, 4vw, 3rem);
+}
+
+.pband--faq .pband__inner > *:not(h2),
+.pband--talk .pband__inner > *:not(h2) {
+  grid-column: 2;
+}
+
+/* The first fold sits on the heading's own baseline rather than a line below
+   it: the band's rule is already the separator above them. */
+.pband--faq .doc__body > h2 + .doc__fold {
+  margin-top: 0;
+}
+
+.pband--faq .doc__body .doc__fold {
+  max-width: none;
+}
+
+.pband--talk .doc__body > p:first-of-type {
+  margin-top: 0;
+  max-width: 62ch;
+  color: var(--ink);
+}
+
+/* The closing band runs the full width under both columns. */
+.pband--talk .doc__body .docend {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 55.999em) {
+  .pband--faq .pband__inner,
+  .pband--talk .pband__inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pband--faq .pband__inner > h2,
+  .pband--talk .pband__inner > h2 {
+    grid-column: 1;
+    position: static;
+    margin-bottom: clamp(1.25rem, 3vw, 1.75rem);
+  }
+
+  .pband--faq .pband__inner > *:not(h2),
+  .pband--talk .pband__inner > *:not(h2) {
+    grid-column: 1;
+  }
 }

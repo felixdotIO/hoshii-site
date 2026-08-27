@@ -14,7 +14,7 @@
     <meta property="og:url" content="https://www.hoshii.ai/resources/" />
     <meta property="og:image" content="https://www.hoshii.ai/assets/img/hero-slot.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="stylesheet" href="/styles.css?v=571" />
+    <link rel="stylesheet" href="/styles.css?v=577" />
   </head>
   <body>
     <header class="titlebar">
@@ -72,7 +72,7 @@
       </nav>
     </header>
 
-    <main class="doc doc--wide">
+    <main class="doc page--resources doc--wide">
       <div class="doc__head">
         <div class="doc__inner">
           <h1 class="doc__title">Resources</h1>
@@ -91,7 +91,7 @@
         </div>
         <ul class="res__list">
           <li class="res__item" data-kind="ai-automation">
-            <a class="res__card" href="https://www.hoshii.ai/blog-posts/what-happens-when-an-ai-agent-reads-your-customer-orders" target="_blank" rel="noopener">
+            <a class="res__card" href="https://www.hoshii.ai/blog/what-happens-when-an-ai-agent-reads-your-customer-orders" target="_blank" rel="noopener">
               <img class="res__shot" src="/assets/posts/post-agent.jpg" alt="" width="960" height="720" loading="lazy" />
               <span class="res__kind">AI &amp; Automation</span>
               <span class="res__title">What Happens When an AI Agent Reads Your Customer Orders</span>
@@ -100,7 +100,7 @@
             </a>
           </li>
           <li class="res__item" data-kind="industry">
-            <a class="res__card" href="https://www.hoshii.ai/blog-posts/how-b2b-wholesale-actually-works-in-2026-(it-still-starts-in-an-inbox)" target="_blank" rel="noopener">
+            <a class="res__card" href="https://www.hoshii.ai/blog/how-b2b-wholesale-actually-works-in-2026-(it-still-starts-in-an-inbox)" target="_blank" rel="noopener">
               <img class="res__shot" src="/assets/posts/post-inbox.jpg" alt="" width="540" height="960" loading="lazy" />
               <span class="res__kind">Industry</span>
               <span class="res__title">How B2B Wholesale Actually Works in 2026</span>
@@ -109,7 +109,7 @@
             </a>
           </li>
           <li class="res__item" data-kind="product">
-            <a class="res__card" href="https://www.hoshii.ai/blog-posts/partnership-announcement-csb-system-x-hoshii" target="_blank" rel="noopener">
+            <a class="res__card" href="https://www.hoshii.ai/blog/partnership-announcement-csb-system-x-hoshii" target="_blank" rel="noopener">
               <img class="res__shot" src="/assets/posts/post-cost.jpg" alt="" width="540" height="960" loading="lazy" />
               <span class="res__kind">Product</span>
               <span class="res__title">Partnership Announcement: CSB&#8209;System x Hoshii</span>
@@ -118,7 +118,7 @@
             </a>
           </li>
           <li class="res__item" data-kind="industry">
-            <a class="res__card" href="https://www.hoshii.ai/blog-posts/how-order-errors-drive-customer-churn-in-wholesale-distribution" target="_blank" rel="noopener">
+            <a class="res__card" href="https://www.hoshii.ai/blog/how-order-errors-drive-customer-churn-in-wholesale-distribution" target="_blank" rel="noopener">
               <img class="res__shot" src="/assets/posts/post-inbox.jpg" alt="" width="540" height="960" loading="lazy" />
               <span class="res__kind">Industry</span>
               <span class="res__title">How Order Errors Drive Customer Churn in Wholesale Distribution</span>
@@ -127,7 +127,7 @@
             </a>
           </li>
           <li class="res__item" data-kind="operations">
-            <a class="res__card" href="https://www.hoshii.ai/blog-posts/the-hidden-cost-of-manual-order-processing-in-b2b" target="_blank" rel="noopener">
+            <a class="res__card" href="https://www.hoshii.ai/blog/the-hidden-cost-of-manual-order-processing-in-b2b" target="_blank" rel="noopener">
               <img class="res__shot" src="/assets/posts/post-cost.jpg" alt="" width="540" height="960" loading="lazy" />
               <span class="res__kind">Operations</span>
               <span class="res__title">The Hidden Cost of Manual Order Processing in B2B</span>
@@ -252,10 +252,13 @@
       // and these bands do not otherwise have one to spare.
       (function () {
         // Surfaces whose pattern is visible enough to be worth touching.
-        const REACT = new Set(['.doc__head', '.askrow', '.closer', '.docend']);
+        const REACT = new Set([
+          '.doc__head', '.pricehead', '.askrow', '.closer', '.docend'
+        ]);
 
         const HOSTS = [
           ['.doc__head', ['pat']],
+          ['.pricehead', ['pat']],
           ['.askrow', ['pat--l', 'pat--r']],
           ['.closer', ['pat']],
           ['.pitch__panel', ['pat']],
