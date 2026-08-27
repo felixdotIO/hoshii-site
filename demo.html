@@ -200,20 +200,6 @@
           </figcaption>
         </figure>
         </div>
-        <ul class="figs">
-          <li class="figs__item">
-            <span class="figs__n" data-count="500+">500+</span>
-            <span class="figs__l">teams running Hoshii</span>
-          </li>
-          <li class="figs__item">
-            <span class="figs__n" data-count="20+">20+</span>
-            <span class="figs__l">ERP systems written into</span>
-          </li>
-          <li class="figs__item">
-            <span class="figs__n" data-count="30">30</span>
-            <span class="figs__l">minutes, start to finish</span>
-          </li>
-        </ul>
         </div>
       </div>
     </main>
@@ -288,55 +274,6 @@
           mobileNav.hidden = open;
         }});
       }}
-    </script>
-
-    <script>
-      // The figures count up once, the first time they are on screen. The final
-      // value is already in the markup and is only ever replaced by a number on
-      // the way to it, so no-JS and reduced-motion readers see the real figure
-      // and nothing here can leave a wrong one behind.
-      (function () {
-        const figs = document.querySelectorAll('.figs__n[data-count]');
-        if (!figs.length) return;
-        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-        const run = (el) => {
-          const raw = el.dataset.count;
-          // Split the number off any prefix or suffix -- "100+" counts to 100
-          // and keeps its plus, "CHF 20" keeps its currency.
-          const m = raw.match(/^(\D*)([\d.,]+)(\D*)$/);
-          if (!m) return;
-          const [, pre, digits, post] = m;
-          const target = parseFloat(digits.replace(/,/g, ''));
-          if (!isFinite(target)) return;
-          const grouped = digits.includes(',');
-          const dur = 1100;
-          let t0 = null;
-          const step = (t) => {
-            if (t0 === null) t0 = t;
-            const k = Math.min(1, (t - t0) / dur);
-            // Ease out, so it decelerates onto the value instead of stopping
-            // dead on it.
-            const v = Math.round(target * (1 - Math.pow(1 - k, 3)));
-            el.textContent = pre + (grouped ? v.toLocaleString('en-US') : v) + post;
-            if (k < 1) requestAnimationFrame(step);
-            else el.textContent = raw;
-          };
-          requestAnimationFrame(step);
-        };
-
-        const io = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((e) => {
-              if (!e.isIntersecting) return;
-              io.unobserve(e.target);
-              run(e.target);
-            });
-          },
-          { threshold: 0.6 }
-        );
-        figs.forEach((el) => io.observe(el));
-      })();
     </script>
 
 

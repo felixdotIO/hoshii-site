@@ -1401,11 +1401,6 @@ SLOT: 20&ndash;30|Systems and numbers|What connecting yours takes, your price at
 ENDAGENDA:
 PULL: The 2 to 3 hours a day we used to process orders have been cut in half. New joiners also have impact significantly faster.|Thomas Locher|Head of Sales, Max Schwarz AG|thomas-locher.jpg
 ENDPAIR:
-STATS:
-STAT: 500+|teams running Hoshii
-STAT: 20+|ERP systems written into
-STAT: 30|minutes, start to finish
-ENDSTATS:
 """
 
 
