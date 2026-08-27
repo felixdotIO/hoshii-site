@@ -14,7 +14,7 @@
     <meta property="og:url" content="https://www.hoshii.ai/customers/stutzer-service.html" />
     <meta property="og:image" content="https://www.hoshii.ai/assets/img/hero-slot.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="stylesheet" href="../styles.css?v=551" />
+    <link rel="stylesheet" href="../styles.css?v=566" />
   </head>
   <body>
     <header class="titlebar">
@@ -43,10 +43,33 @@
           />
         </a>
 
+        <nav class="nav" aria-label="Primary">
+          <a class="nav__btn" href="../index.html#product">Product</a>
+          <a class="nav__btn" href="../customers.html">Customer stories</a>
+          <a class="nav__btn" href="../pricing.html">Pricing</a>
+        </nav>
+
         <div class="titlebar__actions">
-          <a class="btn-os btn-os--accent" href="../index.html">Back to site<span class="btn-os__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg></span></a>
+          <a class="btn-os btn-os--accent" href="../demo.html">Book a demo<span class="btn-os__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg></span></a>
+
+          <button
+            class="menu-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="mobile-nav"
+            aria-label="Menu"
+          >
+            <span class="menu-toggle__bar"></span>
+            <span class="menu-toggle__bar"></span>
+          </button>
         </div>
       </div>
+
+      <nav class="mobile-nav" id="mobile-nav" aria-label="Primary" hidden>
+        <a class="mobile-nav__link" href="../index.html#product">Product</a>
+        <a class="mobile-nav__link" href="../customers.html">Customer stories</a>
+        <a class="mobile-nav__link" href="../pricing.html">Pricing</a>
+      </nav>
     </header>
 
     <main class="doc">
@@ -58,20 +81,23 @@
       </div>
 
       <div class="doc__band guides">
-        <div class="doc__inner doc__body">
-        <div class="doc__video">
-          <iframe src="https://player.vimeo.com/video/1083549816?dnt=1" title="Stutzer Service AG on running Hoshii" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-        </div>
+        <div class="doc__inner case doc__body">
+        <figure class="doc__shot">
+          <img src="../assets/customers/cover-stutzer.jpg" alt="A Thai curry with rice and basil, plated" width="1230" height="779" />
+        </figure>
         <p>At Stutzer Service AG, order processing is a highly operational, fast-moving core activity. With more than 100 orders per day, handled by a team of over 15 people, the organisation processes a large and diverse volume of incoming orders every day.</p>
-        <p>Unlike highly standardised order environments, much of this work does not start in the ERP system itself. Orders arrive in many different formats: unstructured documents, handwritten notes, scanned PDFs, emails, and mixed attachments. Content varies significantly in layout and completeness and is submitted in multiple languages, including German, French, and Thai, both typed and handwritten.</p>
-        <p>Before any ERP process can begin, these orders must be interpreted, understood, and manually prepared, a step that is time-consuming and heavily dependent on individual experience.</p>
+        <p>Unlike highly standardised order environments, much of this work does not start in the ERP system itself. Orders arrive in many different formats: unstructured documents, handwritten notes, scanned PDFs, emails, and mixed attachments. Content varies significantly in layout and completeness and is submitted in multiple languages, including <strong>German, French, and Thai, both typed and handwritten</strong>.</p>
+        <p>Before any ERP process can begin, these orders must be interpreted, understood, and manually prepared, a step that is time-consuming and <strong>heavily dependent on individual experience</strong>.</p>
         <p>To manage this complexity at scale, Stutzer Service AG uses Hoshii operationally in its daily order processing.</p>
-        <p>Hoshii is currently connected to their Microsoft Dynamics Navision environment via SFTP, where it prepares and transfers structured order data directly into the ERP.</p>
+        <p>Hoshii is currently connected to their <strong>Microsoft Dynamics Navision</strong> environment via SFTP, where it prepares and transfers structured order data directly into the ERP.</p>
         <p>Incoming documents are automatically read and understood, including unstructured layouts, handwritten content, and multilingual input. Relevant information such as articles, quantities, delivery details, and customer references is extracted and prepared in a consistent format for ERP processing.</p>
-        <p>The team continues to work in its familiar tools and communication channels. Orders arrive as they always have. In the background, Hoshii reduces manual interpretation effort and translates complexity into structured data that can be reliably processed in the ERP.</p>
-        <p>As a result, Stutzer Service AG is able to handle very high order volumes more effectively. Processing becomes faster and more consistent, dependency on individual knowledge is reduced, and operational know-how is captured centrally rather than residing only with experienced employees. This also makes onboarding new team members significantly easier.</p>
+            <blockquote class="lift">
+              <p class="lift__text">The team continues to work in its familiar tools and communication channels. Orders arrive as they always have.</p>
+            </blockquote>
+        <p>In the background, Hoshii reduces manual interpretation effort and translates complexity into structured data that can be reliably processed in the ERP.</p>
+        <p>As a result, Stutzer Service AG is able to handle very high order volumes more effectively. <strong>Processing becomes faster and more consistent</strong>, dependency on individual knowledge is reduced, and operational know-how is captured centrally rather than residing only with experienced employees. This also makes onboarding new team members significantly easier.</p>
         <p>Until the end of 2025, parts of the organisation operated under the name George Weiss Lebensmittel AG. On 1 January 2026, George Weiss Lebensmittel AG merged with Stutzer Service AG. Hoshii supported this transition by integrating the newly added team in Villars alongside the existing team in Fahrenweid, ensuring consistent order processing across locations during the merger.</p>
-        <p>Looking ahead, Stutzer Service AG is preparing the next step in its ERP setup. In April, the connection will move from Microsoft Dynamics Navision to Microsoft Dynamics 365 Business Central, replacing the SFTP integration with a REST API-based connection. This will enable deeper integration, faster data exchange, and access to additional functionality as the organisation continues to scale.</p>
+        <p>Looking ahead, Stutzer Service AG is preparing the next step in its ERP setup. In April, the connection will move from Microsoft Dynamics Navision to <strong>Microsoft Dynamics 365 Business Central</strong>, replacing the SFTP integration with a REST API-based connection. This will enable deeper integration, faster data exchange, and access to additional functionality as the organisation continues to scale.</p>
         <aside class="docend">
           <p class="docend__head">Bring your most complex order. We will show you what happens to it.</p>
           <a class="btn-os btn-os--fill btn-os--lg" href="../demo.html">Book a demo<span class="btn-os__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg></span></a>
@@ -138,6 +164,19 @@
         <span>Z&uuml;rich, Switzerland</span>
       </p>
     </footer>
+
+    <script>
+      // The only script these pages need: the mobile menu on the full header.
+      const toggle = document.querySelector('.menu-toggle');
+      const mobileNav = document.querySelector('.mobile-nav');
+      if (toggle && mobileNav) {{
+        toggle.addEventListener('click', () => {{
+          const open = toggle.getAttribute('aria-expanded') === 'true';
+          toggle.setAttribute('aria-expanded', String(!open));
+          mobileNav.hidden = open;
+        }});
+      }}
+    </script>
 
 
     <script>

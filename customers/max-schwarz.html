@@ -14,7 +14,7 @@
     <meta property="og:url" content="https://www.hoshii.ai/customers/max-schwarz.html" />
     <meta property="og:image" content="https://www.hoshii.ai/assets/img/hero-slot.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="stylesheet" href="../styles.css?v=551" />
+    <link rel="stylesheet" href="../styles.css?v=566" />
   </head>
   <body>
     <header class="titlebar">
@@ -43,10 +43,33 @@
           />
         </a>
 
+        <nav class="nav" aria-label="Primary">
+          <a class="nav__btn" href="../index.html#product">Product</a>
+          <a class="nav__btn" href="../customers.html">Customer stories</a>
+          <a class="nav__btn" href="../pricing.html">Pricing</a>
+        </nav>
+
         <div class="titlebar__actions">
-          <a class="btn-os btn-os--accent" href="../index.html">Back to site<span class="btn-os__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg></span></a>
+          <a class="btn-os btn-os--accent" href="../demo.html">Book a demo<span class="btn-os__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg></span></a>
+
+          <button
+            class="menu-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="mobile-nav"
+            aria-label="Menu"
+          >
+            <span class="menu-toggle__bar"></span>
+            <span class="menu-toggle__bar"></span>
+          </button>
         </div>
       </div>
+
+      <nav class="mobile-nav" id="mobile-nav" aria-label="Primary" hidden>
+        <a class="mobile-nav__link" href="../index.html#product">Product</a>
+        <a class="mobile-nav__link" href="../customers.html">Customer stories</a>
+        <a class="mobile-nav__link" href="../pricing.html">Pricing</a>
+      </nav>
     </header>
 
     <main class="doc">
@@ -58,16 +81,26 @@
       </div>
 
       <div class="doc__band guides">
-        <div class="doc__inner doc__body">
+        <div class="doc__inner case doc__body">
         <div class="doc__video">
           <iframe src="https://fast.wistia.net/embed/iframe/213shm0tsd?videoFoam=true" title="Thomas Locher of Max Schwarz AG on running Hoshii" loading="lazy" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
         </div>
-        <p>At Max Schwarz AG, a significant share of daily orders is placed by phone and received as voicemails outside of business hours. Especially overnight, a high volume of customer orders accumulates before the working day even begins.</p>
-        <p>These voicemails are typically recorded in Swiss German, often spoken quickly and informally. Before any ERP process can start, messages must be listened to carefully, understood correctly, and manually transferred into the system. This task is time-consuming and places a high dependency on employees who are fluent in Swiss German.</p>
-        <p>To handle this workload more efficiently, Max Schwarz AG uses Hoshii in daily operations. Hoshii automatically transcribes Swiss-German voicemails and makes the content available in clear Standard German. Based on this transcription, order information is structured and prepared for processing in Fruchtmanager, the company&rsquo;s ERP system.</p>
-        <p>Orders that previously required repeated listening and interpretation are now available as written, structured information as soon as the team starts its day. This significantly reduces manual effort and accelerates order processing.</p>
-        <p>A key benefit is the relief for employees who are not fluent in Swiss German. Instead of relying on dialect comprehension, they can work directly with Standard German transcriptions, ensuring consistent understanding and reliable order handling across the team.</p>
-        <p>As a result, Max Schwarz AG is able to process high overnight voicemail volumes more efficiently, start ERP workflows earlier in the day, and reduce dependency on individual language skills. Communication is transformed into structured input for the ERP, enabling smoother operations and more balanced workload distribution within the team.</p>
+        <p>At Max Schwarz AG, a significant share of daily orders is placed by phone and received as <strong>voicemails outside of business hours</strong>. Especially overnight, a high volume of customer orders accumulates before the working day even begins.</p>
+        <p>These voicemails are typically recorded in <strong>Swiss German, often spoken quickly and informally</strong>. Before any ERP process can start, messages must be listened to carefully, understood correctly, and manually transferred into the system. This task is time-consuming and places a high dependency on employees who are fluent in Swiss German.</p>
+        <p>To handle this workload more efficiently, Max Schwarz AG uses Hoshii in daily operations. Hoshii automatically transcribes Swiss-German voicemails and makes the content available in <strong>clear Standard German</strong>. Based on this transcription, order information is structured and prepared for processing in <strong>Fruchtmanager</strong>, the company&rsquo;s ERP system.</p>
+        <p>Orders that previously required repeated listening and interpretation are now available as written, structured information <strong>as soon as the team starts its day</strong>. This significantly reduces manual effort and accelerates order processing.</p>
+        <figure class="pull">
+          <blockquote class="pull__text">The 2 to 3 hours a day we used to process orders have been cut in half. New joiners also have impact significantly faster.</blockquote>
+          <figcaption class="pull__by">
+            <img class="pull__face" src="../assets/img/thomas-locher.jpg" alt="" width="288" height="288" loading="lazy" />
+            <span class="pull__who">
+              <span class="pull__name">Thomas Locher</span>
+              <span class="pull__role">Head of Sales, Max Schwarz AG</span>
+            </span>
+          </figcaption>
+        </figure>
+        <p>A key benefit is the <strong>relief for employees who are not fluent in Swiss German</strong>. Instead of relying on dialect comprehension, they can work directly with Standard German transcriptions, ensuring consistent understanding and reliable order handling across the team.</p>
+        <p>As a result, Max Schwarz AG is able to process high overnight voicemail volumes more efficiently, <strong>start ERP workflows earlier in the day</strong>, and reduce dependency on individual language skills. Communication is transformed into structured input for the ERP, enabling smoother operations and more balanced workload distribution within the team.</p>
         <aside class="docend">
           <p class="docend__head">Bring your most complex order. We will show you what happens to it.</p>
           <a class="btn-os btn-os--fill btn-os--lg" href="../demo.html">Book a demo<span class="btn-os__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg></span></a>
@@ -134,6 +167,19 @@
         <span>Z&uuml;rich, Switzerland</span>
       </p>
     </footer>
+
+    <script>
+      // The only script these pages need: the mobile menu on the full header.
+      const toggle = document.querySelector('.menu-toggle');
+      const mobileNav = document.querySelector('.mobile-nav');
+      if (toggle && mobileNav) {{
+        toggle.addEventListener('click', () => {{
+          const open = toggle.getAttribute('aria-expanded') === 'true';
+          toggle.setAttribute('aria-expanded', String(!open));
+          mobileNav.hidden = open;
+        }});
+      }}
+    </script>
 
 
     <script>

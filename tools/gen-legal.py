@@ -27,7 +27,7 @@ SITE = pathlib.Path(__file__).resolve().parent.parent
 # The domain this site will serve from once hoshii.ai points here.
 ORIGIN = "https://www.hoshii.ai/"
 
-CSS_V = "551"
+CSS_V = "566"
 
 # Paths are relative, never root-relative: Pages serves this repo from
 # /hoshii-site/, so a leading slash would resolve above the site root. Each page
@@ -56,7 +56,7 @@ DOCS = [
     (".", "careers", "Come build the inbox B2B operations runs on."),
     (".", "resources", "Resources"),
     (".", "customers", "Hoshii is clearing the inboxes<span class=\"doc__line\">of <span class=\"doc__accent\">Europe\u2019s busiest order desks.</span></span>"),
-    (".", "pricing", "Unlimited users on every plan.<span class=\"doc__line\">Credits that roll over, not reset.</span>"),
+    (".", "pricing", "Pricing"),
     ("customers", "stutzer-service", "High-volume, multilingual order processing on Microsoft Dynamics"),
     ("customers", "egger-gemuesebau", "Voicemail and PDF orders, straight into the CSB ERP"),
     # marinello and adank-davos deliberately have no page: their Framer Content
@@ -202,6 +202,10 @@ def render(block, fold=False, up="."):
             out.append(f'          <li class="plan{rec}">')
             if tag:
                 out.append(f'            <p class="plan__tag">{inline(tag)}</p>')
+            else:
+                # Same box, nothing painted: the headline below it starts on the
+                # same line as the badged card's does.
+                out.append('            <p class="plan__tag plan__tag--none" aria-hidden="true">&nbsp;</p>')
             out.append(f'            <p class="plan__name">{inline(name)}</p>')
             out.append(f'            <p class="plan__pitch">{inline(pitch)}</p>')
             out.append('            <p class="plan__price">')
@@ -243,6 +247,21 @@ def render(block, fold=False, up="."):
                     c, cls = "&ndash;", ' class="is-no"'
                 out.append(f"                <td{cls}>{inline(c)}</td>")
             out.append("              </tr>")
+        elif kind == "LIFT":
+            # A sentence lifted out of the article itself, set large. Deliberately
+            # unattributed: putting words in a named person's mouth to fill a
+            # quote slot is not a design decision anyone gets to make.
+            out.append('            <blockquote class="lift">')
+            out.append(f'              <p class="lift__text">{inline(rest)}</p>')
+            out.append("            </blockquote>")
+        elif kind == "SHOT":
+            src, label = rest.split("|", 1)
+            out.append('        <figure class="doc__shot">')
+            out.append(
+                f'          <img src="{up}/assets/customers/{src}" alt="{inline(label)}" '
+                'width="1230" height="779" />'
+            )
+            out.append("        </figure>")
         elif kind == "VIDEO":
             provider, vid, label = rest.split("|", 2)
             src = (
@@ -430,39 +449,6 @@ def render(block, fold=False, up="."):
                     )
                 out.append("          </ul>")
             out.append("        </div>")
-        elif kind == "LOGOS":
-            MARKS = BELT_MARKS
-        elif kind == "__never__":
-            MARKS = {
-                "casadelvino": ("Casa del Vino", "paper", "2.5rem"),
-                "staempfli": ("St\u00e4mpfli", "paper", "2.375rem"),
-                "chiefs": ("Chiefs", "paper", "4rem"),
-                "stutzer": ("Stutzer", "alpha", "3.25rem"),
-                "igp": ("IGP Powder Coatings", "paper", "2rem"),
-                "schuetzengarten": ("Sch\u00fctzengarten", "solid", "3.875rem"),
-                "egger": ("Egger Gem\u00fcsebau", "paper", "2.75rem"),
-                "safruits": ("Safruits", "paper", "2.75rem"),
-            }
-            # "label" or "label|slug,slug,...". A page that already features a
-            # customer in full should not repeat its mark down here.
-            label, _, picked = rest.partition("|")
-            label = label.strip()
-            keys = [k.strip() for k in picked.split(",") if k.strip()] or [
-                "casadelvino", "staempfli", "chiefs", "stutzer", "igp",
-                "schuetzengarten",
-            ]
-            marks = [(k,) + MARKS[k] for k in keys]
-            if label:
-                out.append(f'        <p class="doc__proofLabel">{inline(label)}</p>')
-            out.append('        <ul class="doc__proof">')
-            for slug_, alt, treat, h in marks:
-                w, hh = CLIENT_DIMS[slug_]
-                out.append(
-                    f'          <li><img class="doc__mark doc__mark--{treat}" '
-                    f'style="--h: {h}" src="{up}/assets/clients/n-{slug_}.png" '
-                    f'alt="{alt}" width="{w}" height="{hh}" loading="lazy" /></li>'
-                )
-            out.append("        </ul>")
         elif kind == "PANELS":
             out.append('        <ul class="doc__panels">')
         elif kind == "ENDPANELS":
@@ -646,7 +632,7 @@ FULL_HEADER = """    <header class="titlebar">
         </nav>
 
         <div class="titlebar__actions">
-          <a class="btn-os btn-os--accent" href="{dm}demo.html">Book a demo<span class="btn-os__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg></span></a>
+          <a class="btn-os btn-os--accent" href="{dm}demo.html">{cta}<span class="btn-os__go" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"/></svg></span></a>
 
           <button
             class="menu-toggle"
@@ -954,9 +940,16 @@ MENU_JS = """
     </script>
 """
 
+# On the booking page the header CTA would otherwise link to the page it is
+# already on and repeat its title, so it invites instead.
+HEADER_CTA = {"demo": "Let&rsquo;s chat"}
+
 # Marketing pages keep the site nav; the legal documents and the FAQ stay on
 # the stripped bar, where a full nav would just be noise around a document.
-FULL_NAV = {"partners", "careers", "resources", "customers", "pricing", "demo", "about"}
+FULL_NAV = {
+    "partners", "careers", "resources", "customers", "pricing", "demo", "about",
+    "stutzer-service", "egger-gemuesebau", "max-schwarz",
+}
 
 # Contract documents that have to exist at a stable URL -- an order form links
 # to them -- but that are not part of the site: no footer link, no sitemap entry,
@@ -968,10 +961,21 @@ NOINDEX = {"msa", "sls"}
 WIDE = {"careers", "resources", "customers", "pricing", "about"}
 
 
+CASE_MAIN = """      <div class="doc__head">
+        <div class="doc__inner">
+          <h1 class="doc__title">{title}</h1>{stand}
+        </div>
+      </div>
+
+      <div class="doc__band guides">
+        <div class="doc__inner case doc__body">
+{body}
+        </div>
+      </div>"""
+
 PLAIN_MAIN = """      <div class="doc__head">
         <div class="doc__inner">
-          <h1 class="doc__title">{title}</h1>
-          <p class="doc__standfirst">{stand}</p>
+          <h1 class="doc__title">{title}</h1>{stand}
         </div>
       </div>
 
@@ -984,8 +988,7 @@ PLAIN_MAIN = """      <div class="doc__head">
 SPLIT_MAIN = """      <div class="doc__head doc__head--intro">
         <div class="doc__inner">
           <div class="doc__lede">
-            <h1 class="doc__title">{title}</h1>
-            <p class="doc__standfirst">{stand}</p>
+            <h1 class="doc__title">{title}</h1>{stand}
           </div>
 {head}
         </div>
@@ -1006,6 +1009,11 @@ SPLIT_MAIN = """      <div class="doc__head doc__head--intro">
 
 # Pages whose whole purpose is the form get it beside the copy, not under it.
 SPLIT = {"partners"}
+
+# Case studies run the full band: a reading column with a rail beside it holding
+# the numbers the prose states and a quote lifted out of it. A single narrow
+# column left two thirds of the band empty.
+CASE = {"stutzer-service", "egger-gemuesebau", "max-schwarz"}
 
 # The booking page has its own template: two columns from the top, split by a
 # single rule, with the form sticky in the right one. It stopped fitting the
@@ -1399,7 +1407,6 @@ SLOT: 0&ndash;10|We start with you|What you are trying to fix, what you expect f
 SLOT: 10&ndash;20|We run it live|What it reads, what it looks up, what it drafts, and exactly what it would post to your ERP.
 SLOT: 20&ndash;30|Systems and numbers|What connecting yours takes, your price at your volume, and what changes for your team on Monday.
 ENDAGENDA:
-PULL: The 2 to 3 hours a day we used to process orders have been cut in half. New joiners also have impact significantly faster.|Thomas Locher|Head of Sales, Max Schwarz AG|thomas-locher.jpg
 ENDPAIR:
 """
 
@@ -1544,40 +1551,43 @@ CLOSER: Bring your most complex order. We will show you what happens to it.|Book
 
 
 CASE_STUTZER_SERVICE = """
-VIDEO: vimeo|1083549816|Stutzer Service AG on running Hoshii
+SHOT: cover-stutzer.jpg|A Thai curry with rice and basil, plated
 P: At Stutzer Service AG, order processing is a highly operational, fast-moving core activity. With more than 100 orders per day, handled by a team of over 15 people, the organisation processes a large and diverse volume of incoming orders every day.
-P: Unlike highly standardised order environments, much of this work does not start in the ERP system itself. Orders arrive in many different formats: unstructured documents, handwritten notes, scanned PDFs, emails, and mixed attachments. Content varies significantly in layout and completeness and is submitted in multiple languages, including German, French, and Thai, both typed and handwritten.
-P: Before any ERP process can begin, these orders must be interpreted, understood, and manually prepared, a step that is time-consuming and heavily dependent on individual experience.
+P: Unlike highly standardised order environments, much of this work does not start in the ERP system itself. Orders arrive in many different formats: unstructured documents, handwritten notes, scanned PDFs, emails, and mixed attachments. Content varies significantly in layout and completeness and is submitted in multiple languages, including **German, French, and Thai, both typed and handwritten**.
+P: Before any ERP process can begin, these orders must be interpreted, understood, and manually prepared, a step that is time-consuming and **heavily dependent on individual experience**.
 P: To manage this complexity at scale, Stutzer Service AG uses Hoshii operationally in its daily order processing.
-P: Hoshii is currently connected to their Microsoft Dynamics Navision environment via SFTP, where it prepares and transfers structured order data directly into the ERP.
+P: Hoshii is currently connected to their **Microsoft Dynamics Navision** environment via SFTP, where it prepares and transfers structured order data directly into the ERP.
 P: Incoming documents are automatically read and understood, including unstructured layouts, handwritten content, and multilingual input. Relevant information such as articles, quantities, delivery details, and customer references is extracted and prepared in a consistent format for ERP processing.
-P: The team continues to work in its familiar tools and communication channels. Orders arrive as they always have. In the background, Hoshii reduces manual interpretation effort and translates complexity into structured data that can be reliably processed in the ERP.
-P: As a result, Stutzer Service AG is able to handle very high order volumes more effectively. Processing becomes faster and more consistent, dependency on individual knowledge is reduced, and operational know-how is captured centrally rather than residing only with experienced employees. This also makes onboarding new team members significantly easier.
+LIFT: The team continues to work in its familiar tools and communication channels. Orders arrive as they always have.
+P: In the background, Hoshii reduces manual interpretation effort and translates complexity into structured data that can be reliably processed in the ERP.
+P: As a result, Stutzer Service AG is able to handle very high order volumes more effectively. **Processing becomes faster and more consistent**, dependency on individual knowledge is reduced, and operational know-how is captured centrally rather than residing only with experienced employees. This also makes onboarding new team members significantly easier.
 P: Until the end of 2025, parts of the organisation operated under the name George Weiss Lebensmittel AG. On 1 January 2026, George Weiss Lebensmittel AG merged with Stutzer Service AG. Hoshii supported this transition by integrating the newly added team in Villars alongside the existing team in Fahrenweid, ensuring consistent order processing across locations during the merger.
-P: Looking ahead, Stutzer Service AG is preparing the next step in its ERP setup. In April, the connection will move from Microsoft Dynamics Navision to Microsoft Dynamics 365 Business Central, replacing the SFTP integration with a REST API-based connection. This will enable deeper integration, faster data exchange, and access to additional functionality as the organisation continues to scale.
+P: Looking ahead, Stutzer Service AG is preparing the next step in its ERP setup. In April, the connection will move from Microsoft Dynamics Navision to **Microsoft Dynamics 365 Business Central**, replacing the SFTP integration with a REST API-based connection. This will enable deeper integration, faster data exchange, and access to additional functionality as the organisation continues to scale.
 CLOSER: Bring your most complex order. We will show you what happens to it.|Book a demo|../demo.html
 """
 
 CASE_EGGER_GEMUESEBAU = """
-VIDEO: vimeo|1083549816|Egger Gem&uuml;sebau AG on running Hoshii
-P: At Egger Gemüsebau, the ERP system has been the backbone of operational workflows for many years. As a vegetable producer with high order volumes and a fast-paced daily business, core processes run through CSB System: reliably, in a structured way, and deeply embedded in day-to-day operations.
-P: At the same time, much of the daily work does not start in the ERP system, but before it. Orders arrive via voicemail or as PDF attachments by email, often outside of office hours. These messages must be listened to, read, interpreted, and manually transferred into the system. This step between communication and ERP is time-consuming and error-prone, and this is exactly where the greatest leverage was identified.
+SHOT: cover-egger.jpg|Five of the Egger Gem&uuml;sebau team standing in one of their cabbage fields
+P: At Egger Gemüsebau, the ERP system has been the backbone of operational workflows for many years. As a vegetable producer with high order volumes and a fast-paced daily business, core processes run through **CSB System**: reliably, in a structured way, and deeply embedded in day-to-day operations.
+P: At the same time, much of the daily work does not start in the ERP system, but before it. Orders arrive via **voicemail or as PDF attachments** by email, often **outside of office hours**. These messages must be listened to, read, interpreted, and manually transferred into the system. This step between communication and ERP is time-consuming and error-prone, and this is exactly where the greatest leverage was identified.
 P: As part of a pilot project, Egger Gemüsebau therefore began using Hoshii operationally for the first time.
-P: In practical terms, voicemail and PDF orders are automatically captured, understood in context, and prepared in a way that allows seamless transfer into the CSB system.
-P: Employees continue to work in their familiar communication environment. Orders arrive as they always have, by phone or email. In the background, Hoshii takes over the content processing, identifies relevant information such as items, quantities, and delivery dates, and transfers this data in a structured form to CSB. The operational process therefore starts exactly where it belongs, in the ERP system, without manual listening, typing, or forwarding.
-P: As a result, day-to-day work at Egger Gemüsebau changes noticeably. Communication is no longer a preliminary manual effort, but an integrated part of the ERP process. Workflows become more consistent, response times shorter, and the team is relieved, especially during periods of high order volume.
-P: Based on the success of this pilot project, Hoshii and CSB System have now entered into a partnership. The goal is to systematically bring AI-driven communication processing into the CSB ecosystem and make it accessible to additional CSB customers. Insights from the project with Egger Gemüsebau flow directly into the expansion of the integration and the further development of standardised use cases.
+P: In practical terms, **voicemail and PDF orders are automatically captured**, understood in context, and prepared in a way that allows seamless transfer into the CSB system.
+P: Employees continue to work in their familiar communication environment. Orders arrive as they always have, by phone or email. In the background, Hoshii takes over the content processing, identifies relevant information such as items, quantities, and delivery dates, and transfers this data in a structured form to CSB. The operational process therefore starts exactly where it belongs, in the ERP system, **without manual listening, typing, or forwarding**.
+LIFT: Communication is no longer a preliminary manual effort, but an integrated part of the ERP process.
+P: As a result, day-to-day work at Egger Gem&uuml;sebau changes noticeably. Workflows become more consistent, **response times shorter**, and the team is relieved, especially during periods of high order volume.
+P: Based on the success of this pilot project, Hoshii and CSB System have now entered into a **partnership**. The goal is to systematically bring AI-driven communication processing into the CSB ecosystem and make it accessible to additional CSB customers. Insights from the project with Egger Gemüsebau flow directly into the expansion of the integration and the further development of standardised use cases.
 CLOSER: Bring your most complex order. We will show you what happens to it.|Book a demo|../demo.html
 """
 
 CASE_MAX_SCHWARZ = """
 VIDEO: wistia|213shm0tsd|Thomas Locher of Max Schwarz AG on running Hoshii
-P: At Max Schwarz AG, a significant share of daily orders is placed by phone and received as voicemails outside of business hours. Especially overnight, a high volume of customer orders accumulates before the working day even begins.
-P: These voicemails are typically recorded in Swiss German, often spoken quickly and informally. Before any ERP process can start, messages must be listened to carefully, understood correctly, and manually transferred into the system. This task is time-consuming and places a high dependency on employees who are fluent in Swiss German.
-P: To handle this workload more efficiently, Max Schwarz AG uses Hoshii in daily operations. Hoshii automatically transcribes Swiss-German voicemails and makes the content available in clear Standard German. Based on this transcription, order information is structured and prepared for processing in Fruchtmanager, the company&rsquo;s ERP system.
-P: Orders that previously required repeated listening and interpretation are now available as written, structured information as soon as the team starts its day. This significantly reduces manual effort and accelerates order processing.
-P: A key benefit is the relief for employees who are not fluent in Swiss German. Instead of relying on dialect comprehension, they can work directly with Standard German transcriptions, ensuring consistent understanding and reliable order handling across the team.
-P: As a result, Max Schwarz AG is able to process high overnight voicemail volumes more efficiently, start ERP workflows earlier in the day, and reduce dependency on individual language skills. Communication is transformed into structured input for the ERP, enabling smoother operations and more balanced workload distribution within the team.
+P: At Max Schwarz AG, a significant share of daily orders is placed by phone and received as **voicemails outside of business hours**. Especially overnight, a high volume of customer orders accumulates before the working day even begins.
+P: These voicemails are typically recorded in **Swiss German, often spoken quickly and informally**. Before any ERP process can start, messages must be listened to carefully, understood correctly, and manually transferred into the system. This task is time-consuming and places a high dependency on employees who are fluent in Swiss German.
+P: To handle this workload more efficiently, Max Schwarz AG uses Hoshii in daily operations. Hoshii automatically transcribes Swiss-German voicemails and makes the content available in **clear Standard German**. Based on this transcription, order information is structured and prepared for processing in **Fruchtmanager**, the company&rsquo;s ERP system.
+P: Orders that previously required repeated listening and interpretation are now available as written, structured information **as soon as the team starts its day**. This significantly reduces manual effort and accelerates order processing.
+PULL: The 2 to 3 hours a day we used to process orders have been cut in half. New joiners also have impact significantly faster.|Thomas Locher|Head of Sales, Max Schwarz AG|thomas-locher.jpg
+P: A key benefit is the **relief for employees who are not fluent in Swiss German**. Instead of relying on dialect comprehension, they can work directly with Standard German transcriptions, ensuring consistent understanding and reliable order handling across the team.
+P: As a result, Max Schwarz AG is able to process high overnight voicemail volumes more efficiently, **start ERP workflows earlier in the day**, and reduce dependency on individual language skills. Communication is transformed into structured input for the ERP, enabling smoother operations and more balanced workload distribution within the team.
 CLOSER: Bring your most complex order. We will show you what happens to it.|Book a demo|../demo.html
 """
 
@@ -1663,7 +1673,7 @@ CONTENT = {
     "pricing": (
         PRICING,
         "Hoshii pricing: three plans from EUR 149 per month, unlimited users, credits that roll over and never expire.",
-        "Three plans, unlimited users on all of them, and credits that roll over rather than reset.",
+        "",
     ),
     "stutzer-service": (
         CASE_STUTZER_SERVICE,
@@ -1790,6 +1800,12 @@ def faq_schema(block):
 
 
 def build_main(slug, title, stand, body):
+    # A page can decline the standfirst: pricing is called Pricing and says the
+    # rest with the plans themselves. An empty one emits no element, rather than
+    # an empty paragraph holding open the space it would have filled.
+    stand = (
+        f'\n          <p class="doc__standfirst">{stand}</p>' if stand.strip() else ""
+    )
     if slug in BOOK:
         head, sep, rest = body.partition("<!--HEAD-->")
         if not sep:
@@ -1806,6 +1822,8 @@ def build_main(slug, title, stand, body):
             title=title, stand=stand, body=left.rstrip(),
             aside=aside.strip(), after=block,
         )
+    if slug in CASE:
+        return CASE_MAIN.format(title=title, stand=stand, body=body.rstrip())
     if slug not in SPLIT:
         return PLAIN_MAIN.format(title=title, stand=stand, body=body)
     head, sep, rest = body.partition("<!--HEAD-->")
@@ -1854,7 +1872,9 @@ def main():
             dm=dm,
             wide=("" if slug not in WIDE else " doc--wide")
             + (" doc--split" if slug in SPLIT else ""),
-            header=(FULL_HEADER if slug in FULL_NAV else MINIMAL_HEADER).format(up=up, dm=dm),
+            header=(FULL_HEADER if slug in FULL_NAV else MINIMAL_HEADER).format(
+                up=up, dm=dm, cta=HEADER_CTA.get(slug, "Book a demo")
+            ),
             script=(MENU_JS if slug in FULL_NAV else "")
             + (FILTER_JS if slug == "resources" else "")
             + (TOGGLE_JS if slug == "pricing" else "")

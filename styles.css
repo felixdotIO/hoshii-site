@@ -80,16 +80,21 @@
      orange. */
   --accent: #fd4b00;
 
-  --green-deep: #0d2016;
 
   /* Text on dark */
   --on-dark: var(--bone);
   --on-dark-dim: #c3cbbc;
 
-  /* Near-black that clears AA on the accent at small sizes, where white
-     (3.40:1) does not. The value was left over from the blue accent; against
-     the orange it is a warm near-black at 5.0:1. */
-  --on-accent-sm: #2a1a12;
+  /* Small type on the accent is white, like every other label on an orange
+     ground. White on the brand orange is only 3.40:1, which fails AA below the
+     18.66px large-text threshold, so these small surfaces take --accent-deep
+     rather than the text going dark again. */
+  --on-accent-sm: var(--white);
+
+  /* The lightest step along the brand hue that carries white small type: 4.64:1.
+     Solved for the ratio, not picked. Used by the chips and pills, never by the
+     buttons -- those are large enough for the brand orange itself. */
+  --accent-deep: #d63d00;
 
   /* Highlight surfaces: the announcement banner and the upsell pill. Same value
      as --accent now that both come from Rare Wash, kept as its own token
@@ -102,13 +107,11 @@
   --chrome-face: #ffffff;
   --chrome-light: #faf8f3;
   --chrome-shadow: rgba(38, 24, 20, 0.15);
-  --chrome-dark: #63514a;
 
   --font: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui,
     sans-serif;
 
   --gutter: clamp(1.25rem, 4vw, 2.5rem);
-  --shell: 78rem;
 
   /* Thin column rules, after Corgi. Deliberately the same width as
      .pitch__panel: the rules land exactly on the slab's edges, so they read as
@@ -374,14 +377,6 @@ p {
   color: var(--bone);
 }
 
-/* Signals the use-case submenu. The menu itself is not built yet. */
-.nav__caret {
-  width: 0;
-  height: 0;
-  border-inline: 3.5px solid transparent;
-  border-top: 4px solid currentColor;
-}
-
 .titlebar__actions {
   display: flex;
   align-items: center;
@@ -396,9 +391,6 @@ p {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-}
-
-.btn-os {
   height: 2.375rem;
   padding: 0 1rem;
   gap: 0.625rem;
@@ -574,7 +566,6 @@ p {
 
      One known give: dismissing the announcement bar lifts the page 34px, so the
      slab shows by that much. A gap is the safe direction to be wrong in. */
-  --fold-reserve: 21.125rem;
   /* The pattern layer is absolutely positioned, so the band has to be its
      containing block at every width. Above 64em .hero__grid supplied that;
      below it there was no positioned ancestor and the strips resolved against
@@ -628,7 +619,6 @@ p {
   }
 
 
-
   /* Left again, beside the picture rather than above it. Centred copy over a
      full-width photograph was the arrangement the letterbox slot forced; a square
      picture sits beside its argument instead. */
@@ -637,17 +627,20 @@ p {
        to the band's top, bottom and right edges, which is what makes it read as
        one of two surfaces rather than as an image placed on a page. */
     /* The image column is shaped to the photographs rather than to a shape chosen
-       first. Both frames are 1.504:1 group shots with people at the far left and
-       right, and a square column cropped the outer two out of each -- cover has to
-       crop something, and with the column at the photograph's own ratio it crops
-       nothing. At 1512 this comes out 818 x 544, which is 1.504. */
+       first: both frames are 1254 x 840 group shots with people at the far left
+       and right, so any column that is not their ratio makes cover crop somebody
+       out of an edge. */
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.22fr);
     align-items: stretch;
     gap: 0;
-    /* Taller, and the photographs are cropped to the people rather than to the
-       whole set -- so the column can be tighter than the original frames without
-       cover taking anyone out of the edges. */
-    height: clamp(26rem, calc(100svh - 6.125rem), 38rem);
+    /* No fixed height. A height set here decides the column's ratio, which then
+       decides what cover throws away -- and because it was viewport-dependent, a
+       taller window cropped 16% off the sides and took the outer two people with
+       it. The photograph states its own ratio below and the band's height follows
+       from it, so the crop is nothing at every size. min-height only keeps the
+       band from collapsing when the copy is short. */
+    min-height: 26rem;
+    max-height: calc(100svh - 6.125rem);
   }
 
   .hero__copy {
@@ -695,50 +688,8 @@ p {
    The picture holds the centre of the band; the pattern runs down the margins
    either side of it, masked inward so it never reaches the type. */
 
-.hero__demo {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  padding: 0;
-  pointer-events: none;
-}
-
-.hero__demo .pat {
-  opacity: 0.36;
-  background-image: url('assets/pattern.svg');
-  /* Down from 858. At 9% the strip is 135px wide and a 72px module put barely two
-     shapes across it; 420px lands a module near 35px, so the mark still reads as
-     the pattern rather than as one enormous triangle. */
-  background-size: 420px auto;
-  background-position: left top;
-  background-repeat: repeat;
-  top: 0;
-  bottom: 0;
-  /* A hint, not a field, and less of one again: 19% filled the free margin, 12%
-     was still a strip, 9% is a mark in the corner. The hero already carries a
-     headline, a sub, a button and a photograph. */
-  width: 9%;
-}
-
 /* Faded along the strip as well as inward, so what is left sits in the two outer
    corners and nothing competes with the type. */
-.hero__demo .pat--l {
-  left: 0;
-  background-position: left top;
-  /* Diagonal, not two axis-aligned fades intersected. Intersecting a horizontal and a vertical
-     gradient still leaves a straight edge where whichever one runs out first cuts the
-     other off -- which read as a block ending on a line. A single diagonal has no edge. */
-  -webkit-mask-image: linear-gradient(to bottom right, #000 0%, #000 18%, transparent 76%);
-  mask-image: linear-gradient(to bottom right, #000 0%, #000 18%, transparent 76%);
-}
-
-.hero__demo .pat--r {
-  left: auto;
-  right: 0;
-  background-position: right top;
-  -webkit-mask-image: linear-gradient(to bottom left, #000 0%, #000 18%, transparent 76%);
-  mask-image: linear-gradient(to bottom left, #000 0%, #000 18%, transparent 76%);
-}
 
 .hero__title {
   margin: 0;
@@ -979,15 +930,6 @@ p {
    With the crop, the leftover black margin is a few pixels against a near-black
    panel, so plain opaque stacking is cleaner. The shadow is done here rather
    than baked into the file, so it stays crisp at any size. */
-/* No `max-width: none` here. It was carried over from when these were
-   absolutely positioned, and as `.pitch__art img` (0-1-1) it outranked the
-   px ceilings on `.pitch__art-back` / `-front` (0-1-0) and silently discarded
-   them. The global `img { max-width: 100% }` it was there to beat never
-   applies to a width set in percent of the same box. */
-.pitch__art img {
-  filter: drop-shadow(0 12px 26px rgba(0, 0, 0, 0.5));
-}
-
 @media (min-width: 56em) {
   .pitch__panel {
     grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
@@ -1644,17 +1586,6 @@ p {
 .chatband__chip-ico .vox,
 .chatband__tool .vox {
   stroke-width: 1.6;
-}
-
-.steps__tab-num {
-  color: var(--caption);
-  font-size: 0.875rem;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.06em;
-}
-
-.steps__tab[aria-selected='true'] .steps__tab-num {
-  color: var(--accent);
 }
 
 /* --- Hoshii Chat band ----------------------------------------------------- */
@@ -2837,22 +2768,6 @@ p {
   max-width: 34rem;
 }
 
-.cap[data-tone='a'] .cap__dot {
-  background: var(--accent);
-}
-
-.cap[data-tone='b'] .cap__dot {
-  background: var(--sage);
-}
-
-.cap[data-tone='c'] .cap__dot {
-  background: var(--green);
-}
-
-.cap[data-tone='d'] .cap__dot {
-  background: var(--cream);
-}
-
 .cap__head {
   margin: 0;
   font-size: clamp(1.625rem, 1rem + 2.1vw, 2.5rem);
@@ -3109,7 +3024,7 @@ p {
 }
 
 .lmail__tag--order {
-  background: var(--accent);
+  background: var(--accent-deep);
   color: var(--on-accent-sm);
 }
 
@@ -3225,7 +3140,6 @@ p {
    entrances and the pull can never fall out of phase. */
 
 .suckart {
-  --cycle: 13s;
   position: relative;
   z-index: 1;
   display: grid;
@@ -3620,7 +3534,7 @@ p {
   flex: 0 0 auto;
   padding: 0.12em 0.35em;
   border-radius: 0.1875rem;
-  background: var(--accent);
+  background: var(--accent-deep);
   color: var(--on-accent-sm);
   font-size: clamp(0.375rem, 1.4cqw, 0.5rem);
   font-weight: 700;
@@ -4373,6 +4287,17 @@ p {
 
 .doc--wide .doc__body h2 {
   font-size: clamp(1.375rem, 1rem + 1.2vw, 1.75rem);
+}
+
+/* The booking page's one section heading is a claim, not a prose sub-heading, so
+   it takes the page-title scale a step down rather than the 20px the legal
+   documents want. Lighter with it: 700 at this size reads as shouting. */
+.book-page .doc__body h2 {
+  font-size: clamp(1.625rem, 1.1rem + 1.9vw, 2.375rem);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.028em;
+  margin-bottom: clamp(1.125rem, 2vw, 1.5rem);
 }
 
 /* --- How we work --- */
@@ -5311,26 +5236,6 @@ p {
 
 /* The company's own mark, on the picture rather than beside it. White ground
    because these marks were drawn for paper and several are near-black. */
-.feat__chip {
-  position: absolute;
-  bottom: 0.75rem;
-  left: 0.75rem;
-  display: grid;
-  place-items: center;
-  width: 3rem;
-  height: 3rem;
-  padding: 0.4375rem;
-  border-radius: 0.4375rem;
-  background: rgba(255, 255, 255, 0.94);
-  box-shadow: 0 1px 3px rgba(42, 35, 32, 0.16);
-}
-
-.feat__chip img {
-  display: block;
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
 
 .feat__meta {
   display: flex;
@@ -5450,6 +5355,71 @@ p {
   pointer-events: none;
   -webkit-mask-image: linear-gradient(to bottom left, #000 0%, transparent 58%);
   mask-image: linear-gradient(to bottom left, #000 0%, transparent 58%);
+}
+
+/* Subpage bodies. The header carried the pattern top-right and the closing aside
+   carries it right again, which left the long middle of every subpage bare and
+   put both flourishes on the same side. This one sits left and a quarter of the
+   way down, so the three read as a diagonal travelling down the page rather than
+   one stamp repeated. Quieter than the header's 0.26 because it sits beside body
+   copy rather than under a headline.
+
+   The explicit z-index is load-bearing: `.guides > *` raises every direct child
+   to 1, and this layer is a direct child that has to stay behind them. Without
+   it the pattern paints over the plan cards and the comparison table. */
+.doc__band > .pat {
+  position: absolute;
+  top: 26%;
+  right: auto;
+  bottom: auto;
+  left: 0;
+  z-index: 0;
+  width: min(30%, 22rem);
+  height: min(24rem, 34%);
+  opacity: 0.16;
+  pointer-events: none;
+  background-image: url('assets/pattern.svg');
+  background-size: 280px auto;
+  background-position: left top;
+  background-repeat: repeat;
+  /* Densest at the anchored top-left corner, gone by two-thirds of the way to
+     the opposite one. */
+  -webkit-mask-image: linear-gradient(to bottom right, #000 0%, #000 12%, transparent 68%);
+  mask-image: linear-gradient(to bottom right, #000 0%, #000 12%, transparent 68%);
+}
+
+/* The demo page is built on .book rather than .doc, so it matched none of the
+   pattern hosts and was the one page carrying no pattern at all. Anchored
+   bottom-left under the pitch column: the same corner and the same mask as
+   .pitch__panel on the home page, so the two rhyme. */
+.book__pitch {
+  position: relative;
+}
+
+/* Same device .guides uses: raise the real content so the layer stays under it.
+   The pattern rule below beats this on specificity and keeps z-index 0. */
+.book__pitch > *:not(.pat) {
+  position: relative;
+  z-index: 1;
+}
+
+.book__pitch .pat {
+  position: absolute;
+  inset: auto auto 0 0;
+  z-index: 0;
+  /* Kept small and quiet: the proof logos sit in this corner, and at 0.2 the
+     triangles competed with them. This is texture behind them, not a graphic
+     beside them. */
+  width: min(38%, 24rem);
+  height: min(15rem, 34%);
+  opacity: 0.13;
+  pointer-events: none;
+  background-image: url('assets/pattern.svg');
+  background-size: 300px auto;
+  background-position: left bottom;
+  background-repeat: repeat;
+  -webkit-mask-image: linear-gradient(to top right, #000 0%, transparent 56%);
+  mask-image: linear-gradient(to top right, #000 0%, transparent 56%);
 }
 
 .docend__head {
@@ -5734,6 +5704,23 @@ a.story__card:focus-visible {
   background: var(--wash);
 }
 
+/* A case study opens on a photograph of the desk it is about. Same slot the
+   video occupied, cropped to the same shape so the two can sit side by side
+   across stories without the column changing rhythm. */
+.doc__shot {
+  margin: clamp(1.25rem, 3vw, 1.75rem) 0 clamp(1.5rem, 3.5vw, 2.25rem);
+  aspect-ratio: 16 / 9;
+  background: var(--wash);
+  overflow: hidden;
+}
+
+.doc__shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .doc__video iframe {
   display: block;
   width: 100%;
@@ -5807,10 +5794,11 @@ a.story__card:focus-visible {
 /* One row per area of work, and the row's subject is its track: a permission
    sitting at read that can move to write.
 
-   The version this replaces was a bar chart of hours lost. It said where the
-   week goes, which the heading already says, and never showed the thing the copy
-   is actually about -- that read access becomes write access, and only because
-   someone said yes. A chart cannot show a decision; a permission moving can. */
+   The version this replaces looped: two rows crossed to write and then, at 84%,
+   the fill collapsed, the knob slid back and Approved faded out. A decision
+   undoing itself every six seconds reads as broken software, not as a state
+   change -- so this plays once, when the section comes into view, and holds
+   where it lands. The ledger fills up rather than resetting. */
 .hand__row {
   display: grid;
   grid-template-columns: 1fr auto auto;
@@ -5829,37 +5817,14 @@ a.story__card:focus-visible {
   width: clamp(3.25rem, 15cqw, 4.5rem);
   height: 0.625rem;
   border-radius: 999px;
+  overflow: hidden;
   background: color-mix(in srgb, var(--sage) 26%, #ffffff);
   box-shadow: inset 0 0 0 1px rgba(42, 35, 32, 0.07);
 }
 
-.hand__knob {
-  position: absolute;
-  top: 50%;
-  left: 0.125rem;
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 999px;
-  background: var(--sage);
-  translate: 0 -50%;
-}
-
-.hand__state {
-  width: clamp(3.25rem, 14cqw, 4.25rem);
-  color: var(--caption);
-  font-size: clamp(0.5rem, 2cqw, 0.625rem);
-  font-weight: 700;
-  text-align: right;
-}
-
-/* The row that has crossed. The knob travels to the write stop, the track fills
-   in behind it, and only then does the state read Approved -- the order matters,
-   because the approval is the consequence and not the cause. */
-.hand__row--on .hand__track {
-  overflow: hidden;
-}
-
-.hand__row--on .hand__track::before {
+/* The fill sits on every track and simply is not scaled up until the row
+   crosses, so a settled row and a crossing one are built the same way. */
+.hand__track::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -5867,76 +5832,128 @@ a.story__card:focus-visible {
   background: var(--green);
   transform-origin: left center;
   scale: 0 1;
-  animation: hand-fill 6.5s var(--ease-out) infinite;
 }
 
-.hand__row--on .hand__knob {
+.hand__knob {
+  position: absolute;
+  top: 50%;
+  left: 0.125rem;
   z-index: 1;
-  background: var(--white);
-  animation: hand-move 6.5s var(--ease-out) infinite;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--sage);
+  /* translate, not left: the knob travels on the compositor rather than
+     forcing layout every frame. */
+  translate: 0 -50%;
 }
 
-.hand__row--on .hand__state {
+.hand__state {
+  position: relative;
+  width: clamp(3.25rem, 14cqw, 4.25rem);
+  color: var(--caption);
+  font-size: clamp(0.5rem, 2cqw, 0.625rem);
+  font-weight: 700;
+  text-align: right;
+}
+
+.hand__was,
+.hand__now {
+  display: block;
+}
+
+/* Both labels share one grid cell, so the swap is a cross-fade in place and the
+   row does not reflow when the wording changes length. */
+.hand__row--cross .hand__state {
+  display: grid;
+}
+
+.hand__row--cross .hand__was,
+.hand__row--cross .hand__now {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.hand__row--cross .hand__now {
   color: var(--green);
   opacity: 0;
-  animation: hand-say 6.5s var(--ease-out) infinite;
 }
 
-/* The rows still waiting on a decision: the knob breathes at the read stop.
-   Enough to read as pending, not enough to compete with the row that moves. */
-.hand__row--ask .hand__knob {
-  animation: hand-wait 2.6s calc(var(--i) * 0.4s) ease-in-out infinite;
+/* The settled row: where the ledger already stood before Hoshii suggested
+   anything. Drawn, not animated -- it is the baseline, not an event. */
+.hand__row--set .hand__track::before {
+  scale: 1 1;
+}
+
+.hand__row--set .hand__knob {
+  left: auto;
+  right: 0.125rem;
+  background: var(--white);
+}
+
+.hand__row--set .hand__now {
+  color: var(--green);
+}
+
+/* The row that stays at read. No animation at all: not everything gets handed
+   over, which is the point the footer makes. */
+.hand__row--held .hand__knob {
+  background: color-mix(in srgb, var(--sage) 78%, #ffffff);
+}
+
+/* The crossings, staggered so they read as two separate decisions rather than
+   one bulk change: knob, then the fill behind it, then the word. The knob turns
+   white only once it is over the filled part of the track, so it is never a
+   light dot on a light ground. */
+.anim-live .hand__row--cross .hand__knob {
+  animation-name: hand-move, hand-light;
+  animation-duration: 620ms, 200ms;
+  animation-delay: calc(360ms + var(--i) * 1080ms),
+    calc(700ms + var(--i) * 1080ms);
+  animation-timing-function: var(--ease-spring), linear;
+  animation-fill-mode: forwards, forwards;
+}
+
+.anim-live .hand__row--cross .hand__track::before {
+  animation: hand-fill 560ms calc(400ms + var(--i) * 1080ms) var(--ease-out)
+    forwards;
+}
+
+.anim-live .hand__row--cross .hand__was {
+  animation: hand-drop 260ms calc(880ms + var(--i) * 1080ms) var(--ease) forwards;
+}
+
+.anim-live .hand__row--cross .hand__now {
+  animation: hand-say 320ms calc(900ms + var(--i) * 1080ms) var(--ease) forwards;
 }
 
 @keyframes hand-fill {
-  0%,
-  16% {
-    scale: 0 1;
-  }
-  38%,
-  84% {
+  to {
     scale: 1 1;
-  }
-  100% {
-    scale: 0 1;
   }
 }
 
 @keyframes hand-move {
-  0%,
-  16% {
-    left: 0.125rem;
+  to {
+    translate: calc(clamp(3.25rem, 15cqw, 4.5rem) - 0.75rem) -50%;
   }
-  38%,
-  84% {
-    left: calc(100% - 0.625rem);
-  }
-  100% {
-    left: 0.125rem;
+}
+
+@keyframes hand-light {
+  to {
+    background: var(--white);
   }
 }
 
 @keyframes hand-say {
-  0%,
-  30% {
-    opacity: 0;
-  }
-  46%,
-  84% {
+  to {
     opacity: 1;
-  }
-  100% {
-    opacity: 0;
   }
 }
 
-@keyframes hand-wait {
-  0%,
-  100% {
-    opacity: 0.45;
-  }
-  50% {
-    opacity: 1;
+@keyframes hand-drop {
+  to {
+    opacity: 0;
   }
 }
 
@@ -5959,25 +5976,23 @@ a.story__card:focus-visible {
   color: var(--caption);
 }
 
+/* Resolves to where the sequence lands: both suggestions taken. */
 @media (prefers-reduced-motion: reduce) {
-  .hand__row--on .hand__track::before,
-  .hand__row--on .hand__knob,
-  .hand__row--on .hand__state,
-  .hand__row--ask .hand__knob {
-    animation: none;
-  }
-
-  /* Frozen mid-sequence it would read as broken, so the settled state shows:
-     the permission granted. */
-  .hand__row--on .hand__track::before {
+  .hand__row--cross .hand__track::before {
     scale: 1 1;
   }
 
-  .hand__row--on .hand__knob {
-    left: calc(100% - 0.625rem);
+  .hand__row--cross .hand__knob {
+    left: auto;
+    right: 0.125rem;
+    background: var(--white);
   }
 
-  .hand__row--on .hand__state {
+  .hand__row--cross .hand__was {
+    opacity: 0;
+  }
+
+  .hand__row--cross .hand__now {
     opacity: 1;
   }
 }
@@ -6050,10 +6065,17 @@ a.story__card:focus-visible {
   margin: 0 0 0.625rem;
   padding: 0.1875rem 0.5rem;
   border-radius: 999px;
-  background: var(--accent);
+  background: var(--accent-deep);
   color: var(--on-accent-sm);
   font-size: 0.75rem;
   font-weight: 700;
+}
+
+/* The unbadged cards carry the same box with nothing in it, so all three plan
+   names sit on one line. Reserving the row this way rather than with a padding
+   value means it cannot drift when the badge's type or padding changes. */
+.plan__tag--none {
+  visibility: hidden;
 }
 
 .plan__name {
@@ -6220,12 +6242,9 @@ a.story__card:focus-visible {
      0.7em of side padding on 19px type is 13px a side. */
   padding: 0.24em 0.62em;
   border-radius: 999px;
-  /* White type at 15px needs 4.5:1, and the brand orange gives 3.40 -- so the
-     pill takes a deeper orange of its own rather than the text going dark or the
-     size growing back to the 18.66px large-text threshold. Solved for the ratio
-     rather than picked: this is the lightest step along the brand hue that still
-     clears it, at 4.64:1. */
-  background: #d63d00;
+  /* White type at 15px needs 4.5:1 and the brand orange gives 3.40, so the pill
+     takes the deeper orange. See --accent-deep. */
+  background: var(--accent-deep);
   color: var(--white);
   /* 15px. */
   font-size: 0.9375rem;
@@ -6707,7 +6726,7 @@ a.story__card:focus-visible {
    short rise, both compositor-only, and skipped entirely for anyone who has
    asked the OS to stop animating. */
 @media (prefers-reduced-motion: no-preference) {
-  .book__pitch > *,
+  .book__pitch > *:not(.pat),
   .book__pitch .doc__checks li {
     animation: book-in 620ms var(--ease-out) backwards;
   }
@@ -6905,11 +6924,6 @@ a.story__card:focus-visible {
   max-width: 34ch;
 }
 
-.pricing-claim,
-.doc__head--claim .doc__title {
-  font-size: clamp(1.875rem, 1.2rem + 2.4vw, 3.25rem);
-}
-
 
 /* --- A rolling belt of client marks --------------------------------------
    The same device the home page uses. Two identical tracks side by side, each
@@ -7012,6 +7026,8 @@ a.story__card:focus-visible {
 .hero__show {
   position: relative;
   z-index: 1;
+  /* The photographs' own ratio, so the row height is derived from them. */
+  aspect-ratio: 1254 / 840;
   /* No padding at all. The picture is a surface of the band, not content inside a
      box, so it goes to all three of its own edges.
 
@@ -7120,7 +7136,6 @@ a.story__card:focus-visible {
 /* Module size per surface: what each background-size used to work out to once
    divided across the tile's columns. Stated directly now, so a tile comes out the
    same size on a 512px header as on a 1449px slab. */
-.hero__demo .pat { --pat-mod: 36px; }
 .doc__head .pat { --pat-mod: 44px; }
 .askrow .pat { --pat-mod: 40px; }
 .closer .pat { --pat-mod: 56px; }
@@ -7128,3 +7143,61 @@ a.story__card:focus-visible {
 .cap__art .pat { --pat-mod: 32px; }
 .shift__art--flow .pat { --pat-mod: 28px; }
 .docend .pat { --pat-mod: 44px; }
+.doc__band > .pat { --pat-mod: 34px; }
+.book__pitch .pat { --pat-mod: 38px; }
+
+
+/* --- Case studies -------------------------------------------------------
+   A centred article column. Everything inside it spans it edge to edge -- prose,
+   photograph and pull quotes all stop on the same two lines -- so nothing reads
+   as stopping short of anything else.
+
+   The width is measured, not chosen: this face runs 7.74px per character at the
+   body size, so the full 1293px container gave 167 characters a line -- about
+   double what a reader tracks before the return sweep loses the line. 48rem,
+   less the container's own padding, leaves a 658px text box at 85 characters,
+   the top of the comfortable range. The width the page gives up is centred
+   rather than dumped down one side, which is what made the earlier layout read
+   as unfinished: the emptiness was lopsided, not large. */
+
+.case {
+  max-width: 48rem;
+  margin-inline: auto;
+  padding-block: clamp(1.5rem, 4vw, 2.5rem) clamp(2rem, 5vw, 3.5rem);
+}
+
+.case > p {
+  max-width: none;
+}
+
+/* Weight only, never a second colour: the accent already belongs to the pull
+   quotes in this column, and two emphasis devices in one body of text stop
+   telling the eye anything. */
+.case > p strong {
+  font-weight: 700;
+}
+
+/* The pull quotes break out of the reading rhythm: full span, set large, with
+   the accent rule marking them as lifted rather than as running text. */
+.case .lift,
+.case .pull {
+  margin: clamp(2rem, 4.5vw, 3rem) 0;
+  padding: 0 0 0 clamp(1rem, 2.5vw, 1.75rem);
+  border: 0;
+  border-left: 3px solid var(--accent);
+}
+
+.case .lift__text,
+.case .pull__text {
+  margin: 0;
+  max-width: 34ch;
+  font-size: clamp(1.375rem, 2.2vw, 2rem);
+  font-weight: 500;
+  line-height: 1.22;
+  letter-spacing: -0.024em;
+  text-wrap: balance;
+}
+
+.case .pull__by {
+  margin-top: clamp(0.875rem, 2vw, 1.125rem);
+}
