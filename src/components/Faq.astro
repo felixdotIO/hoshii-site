@@ -1,0 +1,59 @@
+---
+/**
+ * The questions band on a landing page: the heading in the left column, the
+ * answers in the right.
+ *
+ * Each answer is a `<details>`, so it opens with no JavaScript at all and is
+ * keyboard- and screen-reader-operable as shipped. The text is in the initial
+ * HTML whether the disclosure is open or closed, which is what makes it
+ * extractable: a crawler reads a closed `<details>`.
+ *
+ * The same entries that render here are what the page hands to `faqPage()` for
+ * its JSON-LD, so the structured data cannot describe questions the page does
+ * not show. The band heading is the h2; every question is an h3 under it.
+ */
+import type { CollectionEntry } from 'astro:content';
+
+export type Props = {
+  /** Groups from the `faqs` collection, already filtered to this page. */
+  groups: CollectionEntry<'faqs'>[];
+  title: string;
+  /** The clause set on its own row, in the site's italic-accent idiom. */
+  accent?: string;
+  id?: string;
+};
+
+const { groups, title, accent, id = 'faq-title' } = Astro.props;
+---
+
+<section class="faq guides" aria-labelledby={id}>
+  <div class="faq__inner">
+    <div class="faq__lede">
+      <h2 class="faq__title" id={id}>
+        {title}
+        {accent && <em>{accent}</em>}
+      </h2>
+    </div>
+
+    <div class="faq__col">
+      {
+        groups.map((group) => (
+          <ul class="faq__list">
+            {group.data.items.map((item) => (
+              <li class="faq__item">
+                <details class="faq__d">
+                  <summary class="faq__sum">
+                    <h3 class="faq__q">{item.question}</h3>
+                  </summary>
+                  {item.answer.map((para) => (
+                    <p class="faq__a">{para}</p>
+                  ))}
+                </details>
+              </li>
+            ))}
+          </ul>
+        ))
+      }
+    </div>
+  </div>
+</section>

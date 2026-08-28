@@ -1,0 +1,73 @@
+{
+  "page": "home",
+  "group": "What teams ask before they start",
+  "order": 1,
+  "items": [
+    {
+      "question": "What is Hoshii?",
+      "answer": [
+        "The AI‑native inbox for B2B operations. It reads what lands in your team’s shared mailboxes, connects to the systems your answers live in, and prepares the reply, the order or the follow‑up, so your team approves instead of retypes."
+      ]
+    },
+    {
+      "question": "Who is it for?",
+      "answer": [
+        "B2B teams whose day arrives by email: order desks, sales and account teams, customer service, finance, and the contract side. Mostly wholesalers, manufacturers and distributors across DACH."
+      ]
+    },
+    {
+      "question": "Does it replace my team?",
+      "answer": [
+        "No. It takes the retyping, not the judgment. Nothing reaches a customer or one of your systems without someone approving it first."
+      ]
+    },
+    {
+      "question": "We already use Microsoft Copilot. Why Hoshii?",
+      "answer": [
+        "Copilot helps one person write faster. Hoshii runs your team’s work: shared tasks, context from your systems, and numbers for the whole operation. Same budget, different job."
+      ]
+    },
+    {
+      "question": "What happens when it gets something wrong?",
+      "answer": [
+        "Nothing reaches a customer without your approval. You correct it before it goes out, and Hoshii learns from every correction. You stay in control. AI can make mistakes, so always double check."
+      ]
+    },
+    {
+      "question": "Will it work with our ERP?",
+      "answer": [
+        "We are live with 20+ ERP systems, and there are 1,300+ connectors for everything around them. If a system has an interface, Hoshii can reach it, custom and in‑house ones included."
+      ]
+    },
+    {
+      "question": "Do we need to connect our other systems?",
+      "answer": [
+        "No, you do not have to. Hoshii works from day one with just your mailbox. The more context it has the better it gets, so add your CRM, calendar or folders read‑only whenever you want that context on your tasks."
+      ]
+    },
+    {
+      "question": "Does it read my private inbox?",
+      "answer": [
+        "Shared stays shared, private stays private. Hoshii works in the mailboxes you point it at. Your personal mailbox stays yours until you choose to bring a thread into the Unibox."
+      ]
+    },
+    {
+      "question": "Where does our data live?",
+      "answer": [
+        "Built in Switzerland, hosted in the EU, processed in EU data centres. Your data is never used to train third‑party models."
+      ]
+    },
+    {
+      "question": "How fast can we start?",
+      "answer": [
+        "Sign in with Gmail or Outlook and your team can work in Hoshii the same morning. The ERP connection is built in parallel: days with a system we know, up to about six weeks with one that is new to us."
+      ]
+    },
+    {
+      "question": "What does it cost?",
+      "answer": [
+        "We quote per workspace, against how much lands in the inbox, how many inboxes it covers and which systems Hoshii writes into. Users are unlimited on every quote, so inviting colleagues to collaborate costs nothing. The work itself is metered in credits."
+      ]
+    }
+  ]
+}

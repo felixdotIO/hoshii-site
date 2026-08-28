@@ -1,0 +1,101 @@
+---
+/**
+ * The site header. One component for every page, which is the point: the
+ * static build kept a hand-written copy of this on the homepage and a
+ * generated copy everywhere else, and they drifted three times.
+ *
+ * The mobile menu is the only JavaScript here. It is a `<details>` element, so
+ * it opens and closes with no script at all: keyboard, screen reader and
+ * no-JS visitors get a working menu, and nothing has to be hydrated.
+ */
+import { Image } from 'astro:assets';
+import BrandMark from '~/components/BrandMark.astro';
+import Arrow from '~/components/Arrow.astro';
+import { PRIMARY_NAV, PRIMARY_CTA, PRIMARY_CTA_ALT } from '~/data/nav';
+import wordmark from '~/assets/logo/wordmark-a.png';
+
+export type Props = {
+  /** Path of the current page, so the matching nav item can be marked. */
+  current?: string;
+  /**
+   * `minimal` drops the nav and offers the way back, which is what a contract
+   * document wants: a full nav around a legal page is noise.
+   */
+  variant?: 'full' | 'minimal';
+};
+
+const { current = '', variant = 'full' } = Astro.props;
+
+// On the booking page the CTA would otherwise link to the page it is on and
+// repeat its own title, so it invites instead.
+const cta = current === PRIMARY_CTA.href ? PRIMARY_CTA_ALT : PRIMARY_CTA;
+---
+
+<header class="titlebar">
+  <div class="titlebar__inner">
+    <a class="brand" href="/" aria-label="Hoshii home">
+      <BrandMark tone="light" />
+      <Image
+        class="brand__wordmark"
+        src={wordmark}
+        alt="Hoshii"
+        widths={[220, 440]}
+        sizes="110px"
+        loading="eager"
+      />
+    </a>
+
+    {
+      variant === 'full' ? (
+        <>
+          <nav class="nav" aria-label="Primary">
+            {PRIMARY_NAV.map((link) => (
+              <a
+                class="nav__btn"
+                href={link.href}
+                aria-current={current === link.href ? 'page' : undefined}
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+
+          <div class="titlebar__actions">
+            <a class="btn-os btn-os--accent" href={cta.href}>
+              {cta.label}
+              <Arrow />
+            </a>
+
+            <details class="menu">
+              <summary class="menu-toggle" aria-label="Menu">
+                <span class="menu-toggle__bar" />
+                <span class="menu-toggle__bar" />
+              </summary>
+              <nav class="mobile-nav" aria-label="Primary, mobile">
+                {PRIMARY_NAV.map((link) => (
+                  <a
+                    class="mobile-nav__link"
+                    href={link.href}
+                    aria-current={current === link.href ? 'page' : undefined}
+                  >
+                    {link.label}
+                  </a>
+                ))}
+                <a class="mobile-nav__link" href={cta.href}>
+                  {cta.label}
+                </a>
+              </nav>
+            </details>
+          </div>
+        </>
+      ) : (
+        <div class="titlebar__actions">
+          <a class="btn-os btn-os--accent" href="/">
+            Back to site
+            <Arrow />
+          </a>
+        </div>
+      )
+    }
+  </div>
+</header>

@@ -1,0 +1,101 @@
+---
+/**
+ * About: who is building this, where, and why.
+ *
+ * The figure strip at the top is read off the customer stories rather than
+ * invented — Dynamics, CSB and Fruchtmanager are the ERPs behind those pages,
+ * and Stutzer is the hundred-a-day desk.
+ */
+import DocLayout from '~/layouts/DocLayout.astro';
+import Arrow from '~/components/Arrow.astro';
+import { FOUNDERS } from '~/data/founders';
+
+const FIGURES = [
+  { value: 'Zürich', label: 'Where we are built' },
+  { value: '500+', label: 'B2B operations teams' },
+  { value: '20+', label: 'ERP systems connected' },
+  { value: '4', label: 'Languages handled' },
+];
+
+const initials = (name: string) =>
+  name
+    .split(/\s+/)
+    .map((word) => word[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
+---
+
+<DocLayout
+  title="About"
+  description="Hoshii is built in Zürich for the B2B teams that keep goods moving: who we are, why the inbox is the problem, and where the product goes next."
+  path="/about/"
+  sub="The inbox was never built to run a business. "
+  accent="We are building the one that is."
+  trail={[{ label: 'About', href: '/about/' }]}
+  pageClass="page--about"
+  wide={true}
+>
+  <ul class="figs">
+    {
+      FIGURES.map((figure) => (
+        <li class="figs__item">
+          <span class="figs__n">{figure.value}</span>
+          <span class="figs__l">{figure.label}</span>
+        </li>
+      ))
+    }
+  </ul>
+
+  <h2 id="empowering-humans-to-do-more">Empowering humans to do more.</h2>
+  <p>
+    We are on a mission to put AI in people’s hands, so they can stop drowning in
+    manual, repetitive work and spend their day on what actually matters:
+    customers, judgement and growth.
+  </p>
+  <p>
+    Hoshii was founded on one conviction: the inbox was never built to run a
+    business, and the people running theirs out of one deserve a real workspace.
+  </p>
+
+  <h2 id="built-close-to-the-work">Built close to the work.</h2>
+  <p>
+    Hoshii is headquartered in Zürich. Before this we built software at some of
+    the world’s largest technology and pharmaceutical companies; now we build for
+    the businesses that keep goods moving. What we share is a respect for the
+    unglamorous work, and the conviction that it deserves better software.
+  </p>
+
+  <ul class="doc__team">
+    {
+      FOUNDERS.map((founder) => (
+        <li class="doc__person">
+          <p class="doc__portrait doc__portrait--none" aria-hidden="true">
+            {initials(founder.name)}
+          </p>
+          <p class="doc__personName">{founder.name}</p>
+          <p class="doc__personRole">{founder.role}</p>
+          <blockquote class="doc__personQuote">{founder.quote}</blockquote>
+        </li>
+      ))
+    }
+  </ul>
+
+  <h2 id="where-we-are-going">Where we are going.</h2>
+  <p>
+    Order processing was the first thing worth automating because it is the most
+    painful. It is not the last. Every skill after it takes the same route:
+    surfaced by the work itself, agreed with your team, then built. You can read
+    how the first one works on the
+    <a href="/order-processing/">order processing page</a>, or see it running on
+    real desks in the <a href="/customers/">customer stories</a>.
+  </p>
+
+  <aside class="docend">
+    <p class="docend__head">Want to build this with us?</p>
+    <a class="btn-os btn-os--fill btn-os--lg" href="/careers/">
+      See open roles
+      <Arrow />
+    </a>
+  </aside>
+</DocLayout>

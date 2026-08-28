@@ -1,0 +1,47 @@
+---
+/**
+ * One article in a list. The same card is used by the resources index and by
+ * the related-articles rail, so a listed article and a related one are one
+ * object rendered twice rather than two that can drift.
+ *
+ * The whole card is the link, and the link text is the article title, so it is
+ * never "read more".
+ */
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { readableDate } from '~/lib/urls';
+import { articlePath } from '~/lib/paths';
+
+export type Props = {
+  article: CollectionEntry<'articles'>;
+  /** Eager for the cards above the fold on the index; lazy everywhere else. */
+  loading?: 'eager' | 'lazy';
+};
+
+const { article, loading = 'lazy' } = Astro.props;
+const { data } = article;
+---
+
+<li class="res__item" data-category={data.category}>
+  <a class="res__card" href={articlePath(article)}>
+    {
+      data.heroImage && (
+        <Image
+          class="res__shot"
+          src={data.heroImage}
+          alt={data.heroImageAlt ?? ''}
+          widths={[320, 640]}
+          sizes="(min-width: 60em) 20rem, 100vw"
+          loading={loading}
+        />
+      )
+    }
+    <span class="res__kind">{data.category}</span>
+    <span class="res__title">{data.title}</span>
+    <span class="res__blurb">{data.summary}</span>
+    <span class="res__meta">
+      {readableDate(data.publishedAt)}
+      {data.readingMinutes && ` · ${data.readingMinutes} min read`}
+    </span>
+  </a>
+</li>

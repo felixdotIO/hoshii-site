@@ -1,0 +1,78 @@
+---
+/**
+ * The document every page is inside: head, header, main, footer.
+ *
+ * There is no client-side routing, no framework runtime and no hydration
+ * anywhere on this site, so this file is the whole shell, and it ships no
+ * JavaScript of its own.
+ */
+import '~/styles/global.css';
+import Seo from '~/components/Seo.astro';
+import Header from '~/components/Header.astro';
+import Footer from '~/components/Footer.astro';
+import { SITE } from '~/data/site';
+
+export type Props = {
+  title: string;
+  description: string;
+  path: string;
+  index?: boolean;
+  ogType?: 'website' | 'article';
+  image?: string;
+  imageAlt?: string;
+  schema?: Record<string, unknown>[];
+  publishedTime?: string;
+  modifiedTime?: string;
+  /** `minimal` strips the nav, for the two contract documents. */
+  header?: 'full' | 'minimal';
+  /** Extra classes on <main>, for the templates that need a wider measure. */
+  mainClass?: string;
+};
+
+const {
+  title,
+  description,
+  path,
+  index = true,
+  ogType = 'website',
+  image,
+  imageAlt,
+  schema = [],
+  publishedTime,
+  modifiedTime,
+  header = 'full',
+  mainClass,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+  <head>
+    <Seo
+      title={title}
+      description={description}
+      path={path}
+      index={index}
+      ogType={ogType}
+      image={image}
+      imageAlt={imageAlt}
+      schema={schema}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
+    />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <slot name="above-header" />
+
+    <Header current={path} variant={header} />
+
+    <main id="main" class={mainClass}>
+      <slot />
+    </main>
+
+    <Footer />
+  </body>
+</html>

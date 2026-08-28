@@ -1,0 +1,42 @@
+---
+/**
+ * A rolling belt of client marks.
+ *
+ * Two identical tracks, because a marquee loops without a seam only if what
+ * scrolls away has already been replaced by a copy. The animation is CSS, so
+ * this ships no JavaScript, and it pauses on hover and for anyone who has
+ * asked the system to reduce motion.
+ *
+ * The second track is the same eight logos again, so it is `aria-hidden` and
+ * its images carry empty alt: a screen reader should hear each company once.
+ */
+import { Image } from 'astro:assets';
+import { CLIENTS } from '~/data/clients';
+
+export type Props = {
+  label?: string;
+};
+
+const { label = 'Companies running Hoshii' } = Astro.props;
+---
+
+<div class="belt" role="group" aria-label={label}>
+  {
+    [false, true].map((isCopy) => (
+      <ul class="belt__track" aria-hidden={isCopy ? 'true' : undefined}>
+        {CLIENTS.map((client) => (
+          <li>
+            <Image
+              class={`proof__logo proof__logo--${client.key} proof__logo--${client.ink}`}
+              src={client.src}
+              alt={isCopy ? '' : client.name}
+              widths={[300, 480]}
+              sizes="180px"
+              loading="lazy"
+            />
+          </li>
+        ))}
+      </ul>
+    ))
+  }
+</div>

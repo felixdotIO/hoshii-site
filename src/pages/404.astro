@@ -1,0 +1,53 @@
+---
+/**
+ * The page that is not there.
+ *
+ * It offers the handful of places someone probably meant, which is the useful
+ * thing a 404 can do. It is noindex: a 404 body served under a real URL is the
+ * one page on the site that should never be in an index.
+ *
+ * Live has fifty URLs with no page here yet — the product pages and the whole
+ * German tree. They land on this rather than being redirected to the homepage,
+ * because a redirect would claim a replacement that does not exist. See
+ * ~/data/redirects.
+ */
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import DocMasthead from '~/components/DocMasthead.astro';
+
+const ELSEWHERE = [
+  { href: '/', label: 'The homepage' },
+  { href: '/order-processing/', label: 'Order processing' },
+  { href: '/customers/', label: 'Customer stories' },
+  { href: '/resources/', label: 'Resources' },
+  { href: '/pricing/', label: 'Pricing' },
+  { href: '/faq/', label: 'Questions' },
+  { href: '/demo/', label: 'Book a demo' },
+];
+---
+
+<BaseLayout
+  title="Page not found"
+  description="That page is not here. This one lists the places on hoshii.ai you were most likely looking for."
+  path="/404/"
+  index={false}
+  mainClass="doc page--notfound"
+>
+  <DocMasthead
+    title="That page is not here"
+    sub="It may have moved, or it may never have existed. "
+    accent="Here is what is."
+  />
+
+  <div class="doc__band guides">
+    <div class="doc__inner doc__body">
+      <p>
+        If you followed a link from somewhere on this site, we would like to fix
+        it — the address is <a href="mailto:contact@hoshii.ai">contact@hoshii.ai</a>.
+      </p>
+
+      <ul class="notfound__links">
+        {ELSEWHERE.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
+      </ul>
+    </div>
+  </div>
+</BaseLayout>

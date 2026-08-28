@@ -1,0 +1,38 @@
+---
+/**
+ * Portraits, names and roles. The quote runs only where the person gave one.
+ *
+ * The photograph is decorative next to the name printed under it — announcing
+ * "photo of Daniel Nydegger" straight before the text "Daniel Nydegger" is a
+ * duplicate, not a description — so alt is deliberately empty.
+ */
+import { Image } from 'astro:assets';
+import type { TeamMember } from '~/data/team';
+
+export type Props = {
+  members: TeamMember[];
+  quotes?: boolean;
+};
+
+const { members, quotes = true } = Astro.props;
+---
+
+<ul class="doc__team">
+  {
+    members.map((member) => (
+      <li class="doc__person">
+        <Image
+          class="doc__portrait"
+          src={member.photo}
+          alt=""
+          widths={[290, 580]}
+          sizes="(min-width: 60em) 14rem, 40vw"
+          loading="lazy"
+        />
+        <p class="doc__personName">{member.name}</p>
+        <p class="doc__personRole">{member.role}</p>
+        {quotes && member.quote && <blockquote class="doc__personQuote">{member.quote}</blockquote>}
+      </li>
+    ))
+  }
+</ul>

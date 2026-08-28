@@ -1,0 +1,43 @@
+{
+  "page": "faq",
+  "group": "Getting started & pricing",
+  "order": 4,
+  "items": [
+    {
+      "question": "Can I set Hoshii up myself?",
+      "answer": [
+        "Yes. Sign in with Gmail or Outlook, point Hoshii at the mailboxes you want it working in, and it starts preparing what arrives. There is no implementation project and no migration. The one part that can involve someone else is the ERP connection, and even that your own IT team can build with the CDK rather than wait on us."
+      ]
+    },
+    {
+      "question": "How long does it take to get started?",
+      "answer": [
+        "Two parts, running in parallel. Signing in takes minutes: single sign‑on with the mailbox you already use, no migration, no new address, and replies still go out from yours. Your team can work in Hoshii the same morning. The ERP connection is the longer half: often days with an ERP we already know, up to about six weeks with one that is new to us."
+      ]
+    },
+    {
+      "question": "Do you onboard and train our team?",
+      "answer": [
+        "You do not need us in order to start, because the Unibox is built to be picked up without training. When you want it, hands‑on onboarding is there, and it is usually worth taking: adopting Hoshii is more a change in how the desk works than a change of software. As your team works, Hoshii learns your rules and settles into the way you already operate."
+      ]
+    },
+    {
+      "question": "Does my team have to change how they work?",
+      "answer": [
+        "No. The work keeps arriving in the inbox they already use, and that is where Hoshii starts, preparing each message before anyone opens it. When the team wants more overview, the Unibox is there: one shared inbox with owners, statuses and deadlines."
+      ]
+    },
+    {
+      "question": "What does it cost?",
+      "answer": [
+        "We quote per workspace, against how much lands in the inbox, how many inboxes it covers and which systems Hoshii writes into. Users are unlimited on every quote, so inviting your whole company to comment and weigh in costs nothing. The work itself is metered in credits, with an allowance we size to an average month with you. How pricing works sets out what moves the number."
+      ]
+    },
+    {
+      "question": "How do I get started?",
+      "answer": [
+        "Sign in and point Hoshii at one mailbox; you will see what it does with real work inside the hour. If you would rather be walked through it, book a demo and bring a real order, and we will show you exactly what our agents do with it, live, in 30 minutes."
+      ]
+    }
+  ]
+}

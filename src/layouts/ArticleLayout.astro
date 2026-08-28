@@ -1,0 +1,118 @@
+---
+/**
+ * One editorial article.
+ *
+ * The order is deliberate and is the same on every piece: where you are, what
+ * this is, the answer, who wrote it and when, then the argument. A reader and
+ * an answer engine meet the summary in the same place, before the body.
+ *
+ * The BlogPosting node is built from the same title, summary, dates and author
+ * the page prints, so nothing in the structured data is invisible on the page.
+ */
+import { render, getEntry, type CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import DocLayout from '~/layouts/DocLayout.astro';
+import TableOfContents from '~/components/TableOfContents.astro';
+import AuthorCard from '~/components/AuthorCard.astro';
+import Sources from '~/components/Sources.astro';
+import RelatedArticles from '~/components/RelatedArticles.astro';
+import { blogPosting, person } from '~/lib/schema';
+import { isoDay, readableDate } from '~/lib/urls';
+import { articlePath } from '~/lib/paths';
+import type { AuthorId } from '~/data/site';
+
+export type Props = {
+  article: CollectionEntry<'articles'>;
+};
+
+const { article } = Astro.props;
+const { data } = article;
+const path = articlePath(article);
+
+const { Content, headings } = await render(article);
+const author = await getEntry('authors', data.author.id);
+if (!author) throw new Error(`Article ${article.id} names an unknown author.`);
+
+const schema = [
+  blogPosting({
+    headline: data.title,
+    description: data.summary,
+    path,
+    published: data.publishedAt,
+    updated: data.updatedAt,
+    author: data.author.id as AuthorId,
+    image: data.heroImage?.src,
+    section: data.category,
+    keywords: data.tags,
+  }),
+  person(data.author.id as AuthorId),
+];
+---
+
+<DocLayout
+  title={data.title}
+  description={data.description}
+  path={path}
+  index={!data.draft}
+  ogType="article"
+  image={data.heroImage?.src}
+  imageAlt={data.heroImageAlt || undefined}
+  schema={schema}
+  publishedTime={data.publishedAt.toISOString()}
+  modifiedTime={(data.updatedAt ?? data.publishedAt).toISOString()}
+  trail={[
+    { label: 'Resources', href: '/resources/' },
+    { label: data.title, href: path },
+  ]}
+  pageClass="page--article"
+  closerTitle="Reading about it is one thing."
+  closerAccent="Seeing it on your own mail is another."
+  closerLead="We’ll show you exactly what Hoshii does with your operations, live, in 30 minutes."
+>
+  <ul class="art__meta" slot="masthead">
+    <li>{data.category}</li>
+    <li>
+      <time datetime={isoDay(data.publishedAt)}>{readableDate(data.publishedAt)}</time>
+    </li>
+    {
+      data.updatedAt && (
+        <li>
+          <span class="art__updated">
+            Updated <time datetime={isoDay(data.updatedAt)}>{readableDate(data.updatedAt)}</time>
+          </span>
+        </li>
+      )
+    }
+    {data.readingMinutes && <li>{data.readingMinutes} min read</li>}
+  </ul>
+
+  <article class="art">
+    {/* An empty alt means decorative, not absent: the art still runs, it is
+        simply not described to a reader who cannot see it. */}
+    {
+      data.heroImage && (
+        <figure class="art__hero">
+          <Image
+            src={data.heroImage}
+            alt={data.heroImageAlt ?? ''}
+            widths={[640, 960, 1280]}
+            sizes="(min-width: 60em) 40rem, 100vw"
+            loading="eager"
+          />
+        </figure>
+      )
+    }
+
+    <p class="art__lede">{data.summary}</p>
+
+    <TableOfContents headings={headings} />
+
+    <div class="art__body">
+      <Content />
+    </div>
+
+    <Sources sources={data.sources} />
+    <AuthorCard author={author} />
+    <RelatedArticles current={article} />
+  </article>
+</DocLayout>

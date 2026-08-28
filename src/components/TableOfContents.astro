@@ -1,0 +1,38 @@
+---
+/**
+ * The contents of a long article, built from the headings the piece actually
+ * renders.
+ *
+ * Plain in-page links: no scroll spy, no observer, no script. The value is
+ * seeing the shape of the piece and being able to jump, and neither needs
+ * JavaScript.
+ *
+ * Only h2 and h3 appear. An h4 in a piece this length is a detail, and a
+ * contents list that reproduces every heading stops being a summary.
+ */
+import type { MarkdownHeading } from 'astro';
+
+export type Props = {
+  headings: MarkdownHeading[];
+};
+
+const { headings } = Astro.props;
+const entries = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{
+  entries.length > 2 && (
+    <nav class="toc" aria-labelledby="toc-head">
+      <p class="toc__head" id="toc-head">
+        On this page
+      </p>
+      <ol class="toc__list">
+        {entries.map((heading) => (
+          <li class:list={[heading.depth === 3 && 'toc__sub']}>
+            <a href={`#${heading.slug}`}>{heading.text}</a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}

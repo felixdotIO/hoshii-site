@@ -1,0 +1,51 @@
+---
+import { Image } from 'astro:assets';
+import BrandMark from '~/components/BrandMark.astro';
+import { FOOTER_NAV } from '~/data/nav';
+import { SITE } from '~/data/site';
+import wordmark from '~/assets/logo/wordmark-b.png';
+
+const year = new Date().getUTCFullYear();
+---
+
+<footer class="foot">
+  <div class="foot__inner">
+    <div class="foot__brand">
+      <a class="brand brand--foot" href="/" aria-label="Hoshii home">
+        <BrandMark tone="dark" />
+        <Image
+          class="brand__wordmark"
+          src={wordmark}
+          alt="Hoshii"
+          widths={[220, 440]}
+          sizes="110px"
+          loading="lazy"
+        />
+      </a>
+      <p class="foot__line">
+        The AI&#8209;native inbox for B2B operations. Built in Zurich for the teams that keep
+        goods moving.
+      </p>
+    </div>
+
+    <nav class="foot__nav" aria-label="Footer">
+      {
+        FOOTER_NAV.map((column) => (
+          <div class="foot__col">
+            <h2 class="foot__head">{column.heading}</h2>
+            {column.links.map((link) => (
+              <a class="foot__link" href={link.href}>
+                {link.label}
+              </a>
+            ))}
+          </div>
+        ))
+      }
+    </nav>
+  </div>
+
+  <p class="foot__base">
+    <span>&copy; {year} {SITE.name}</span>
+    <span>Z&uuml;rich, Switzerland</span>
+  </p>
+</footer>

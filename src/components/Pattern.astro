@@ -1,0 +1,27 @@
+---
+/**
+ * The decorative pattern layer that sits behind the mastheads and the closing
+ * bands.
+ *
+ * In the static build these boxes were injected by a script, along with two
+ * more that tiled the motif into several thousand real SVG shapes so each one
+ * could tilt under the cursor. That is gone: the layer is now rendered here,
+ * in the HTML, and painted by CSS as a repeating background.
+ *
+ * The visible result is the same pattern at the same density. What is lost is
+ * the hover tilt, which cost a fetch, a DOM parse and up to ~6,000 extra
+ * elements on the longer pages, to animate something purely decorative. That
+ * is not a trade worth making on a page whose job is to load fast.
+ *
+ * `variant` picks the left or right half on the ask row, which is the one
+ * surface that carries two.
+ */
+export type Props = {
+  variant?: 'full' | 'left' | 'right';
+};
+
+const { variant = 'full' } = Astro.props;
+const modifier = variant === 'left' ? 'pat--l' : variant === 'right' ? 'pat--r' : null;
+---
+
+<div class:list={['pat', modifier]} aria-hidden="true"></div>

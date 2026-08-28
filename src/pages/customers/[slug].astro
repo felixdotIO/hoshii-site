@@ -1,0 +1,173 @@
+---
+/**
+ * One customer story.
+ *
+ * These are Articles rather than BlogPostings: they are cases published about
+ * a named company, not dated editorial, and the `about` in the schema names
+ * that company. The figures in the rail are the ones the prose already states.
+ */
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import DocLayout from '~/layouts/DocLayout.astro';
+import StoryCard from '~/components/StoryCard.astro';
+import { caseStudy } from '~/lib/schema';
+import { customerPath } from '~/lib/paths';
+import { isoDay, readableDate } from '~/lib/urls';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const stories = (await getCollection('customers', ({ data }) => !data.draft)).sort(
+    (a, b) => a.data.order - b.data.order
+  );
+  return stories.map((story) => ({
+    params: { slug: story.id },
+    props: { story, others: stories.filter((other) => other.id !== story.id).slice(0, 2) },
+  }));
+};
+
+type Props = {
+  story: CollectionEntry<'customers'>;
+  others: CollectionEntry<'customers'>[];
+};
+
+const { story, others } = Astro.props;
+const { data } = story;
+const path = customerPath(story);
+const { Content } = await render(story);
+
+const schema = [
+  caseStudy({
+    headline: data.headline,
+    description: data.description,
+    path,
+    company: data.company,
+    published: data.publishedAt,
+    updated: data.updatedAt,
+    image: data.coverImage?.src,
+  }),
+];
+---
+
+{/* The company names the page and the headline makes the claim, which is the
+    order every other masthead on the site uses: short name as the h1, the
+    argument as the deck under it. Reversing them here made the deck outrank
+    the heading it sat under. */}
+<DocLayout
+  title={`${data.company} customer story`}
+  description={data.description}
+  path={path}
+  heading={data.company}
+  sub={data.headline}
+  ogType="article"
+  image={data.coverImage?.src}
+  imageAlt={data.coverImageAlt}
+  schema={schema}
+  publishedTime={data.publishedAt.toISOString()}
+  modifiedTime={(data.updatedAt ?? data.publishedAt).toISOString()}
+  trail={[
+    { label: 'Customer stories', href: '/customers/' },
+    { label: data.company, href: path },
+  ]}
+  pageClass="page--case"
+  closerTitle="Your desk is not so different."
+  closerAccent="Let us show you on your own mail."
+  closerLead="We’ll show you exactly what Hoshii does with your operations, live, in 30 minutes."
+>
+  <ul class="art__meta" slot="masthead">
+    <li>{data.industry}</li>
+    <li>{data.erp}</li>
+    <li><time datetime={isoDay(data.publishedAt)}>{readableDate(data.publishedAt)}</time></li>
+  </ul>
+
+  <article class="case">
+    {
+      data.coverImage && (
+        <figure class="art__hero">
+          <Image
+            src={data.coverImage}
+            alt={data.coverImageAlt ?? ''}
+            widths={[640, 960, 1280]}
+            sizes="(min-width: 60em) 40rem, 100vw"
+            loading="eager"
+          />
+        </figure>
+      )
+    }
+
+    {
+      data.figures.length > 0 && (
+        <ul class="figs">
+          {data.figures.map((figure) => (
+            <li class="figs__item">
+              <span class="figs__n">{figure.value}</span>
+              <span class="figs__l">{figure.label}</span>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    {
+      data.videoId && (
+        <div class="cam__frame">
+          <iframe
+            src={`https://fast.wistia.net/embed/iframe/${data.videoId}?videoFoam=true`}
+            title={data.videoTitle ?? `${data.company} on running Hoshii`}
+            loading="lazy"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowfullscreen
+          />
+        </div>
+      )
+    }
+
+    <Content />
+
+    {
+      data.lift && (
+        <p class="lift">
+          <span class="lift__text">{data.lift}</span>
+        </p>
+      )
+    }
+
+    {
+      data.quoteText && (
+        <figure class="pull">
+          <blockquote class="pull__text">{data.quoteText}</blockquote>
+          <figcaption class="pull__by">
+            {data.quotePhoto && (
+              <Image
+                class="pull__face"
+                src={data.quotePhoto}
+                alt=""
+                widths={[88, 176]}
+                sizes="44px"
+                loading="lazy"
+              />
+            )}
+            <span class="pull__who">
+              <span class="pull__name">{data.quoteName}</span>
+              <span class="pull__role">{data.quoteRole}</span>
+            </span>
+          </figcaption>
+        </figure>
+      )
+    }
+  </article>
+
+  {
+    others.length > 0 && (
+      <section class="related" aria-labelledby="more-stories">
+        <h2 class="related__head" id="more-stories">
+          More customer stories
+        </h2>
+        <ul class="story__list">
+          {others.map((other) => (
+            <StoryCard story={other} />
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</DocLayout>

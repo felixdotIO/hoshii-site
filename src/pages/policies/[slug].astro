@@ -1,0 +1,52 @@
+---
+/**
+ * A legal document.
+ *
+ * The two contract documents (the MSA and the service levels) live at a stable
+ * URL because an order form links to them, but they are not part of the site:
+ * `index: false` in their frontmatter keeps them out of the sitemap and puts a
+ * noindex on them, and the header drops to its minimal variant so a contract
+ * is not wrapped in a sales nav.
+ *
+ * No closing CTA here either. A privacy policy is not a funnel.
+ */
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import DocLayout from '~/layouts/DocLayout.astro';
+import { policyPath } from '~/lib/paths';
+import { isoDay, readableDate } from '~/lib/urls';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const policies = await getCollection('policies');
+  return policies.map((policy) => ({
+    params: { slug: policy.id },
+    props: { policy },
+  }));
+};
+
+type Props = { policy: CollectionEntry<'policies'> };
+
+const { policy } = Astro.props;
+const { data } = policy;
+const path = policyPath(policy);
+const { Content } = await render(policy);
+---
+
+<DocLayout
+  title={data.name}
+  description={data.description}
+  path={path}
+  sub={data.standfirst}
+  index={data.index}
+  header={data.index ? 'full' : 'minimal'}
+  trail={data.index ? [{ label: data.name, href: path }] : []}
+  pageClass="page--policy"
+  closer={false}
+  modifiedTime={data.updatedAt.toISOString()}
+>
+  <p class="doc__standfirst">
+    Last updated <time datetime={isoDay(data.updatedAt)}>{readableDate(data.updatedAt)}</time>
+  </p>
+
+  <Content />
+</DocLayout>

@@ -1,0 +1,57 @@
+---
+/**
+ * The FAQ page's own body: every group, in the document shape.
+ *
+ * The page h1 names the page, so each group name is an h2 and each question an
+ * h3 — one level per step, no skips. The jump list at the top is plain
+ * in-page links to those h2 ids.
+ *
+ * Answers sit inside `<details>`, closed by default, and are still in the
+ * HTML: a long page of open answers is unreadable, and a closed disclosure
+ * costs a crawler nothing.
+ */
+import type { CollectionEntry } from 'astro:content';
+
+export type Props = {
+  groups: CollectionEntry<'faqs'>[];
+};
+
+const { groups } = Astro.props;
+
+/** The group name as an id, so the jump link and the heading always agree. */
+const slug = (group: CollectionEntry<'faqs'>) =>
+  group.data.group
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+---
+
+{/* A jump list of one is not navigation, so it only appears when there is
+    somewhere to jump between. */}
+{
+  groups.length > 1 && (
+    <nav class="doc__index" aria-label="Sections">
+      {groups.map((group) => (
+        <a href={`#${slug(group)}`}>{group.data.group}</a>
+      ))}
+    </nav>
+  )
+}
+
+{
+  groups.map((group) => (
+    <>
+      <h2 id={slug(group)}>{group.data.group}</h2>
+      {group.data.items.map((item) => (
+        <details class="doc__fold">
+          <summary class="doc__sum">
+            <h3>{item.question}</h3>
+          </summary>
+          {item.answer.map((para) => (
+            <p>{para}</p>
+          ))}
+        </details>
+      ))}
+    </>
+  ))
+}

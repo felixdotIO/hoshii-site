@@ -1,0 +1,37 @@
+{
+  "page": "order-processing",
+  "group": "Common questions",
+  "order": 1,
+  "items": [
+    {
+      "question": "What is the Order Processing Skill?",
+      "answer": [
+        "It is a Hoshii Skill that reads inbound B2B orders from email, PDF, Excel, voicemail and photographs, matches each line to a product in your ERP, and prepares an entry your team confirms in one click."
+      ]
+    },
+    {
+      "question": "Which formats can it read?",
+      "answer": [
+        "PDFs and scans, email text and forwarded threads, Excel and CSV, audio and voicemail, and photographs including handwriting. Layout does not have to be consistent and the language does not have to be English."
+      ]
+    },
+    {
+      "question": "Does it post into the ERP automatically?",
+      "answer": [
+        "Only once someone approves it. Reading your ERP is included; writing into it is switched on per area of work, and a person confirms the entry before it posts."
+      ]
+    },
+    {
+      "question": "Which ERP systems does it work with?",
+      "answer": [
+        "Hoshii is live with 20+ ERP systems, over REST where there is an API and SFTP where there is not. Where a system has no interface at all, Hoshii drives it the way a person would."
+      ]
+    },
+    {
+      "question": "How does it handle customers who order the same thing differently?",
+      "answer": [
+        "Every confirmation is training data for that customer. The same phrase can resolve to different products for different customers, and the Skill applies what it learned from the next order on."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+---
+/**
+ * The questions page.
+ *
+ * This is the one page on the site that genuinely is a list of questions and
+ * their answers, so it is the one page that carries FAQPage structured data.
+ * The pairs in the schema are built from the same collection entries the page
+ * renders, so the two cannot disagree — which is the only condition under
+ * which the markup is worth emitting at all.
+ */
+import { getCollection } from 'astro:content';
+import DocLayout from '~/layouts/DocLayout.astro';
+import FaqGroups from '~/components/FaqGroups.astro';
+import { faqPage, softwareApplication, type QA } from '~/lib/schema';
+
+const groups = (await getCollection('faqs', ({ data }) => data.page === 'faq')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+
+/** Every rendered question, flattened. Answers join as the page prints them. */
+const pairs: QA[] = groups.flatMap((group) =>
+  group.data.items.map((item) => ({
+    question: item.question,
+    answer: item.answer.join(' '),
+  }))
+);
+---
+
+<DocLayout
+  title="Questions"
+  description="How Hoshii works, what it connects to, where your data lives, and what it takes to start: the questions B2B teams ask before they commit."
+  path="/faq/"
+  heading="Questions"
+  sub="How Hoshii works, what it connects to, where your data lives, "
+  accent="and what it takes to start."
+  trail={[{ label: 'Questions', href: '/faq/' }]}
+  pageClass="page--faq"
+  schema={[faqPage(pairs), softwareApplication()]}
+>
+  <FaqGroups groups={groups} />
+
+  <p>
+    Still unanswered? The <a href="/order-processing/">order processing page</a>
+    walks through what happens to a single order, and
+    <a href="/pricing/">pricing</a> covers what a workspace costs. Anything
+    else, <a href="/demo/">book a demo</a> and ask.
+  </p>
+</DocLayout>

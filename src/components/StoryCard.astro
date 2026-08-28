@@ -1,0 +1,28 @@
+---
+/**
+ * One customer story in a list. The facts on the foot — the system Hoshii
+ * writes into, and the industry — are the ones a reader scans for, so they are
+ * pulled out of the prose rather than left inside it.
+ */
+import type { CollectionEntry } from 'astro:content';
+import { customerPath } from '~/lib/paths';
+
+export type Props = {
+  story: CollectionEntry<'customers'>;
+};
+
+const { story } = Astro.props;
+const { data } = story;
+---
+
+<li class="story__item">
+  <a class="story__card" href={customerPath(story)}>
+    <span class="story__who">{data.company}</span>
+    <span class="story__head">{data.headline}</span>
+    <span class="story__blurb">{data.excerpt}</span>
+    <span class="story__foot">
+      <span class="story__erp">{data.erp}</span>
+      <span class="story__voice">{data.industry}</span>
+    </span>
+  </a>
+</li>

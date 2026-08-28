@@ -1,0 +1,62 @@
+---
+/**
+ * A HubSpot form, and the route that works when it does not load.
+ *
+ * This is the only third-party script on the site, and it is here because the
+ * forms genuinely post to HubSpot. Two things keep it honest:
+ *
+ *  - The fallback is in the HTML, not built by the script. A visitor with the
+ *    embed blocked — which in DACH is a routine consent outcome, not an edge
+ *    case — sees a real mailto route in the initial response rather than an
+ *    empty box. The script hides it once the form is mounted.
+ *  - The embed loads `defer`, so it never blocks first paint.
+ */
+export type Props = {
+  /** HubSpot form id. The portal and region are the same for both forms. */
+  formId: string;
+  /** Id of the element HubSpot mounts into. Unique per page. */
+  target: string;
+  /** What the fallback invites, and the address it writes to. */
+  fallbackLead: string;
+  email: string;
+  subject: string;
+  /** Names the form for assistive technology before HubSpot labels it. */
+  label: string;
+};
+
+const { formId, target, fallbackLead, email, subject, label } = Astro.props;
+
+const PORTAL = '143412715';
+const REGION = 'eu1';
+const mailto = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
+---
+
+<div class="doc__embed doc__embed--form">
+  <div id={target} role="group" aria-label={label}></div>
+
+  <p class="doc__standin" id={`${target}-standin`}>
+    {fallbackLead} <a href={mailto}>{email}</a>
+  </p>
+</div>
+
+<script
+  is:inline
+  defer
+  src="https://js-eu1.hsforms.net/forms/embed/v2.js"
+  data-hs-form={formId}
+  data-hs-target={target}
+  data-hs-portal={PORTAL}
+  data-hs-region={REGION}
+  onload={`(function(s){
+    if (!window.hbspt) return;
+    hbspt.forms.create({
+      region: s.dataset.hsRegion,
+      portalId: s.dataset.hsPortal,
+      formId: s.dataset.hsForm,
+      target: '#' + s.dataset.hsTarget,
+      onFormReady: function () {
+        var standin = document.getElementById(s.dataset.hsTarget + '-standin');
+        if (standin) standin.hidden = true;
+      }
+    });
+  })(this)`}></script>

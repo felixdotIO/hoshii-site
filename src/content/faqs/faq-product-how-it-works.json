@@ -1,0 +1,98 @@
+{
+  "page": "faq",
+  "group": "Product & how it works",
+  "order": 1,
+  "items": [
+    {
+      "question": "What is Hoshii?",
+      "answer": [
+        "Hoshii is the AI‑native inbox for B2B operations. Our agents read what arrives in your team’s shared mailboxes: orders, RFQs, complaints, chasers, plain questions. They reach into the systems the answers live in: your ERP, your CRM, your price lists, your files. They draft the reply that fits that customer, prepare the entry your ERP needs, and handle the repetitive work in between. Your team approves, adjusts or overrides. Your systems stay the record; Hoshii is where the work gets done."
+      ]
+    },
+    {
+      "question": "Who is Hoshii for?",
+      "answer": [
+        "B2B teams whose day arrives by email. Order desks and customer service, sales and account management, finance and accounts receivable, and the contract and legal side. Most of our customers are wholesalers, manufacturers and distributors in the DACH region, where a shared inbox is still where the work starts."
+      ]
+    },
+    {
+      "question": "Does Hoshii replace my team?",
+      "answer": [
+        "No. Hoshii takes the repetitive work so your team can get ahead of it. There is always a human in the loop: our agents prepare the work, your team approves, adjusts or overrides it. It takes work off your team, not decisions away from them."
+      ]
+    },
+    {
+      "question": "What happens when Hoshii gets something wrong?",
+      "answer": [
+        "Nothing reaches a customer or one of your systems without your approval. Your team corrects it before it goes out, and every correction teaches the agent through Continuous Learning, so the same mistake does not come back, and you can watch that happen in the autonomy figures in Analytics. You stay in control. AI can make mistakes, so always double check."
+      ]
+    },
+    {
+      "question": "Which channels and formats can Hoshii handle?",
+      "answer": [
+        "Email and whatever is attached to it: PDFs, Excel sheets, scans, plus voicemails, WhatsApp messages and photographs of handwritten notes. Whatever channel or format the work arrives in, Hoshii reads it and turns it into a structured task."
+      ]
+    },
+    {
+      "question": "Which languages does Hoshii understand?",
+      "answer": [
+        "Hoshii works out what a message means in any language and any phrasing, German, French, Italian and English included. Your customers never have to change how they write."
+      ]
+    },
+    {
+      "question": "What is the Unibox?",
+      "answer": [
+        "One shared workspace where every channel arrives as a structured task with an owner, a status and a deadline. Build personal views to work the way you like, and see where everything stands at a glance."
+      ]
+    },
+    {
+      "question": "Does Hoshii read my private inbox?",
+      "answer": [
+        "Shared stays shared, private stays private. Hoshii works in the mailboxes you point it at. Your personal mailbox stays yours. Nothing is read from it and nothing in it is visible to colleagues, until you choose to bring a specific thread into the Unibox."
+      ]
+    },
+    {
+      "question": "What are your agents?",
+      "answer": [
+        "An agent is a teammate you scope to one kind of work: order entry, quote follow‑up, complaint triage, chasing unconfirmed orders. It works in the Unibox alongside the people doing the same job: picking up what arrives, preparing it, handing it over for approval.",
+        "Each one has its own level of autonomy, so an agent you have come to trust runs further ahead than one you added last week, and each learns from the corrections made to its own work. You add agents as you need them rather than switching everything on at once."
+      ]
+    },
+    {
+      "question": "What can the chat do for me?",
+      "answer": [
+        "Ask your own operation a question and get an answer out of your own data. Chat reaches the same connected systems our agents use, so “which orders are still unconfirmed?”, “what did we quote this customer last time?” or “why is this delivery late?” get answered from your ERP and your inbox instead of sending you looking. It runs inside Hoshii: what you ask and what it reads never leave your company."
+      ]
+    },
+    {
+      "question": "Can my team collaborate in Hoshii?",
+      "answer": [
+        "Yes. Comment on any task and @mention anyone, including colleagues who do not use Hoshii, and they can reply from their own inbox. Inviting your whole company to collaborate is free, so there is no more forwarding threads back and forth."
+      ]
+    },
+    {
+      "question": "What does Analytics show me?",
+      "answer": [
+        "Analytics is your read on how the operation actually runs: the mix of what arrives, where work is piling up and on whom, which customers or product lines cause the most rework, and how close each kind of task is to running on its own. It also points at what to fix next: the exception that keeps recurring and deserves a rule, the request type worth handing over."
+      ]
+    },
+    {
+      "question": "Can Hoshii run fully autonomously?",
+      "answer": [
+        "Autonomy is a spectrum, not a switch. Every kind of work sits somewhere between fully manual and fully autonomous, and it moves as Hoshii learns. We aim for 95% handled autonomously, with your team holding the judgment calls."
+      ]
+    },
+    {
+      "question": "How is Hoshii different from a chatbot or a generic AI assistant?",
+      "answer": [
+        "Hoshii is not a chat window. It is a workspace wired into your systems and your team’s rules: it reads real inbound work, prepares finished entries and replies, and routes tasks to owners with deadlines. What comes out is operational work waiting for approval, not a conversation you then have to act on."
+      ]
+    },
+    {
+      "question": "We already use Microsoft Copilot. Why Hoshii?",
+      "answer": [
+        "Copilot helps one person write faster. Hoshii runs your team’s work: shared tasks, context pulled from your systems, and numbers for the whole operation. Same budget, different job."
+      ]
+    }
+  ]
+}

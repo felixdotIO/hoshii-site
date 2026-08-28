@@ -1,0 +1,18 @@
+# Build output
+dist/
+.vercel/
+.astro/
+
+# Dependencies
+node_modules/
+
+# Secrets. Keystatic's GitHub credentials live here in local development and
+# must never be committed; production reads them from the Vercel project.
+.env
+.env.*
+!.env.example
+
+# OS and tooling noise
+.DS_Store
+npm-debug.log*
+*.log

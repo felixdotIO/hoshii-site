@@ -1,0 +1,25 @@
+---
+/**
+ * One article, at /resources/<slug>/.
+ *
+ * Drafts are not built at all, so a draft cannot be reached by guessing the
+ * URL, and there is no noindex page sitting there advertising it.
+ */
+import type { GetStaticPaths } from 'astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import ArticleLayout from '~/layouts/ArticleLayout.astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const articles = await getCollection('articles', ({ data }) => !data.draft);
+  return articles.map((article) => ({
+    params: { slug: article.id },
+    props: { article },
+  }));
+};
+
+type Props = { article: CollectionEntry<'articles'> };
+
+const { article } = Astro.props;
+---
+
+<ArticleLayout article={article} />

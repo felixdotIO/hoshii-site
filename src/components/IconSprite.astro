@@ -1,0 +1,43 @@
+---
+/**
+ * Every line icon on the site, defined once.
+ *
+ * The shapes live in `<defs>`, so nothing here paints; each icon is pulled in
+ * where it is used with `<use href="#ico-...">`. That way a motif drawn twenty
+ * times on a page costs one definition rather than twenty copies of the path
+ * data, and the stroke weight is set once in CSS instead of per instance.
+ *
+ * Purely decorative, so the sprite is hidden from assistive technology and
+ * every `<use>` that references it is too.
+ */
+---
+
+<svg class="iconsprite" aria-hidden="true" focusable="false">
+      <defs>
+        <!-- The flow diagram's own set: drawn to one grid, one stroke weight and
+             one corner radius, so the six read as a family at 20px. -->
+        <g id="ico-mail"><rect x="3.25" y="6" width="17.5" height="12" rx="2.25"/><path d="M4.5 7.4 12 13l7.5-5.6"/></g>
+        <g id="ico-chat"><rect x="3.25" y="5.25" width="17.5" height="11.5" rx="2.25"/><path d="M8.1 16.75v3.1l3.7-3.1"/></g>
+        <g id="ico-doc"><path d="M6.25 3.5h7.1l4.4 4.4V20a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 4.75 20V5a1.5 1.5 0 0 1 1.5-1.5Z"/><path d="M13.35 3.5v4.4h4.4"/></g>
+        <g id="ico-search"><circle cx="10.9" cy="10.9" r="6.4"/><path d="m15.5 15.5 5.25 5.25"/></g>
+        <g id="ico-drafted"><rect x="4.75" y="3.5" width="14.5" height="18" rx="1.5"/><path d="M7.9 9h8.2M7.9 12.5h8.2M7.9 16h4.6"/></g>
+        <g id="ico-reply"><path d="M9.4 6.6 4 12l5.4 5.4"/><path d="M4 12h8.6a8.15 8.15 0 0 1 8.15 8.15"/></g>
+        <g id="vox-bars"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8.2 16.2v-3.8M12 16.2V8.6M15.8 16.2v-5.6"/></g>
+        <g id="vox-box"><rect x="3" y="4.5" width="18" height="15" rx="1.75"/><path d="M3 9.4h18M3 14.5h18M9.5 9.4v10.1M15 9.4v10.1"/></g>
+        <g id="vox-chat"><path d="M20.5 11.8c0 3.9-3.8 7.1-8.5 7.1-1 0-2-.14-2.9-.4L4 20.5l1.35-3.6C4.1 15.5 3.5 13.7 3.5 11.8c0-3.9 3.8-7.1 8.5-7.1s8.5 3.2 8.5 7.1Z"/></g>
+        <g id="vox-check"><rect x="3.5" y="3.5" width="17" height="17" rx="2.75"/><path d="m8 12.3 2.9 2.9 5.6-5.6"/></g>
+        <g id="vox-clock"><circle cx="12" cy="12" r="8.5"/><path d="M12 6.9V12l3.5 2.1"/></g>
+        <g id="vox-doc"><path d="M6 3.5h7.5L18.5 8.5v12h-12.5z"/><path d="M13.5 3.5v5h5"/><path d="M9 13h6M9 16.3h4"/></g>
+        <g id="vox-drive"><rect x="2.5" y="4.5" width="19" height="12.5" rx="1.75"/><path d="M9 20.5h6M12 17v3.5"/></g>
+        <g id="vox-folder"><path d="M3 7a1.75 1.75 0 0 1 1.75-1.75h3.9l2.1 2.6h9.5A1.75 1.75 0 0 1 22 9.6v8.65A1.75 1.75 0 0 1 20.25 20H4.75A1.75 1.75 0 0 1 3 18.25z"/></g>
+        <g id="vox-heart"><path d="M12 20.4C10.4 19.2 3.5 14.5 3.5 9.6A4.55 4.55 0 0 1 12 7.05 4.55 4.55 0 0 1 20.5 9.6c0 4.9-6.9 9.6-8.5 10.8Z"/></g>
+        <g id="vox-lock"><rect x="4.5" y="10.4" width="15" height="10.1" rx="2.25"/><path d="M8 10.4V7.9a4 4 0 0 1 8 0v2.5"/></g>
+        <g id="vox-mail"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="m3.7 6.7 8.3 6.1 8.3-6.1"/></g>
+        <g id="vox-money"><circle cx="12" cy="12" r="8.5"/><path d="M15.4 8.7a4.3 4.3 0 1 0 0 6.6"/><path d="M7.6 10.9h5.1M7.6 13.2h5.1"/></g>
+        <g id="vox-parcel"><path d="M3.5 7.8 12 3.5l8.5 4.3v8.4L12 20.5l-8.5-4.3z"/><path d="m3.5 7.8 8.5 4.3 8.5-4.3M12 12.1v8.4"/></g>
+        <g id="vox-pencil"><path d="M16.4 4.6a1.9 1.9 0 0 1 2.65 0l1.35 1.35a1.9 1.9 0 0 1 0 2.65L8.6 20.4 3.5 21.5l1.1-5.1z"/><path d="m14.9 6.1 3.9 3.9"/></g>
+        <g id="vox-people"><circle cx="9.2" cy="8.6" r="3.3"/><path d="M3.4 19.8a5.8 5.8 0 0 1 11.6 0"/><path d="M16.2 6.2a3.3 3.3 0 0 1 0 6.5M17.2 15.4a5.8 5.8 0 0 1 3.4 4.4"/></g>
+        <g id="vox-search"><circle cx="10.6" cy="10.6" r="6.6"/><path d="m15.4 15.4 5.1 5.1"/></g>
+        <g id="vox-sent"><path d="M21 3 3 10.4l7.6 3.1L13.7 21z"/><path d="M21 3 10.6 13.5"/></g>
+      </defs>
+    </svg>

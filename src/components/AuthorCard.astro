@@ -1,0 +1,33 @@
+---
+/**
+ * Who wrote the piece.
+ *
+ * It names the author and what they do, and nothing else. There is no invented
+ * biography, no photograph that does not exist and no social account: the
+ * badge is the author's initials, drawn from the name itself.
+ */
+import type { CollectionEntry } from 'astro:content';
+
+export type Props = {
+  author: CollectionEntry<'authors'>;
+};
+
+const { author } = Astro.props;
+
+const initials = author.data.name
+  .split(/\s+/)
+  .map((word) => word[0])
+  .join('')
+  .slice(0, 2)
+  .toUpperCase();
+---
+
+<aside class="byline" aria-label="Author">
+  <p class="byline__badge" aria-hidden="true">{initials}</p>
+  <div>
+    <p class="byline__name">
+      <a href={author.data.url} rel="author">{author.data.name}</a>
+    </p>
+    <p class="byline__bio">{author.data.bio}</p>
+  </div>
+</aside>

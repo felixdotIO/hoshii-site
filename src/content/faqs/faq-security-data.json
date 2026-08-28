@@ -1,0 +1,31 @@
+{
+  "page": "faq",
+  "group": "Security & data",
+  "order": 3,
+  "items": [
+    {
+      "question": "Where is my data hosted?",
+      "answer": [
+        "Hoshii is built in Switzerland and hosted in the EU. Your data is processed in EU data centres and never leaves the EU."
+      ]
+    },
+    {
+      "question": "Is Hoshii GDPR‑compliant?",
+      "answer": [
+        "Yes. Hoshii is GDPR‑compliant, and a Data Processing Agreement (DPA) is available on request."
+      ]
+    },
+    {
+      "question": "Do you use my data to train AI models?",
+      "answer": [
+        "No. Your data is never used to train third‑party models."
+      ]
+    },
+    {
+      "question": "What about SOC 2 and ISO 27001?",
+      "answer": [
+        "Hoshii is GDPR‑compliant today, and SOC 2 and ISO 27001 audits are in progress. We are happy to share our current security documentation on request."
+      ]
+    }
+  ]
+}

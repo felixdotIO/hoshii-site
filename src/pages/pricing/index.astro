@@ -1,0 +1,217 @@
+---
+/**
+ * The pricing page.
+ *
+ * There is no price figure anywhere on it, deliberately: the number is quoted
+ * per workspace and the page explains what sets it instead of pretending to a
+ * table. That is also why the Offer in the structured data carries a
+ * `priceSpecification` with a description and no `price` — inventing a figure
+ * to earn a rich result would contradict the page.
+ *
+ * Its own banded layout rather than the document shape: this is a landing
+ * page, and each band is a separate argument.
+ */
+import { getCollection } from 'astro:content';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import DocMasthead from '~/components/DocMasthead.astro';
+import FaqGroups from '~/components/FaqGroups.astro';
+import TeamGrid from '~/components/TeamGrid.astro';
+import LogoBelt from '~/components/LogoBelt.astro';
+import Arrow from '~/components/Arrow.astro';
+import { GTM_TEAM } from '~/data/team';
+import { SITE } from '~/data/site';
+import { customerPath } from '~/lib/paths';
+import {
+  organization,
+  website,
+  breadcrumbs,
+  softwareApplication,
+  faqPage,
+  type QA,
+} from '~/lib/schema';
+
+const trail = [
+  { label: 'Home', href: '/' },
+  { label: 'Pricing', href: '/pricing/' },
+];
+
+const groups = (await getCollection('faqs', ({ data }) => data.page === 'pricing')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+
+const pairs: QA[] = groups.flatMap((group) =>
+  group.data.items.map((item) => ({
+    question: item.question,
+    answer: item.answer.join(' '),
+  }))
+);
+
+const stories = (await getCollection('customers', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order
+);
+
+const FACTS = [
+  'One inbox and one system is enough to start',
+  'Credits roll over, they never expire',
+  'No implementation fee on the ERPs we already run',
+];
+
+const DIALS = [
+  {
+    head: 'Volume',
+    body: 'How much lands each month, and in what form. A hundred clean PDFs is not the same job as a hundred voicemails, so the format counts as much as the count.',
+  },
+  {
+    head: 'Inboxes',
+    body: 'How many the desk runs, shared and personal. One shared address behind a whole team is a different job from eight people each forwarding their own.',
+  },
+  {
+    head: 'Systems',
+    body: 'Reading your ERP is included on every plan. Writing back into it is scoped per system, which is where a partner integration costs less than a bespoke one.',
+  },
+  {
+    head: 'Security review',
+    body: 'The standard paperwork is included. Your own DPA, a vendor questionnaire or a custom review is scoped, because it is real work on our side.',
+  },
+];
+
+const INCLUDED = [
+  'Read access to your ERP',
+  'Every shipped Skill',
+  'The Outlook and Gmail add‑in',
+  'EU hosting and email encryption',
+  'Inbox and team analytics',
+  '25+ languages, typed, scanned or spoken',
+];
+
+const pricingMail = `mailto:${SITE.email.sales}?subject=Pricing`;
+---
+
+<BaseLayout
+  title="Pricing"
+  description="What Hoshii costs is set by four things: your mail volume, your inboxes, the systems it writes into, and your security review. Here is how each one moves the number."
+  path="/pricing/"
+  mainClass="doc page--pricing doc--wide"
+  schema={[
+    organization(),
+    website(),
+    breadcrumbs(trail),
+    softwareApplication(),
+    faqPage(pairs),
+  ]}
+>
+  <DocMasthead
+    title="Pricing"
+    sub="Smooth operations, "
+    accent="starting from two coffees a day."
+    trail={trail}
+    variant="dark"
+  >
+    <p class="pricehead__acts">
+      <a class="btn-os btn-os--accent btn-os--fill btn-os--lg" href="/demo/">
+        Talk to sales
+        <Arrow />
+      </a>
+      <a class="pricehead__alt" href={pricingMail}>Or write to us first</a>
+    </p>
+    <ul class="pricehead__facts">
+      {FACTS.map((fact) => <li>{fact}</li>)}
+    </ul>
+  </DocMasthead>
+
+  <section class="pband pband--drivers guides" aria-labelledby="what-sets-the-number">
+    <div class="doc__inner doc__body pband__inner">
+      <h2 id="what-sets-the-number">What sets the number</h2>
+      <p>
+        Four things you already know: how much mail lands, how many inboxes it
+        lands in, which systems Hoshii writes into, and what your security
+        review needs. Bring rough figures for the first two and we can price
+        your desk on the call.
+      </p>
+      <ol class="dials">
+        {
+          DIALS.map((dial, i) => (
+            <li class="dial">
+              <span class="dial__n" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h3 class="dial__head">{dial.head}</h3>
+              <p class="dial__body">{dial.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <div class="kit">
+        <h3 class="kit__head">On every plan, at no extra charge</h3>
+        <ul class="kit__list">
+          {INCLUDED.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+      <p class="kit__note">
+        The work itself is metered in credits on a monthly allowance, sized with
+        you against an average month rather than a peak. Unused credits roll
+        over, so a quiet month builds the balance that carries a busy one.
+      </p>
+    </div>
+  </section>
+
+  <section class="pband pband--talk guides" aria-labelledby="who-you-will-be-talking-to">
+    <div class="doc__inner doc__body pband__inner">
+      <h2 id="who-you-will-be-talking-to">Who you will be talking to</h2>
+      <TeamGrid members={GTM_TEAM} quotes={false} />
+      <p class="doc__note">
+        Rather write first? <a href={pricingMail}>{SITE.email.sales}</a> reaches
+        the same three people.
+      </p>
+    </div>
+  </section>
+
+  <section class="pband pband--refs guides" aria-labelledby="desks-already-priced-this-way">
+    <div class="doc__inner doc__body pband__inner">
+      <p class="doc__proofLabel">Quoted this way for 500+ B2B operations teams</p>
+      <LogoBelt />
+
+      <h2 id="desks-already-priced-this-way">Desks already priced this way</h2>
+      <p>
+        Three of them, at three very different volumes, writing into three
+        different systems. Each one was quoted on the four things above.
+      </p>
+      <ul class="refs">
+        {
+          stories.map((story) => (
+            <li class="ref">
+              <a class="ref__card" href={customerPath(story)}>
+                <span class="ref__co">{story.data.company}</span>
+                <span class="ref__line">{story.data.excerpt}</span>
+                <span class="ref__foot">
+                  <span class="ref__erp">{story.data.erp}</span>
+                  <span class="ref__go" aria-hidden="true">
+                    →
+                  </span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="pband pband--faq guides" aria-label="Common questions about pricing">
+    <div class="doc__inner doc__body pband__inner">
+      <FaqGroups groups={groups} />
+    </div>
+  </section>
+
+  <section class="pband pband--end guides" aria-label="Talk to sales">
+    <div class="doc__inner doc__body pband__inner">
+      <aside class="docend">
+        <p class="docend__head">Nobody leaves this call without a price.</p>
+        <a class="btn-os btn-os--fill btn-os--lg" href="/demo/">
+          Talk to sales
+          <Arrow />
+        </a>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>

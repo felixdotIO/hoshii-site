@@ -1,0 +1,56 @@
+---
+/**
+ * Where a claim in the piece rests on something outside it, the something is
+ * named, dated and linked.
+ *
+ * Rendered only when the article declares sources. An empty "Sources" heading
+ * on a piece that cites nothing is worse than no heading: it implies evidence
+ * that is not there.
+ */
+import { isoDay, readableDate } from '~/lib/urls';
+
+export type Source = {
+  title: string;
+  publisher?: string | undefined;
+  url?: string | undefined;
+  retrieved?: Date | undefined;
+};
+
+export type Props = {
+  sources: Source[];
+};
+
+const { sources } = Astro.props;
+---
+
+{
+  sources.length > 0 && (
+    <section class="sources" aria-labelledby="sources-head">
+      <h2 class="sources__head" id="sources-head">
+        Sources
+      </h2>
+      <ol class="sources__list">
+        {sources.map((source) => (
+          <li>
+            {source.url ? (
+              <a href={source.url} rel="noopener nofollow">
+                {source.title}
+              </a>
+            ) : (
+              source.title
+            )}
+            {source.publisher && <>, {source.publisher}</>}
+            {source.retrieved && (
+              <>
+                {' '}
+                <span class="sources__when">
+                  (retrieved <time datetime={isoDay(source.retrieved)}>{readableDate(source.retrieved)}</time>)
+                </span>
+              </>
+            )}
+          </li>
+        ))}
+      </ol>
+    </section>
+  )
+}

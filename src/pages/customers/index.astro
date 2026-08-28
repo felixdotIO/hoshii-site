@@ -1,0 +1,103 @@
+---
+/**
+ * The customer index.
+ *
+ * Two kinds of proof sit here: the stories that have a page of their own, and
+ * the two customers who are on camera but have no written case. The videos
+ * play here rather than on a page that could only repeat their headline —
+ * which is why /customers/adank-davos and /customers/marinello are 301'd to
+ * this page rather than given thin pages of their own.
+ */
+import { getCollection } from 'astro:content';
+import DocLayout from '~/layouts/DocLayout.astro';
+import StoryCard from '~/components/StoryCard.astro';
+import LogoBelt from '~/components/LogoBelt.astro';
+import { absolute } from '~/lib/urls';
+import { customerPath } from '~/lib/paths';
+
+const stories = (await getCollection('customers', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order
+);
+
+/**
+ * Customers who appear on camera but have no written story. Named here because
+ * the videos are on the page; nothing is claimed about them beyond what they
+ * say themselves.
+ */
+const onCamera = [
+  {
+    company: 'Adank Davos AG',
+    wistia: 'l3tbbb0g61',
+    headline: 'Phone and PDF orders land in the ERP without the retyping',
+    voice: 'Marc Adank, Business Owner',
+  },
+  {
+    company: 'Marinello & Co. AG',
+    wistia: 'fgphaw74q0',
+    headline: 'Inbound orders handled, so the team can face customers instead of a keyboard',
+    voice: 'Max Marinello, Business Owner',
+  },
+];
+
+const itemList = {
+  '@type': 'ItemList',
+  '@id': `${absolute('/customers/')}#list`,
+  name: 'Hoshii customer stories',
+  numberOfItems: stories.length,
+  itemListElement: stories.map((story, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    url: absolute(customerPath(story)),
+    name: `${story.data.company}: ${story.data.headline}`,
+  })),
+};
+---
+
+<DocLayout
+  title="Customer stories"
+  description="How wholesalers and manufacturers run their order desks on Hoshii, in their own words: the systems, the volumes and what changed."
+  path="/customers/"
+  sub="Hoshii is clearing the inboxes "
+  accent="of Europe’s busiest order desks."
+  trail={[{ label: 'Customer stories', href: '/customers/' }]}
+  pageClass="page--customers"
+  wide={true}
+  schema={[itemList]}
+>
+  <LogoBelt />
+
+  <h2 id="written-stories">The full stories</h2>
+  <ul class="story__list">
+    {stories.map((story) => <StoryCard story={story} />)}
+  </ul>
+
+  <h2 id="customers-on-camera">Customers, on camera</h2>
+  <ul class="cam__list">
+    {
+      onCamera.map((customer) => (
+        <li class="cam__item">
+          <div class="cam__frame">
+            <iframe
+              src={`https://fast.wistia.net/embed/iframe/${customer.wistia}?videoFoam=true`}
+              title={`${customer.company} on running Hoshii`}
+              loading="lazy"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowfullscreen
+            />
+          </div>
+          <div class="cam__body">
+            <p class="cam__who">{customer.company}</p>
+            <p class="cam__head">{customer.headline}</p>
+            <p class="cam__voice">{customer.voice}</p>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+
+  <p>
+    For the reasoning behind the work rather than the results, read the
+    <a href="/resources/">resources</a>; for what Hoshii does with an order
+    once it arrives, see <a href="/order-processing/">order processing</a>.
+  </p>
+</DocLayout>

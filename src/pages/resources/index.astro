@@ -1,0 +1,104 @@
+---
+/**
+ * The article index.
+ *
+ * Every card is in the HTML at build time and stays in the DOM: the filter
+ * only hides them, so the whole list is crawlable whichever filter is active.
+ * The filter bar itself ships hidden and is revealed by the script that makes
+ * it work, so a visitor without JavaScript sees the complete list rather than
+ * a row of dead buttons.
+ */
+import { getCollection } from 'astro:content';
+import DocLayout from '~/layouts/DocLayout.astro';
+import ArticleCard from '~/components/ArticleCard.astro';
+import { SITE } from '~/data/site';
+import { absolute } from '~/lib/urls';
+import { articlePath } from '~/lib/paths';
+
+const articles = (await getCollection('articles', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
+);
+
+/** Only the categories that actually have an article behind them. */
+const categories = [...new Set(articles.map((a) => a.data.category))].sort();
+
+/**
+ * The index as an ItemList: it is literally an ordered list of articles, and
+ * saying so is cheaper for a retrieval system than inferring it from cards.
+ */
+const itemList = {
+  '@type': 'ItemList',
+  '@id': `${absolute('/resources/')}#list`,
+  name: 'Hoshii resources',
+  itemListOrder: 'https://schema.org/ItemListOrderDescending',
+  numberOfItems: articles.length,
+  itemListElement: articles.map((article, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    url: absolute(articlePath(article)),
+    name: article.data.title,
+  })),
+};
+---
+
+<DocLayout
+  title="Resources"
+  description="Guides and answers on B2B order processing, shared inboxes and ERP integration, written by the team building Hoshii in Zürich."
+  path="/resources/"
+  sub="Guides, answers and the documents "
+  accent="worth reading before you commit."
+  trail={[{ label: 'Resources', href: '/resources/' }]}
+  pageClass="page--resources"
+  wide={true}
+  schema={[itemList]}
+>
+  <link slot="head" rel="alternate" type="application/rss+xml" title={`${SITE.name} articles`} href="/rss.xml" />
+
+  <div class="res__filters" role="group" aria-label="Filter by topic" data-filters hidden>
+    <button class="res__filter" type="button" data-kind="all" aria-pressed="true">Everything</button>
+    {
+      categories.map((category) => (
+        <button class="res__filter" type="button" data-kind={category} aria-pressed="false">
+          {category}
+        </button>
+      ))
+    }
+  </div>
+
+  <ul class="res__list">
+    {articles.map((article, i) => <ArticleCard article={article} loading={i < 3 ? 'eager' : 'lazy'} />)}
+  </ul>
+
+  <p class="res__empty" data-empty hidden>Nothing filed under that yet.</p>
+
+  <p>
+    Every piece here is also in the <a href="/rss.xml">RSS feed</a>. For what
+    customers say in their own words, read the <a href="/customers/">customer
+    stories</a>; for the short answers, the <a href="/faq/">questions page</a>.
+  </p>
+</DocLayout>
+
+{/* Twelve lines, no framework, and the page is complete without them. */}
+<script>
+  const bar = document.querySelector<HTMLElement>('[data-filters]');
+  const empty = document.querySelector<HTMLElement>('[data-empty]');
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('.res__item'));
+  if (bar) {
+    bar.hidden = false;
+    bar.addEventListener('click', (event) => {
+      const button = (event.target as HTMLElement).closest<HTMLButtonElement>('.res__filter');
+      if (!button) return;
+      const kind = button.dataset.kind ?? 'all';
+      for (const other of bar.querySelectorAll('.res__filter')) {
+        other.setAttribute('aria-pressed', String(other === button));
+      }
+      let shown = 0;
+      for (const card of cards) {
+        const match = kind === 'all' || card.dataset.category === kind;
+        card.hidden = !match;
+        if (match) shown++;
+      }
+      if (empty) empty.hidden = shown > 0;
+    });
+  }
+</script>

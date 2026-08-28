@@ -1,0 +1,111 @@
+---
+/**
+ * The partner page: what a partnership is, who it suits, and the form.
+ *
+ * Split layout, so the form sits beside the argument rather than under it.
+ * A partner who has already decided can start typing without scrolling.
+ */
+import DocLayout from '~/layouts/DocLayout.astro';
+import HubspotForm from '~/components/HubspotForm.astro';
+import LogoBelt from '~/components/LogoBelt.astro';
+import Arrow from '~/components/Arrow.astro';
+import { SITE } from '~/data/site';
+
+const PROPS = [
+  {
+    claim: 'Bring Hoshii to your customers, integrated with the ERP and systems you already support.',
+    why: 'You keep the relationship and the implementation. We never sell around you.',
+  },
+  {
+    claim: 'Connect any system through our CDK, so your customers stay on the stack they know.',
+    why: 'REST where there is an API, SFTP where there is not, Computer Use where there is no interface at all.',
+  },
+  {
+    claim: 'Grow recurring revenue while we handle the AI heavy lifting in the background.',
+    why: 'You build the connector once. It serves every client you have on that system.',
+  },
+];
+
+const AUDIENCES = [
+  {
+    head: 'ERP vendors and integrators',
+    body: 'Your customers are already asking what AI does for their order desk. Hoshii is the part that reads the mail and prepares the entry; your ERP stays the system of record.',
+    shot: '/assets/img/prof-leads.jpg',
+    bloom: 'rgba(120, 150, 170, 0.22)',
+  },
+  {
+    head: 'Agencies and IT consultancies',
+    body: 'You are already the people they call when the order desk is drowning. Now there is something to deliver, not another process workshop.',
+    shot: '/assets/img/prof-sales.jpg',
+    bloom: 'rgba(214, 150, 90, 0.24)',
+  },
+];
+---
+
+<DocLayout
+  title="Become a partner"
+  description="Bring AI-driven order processing to the customers you already serve: build one connector with the Hoshii CDK and keep the relationship."
+  path="/partners/"
+  sub="Bring AI‑driven order processing to your customers, "
+  accent="powered by you."
+  trail={[{ label: 'Become a partner', href: '/partners/' }]}
+  pageClass="page--partners"
+  split={true}
+  closer={false}
+>
+  <ul class="doc__props">
+    {
+      PROPS.map((prop) => (
+        <li>
+          <p class="doc__prop">{prop.claim}</p>
+          <p class="doc__propWhy">{prop.why}</p>
+        </li>
+      ))
+    }
+  </ul>
+
+  <h2 id="who-this-is-for">Who this is for</h2>
+  <ul class="doc__panels">
+    {
+      AUDIENCES.map((audience) => (
+        <li class="doc__panel" style={`--shot: url('${audience.shot}'); --bloom: ${audience.bloom}`}>
+          <h3 class="doc__panelHead">{audience.head}</h3>
+          <p class="doc__panelBody">{audience.body}</p>
+        </li>
+      ))
+    }
+  </ul>
+
+  <h2 id="what-it-takes">What it takes</h2>
+  <p>
+    One connector, built with the Hoshii CDK. We are live with 20+ ERP systems
+    already, so if yours is one of them there may be nothing to build at all. No
+    certification to sit, no minimum to commit to: one system and one client is
+    enough to start. What Hoshii does once an order arrives is set out on the
+    <a href="/order-processing/">order processing page</a>.
+  </p>
+
+  <HubspotForm
+    slot="aside"
+    formId="7c390eb1-8b4e-4e79-a072-386017d1c38e"
+    target="partner-form"
+    label="Partner enquiry"
+    email={SITE.email.partners}
+    subject="Hoshii partnership"
+    fallbackLead="The form did not load. Tell us about your system and your customers at"
+  />
+
+  <div class="doc__band doc__band--after guides" slot="bands">
+    <div class="doc__inner doc__body">
+      <p class="doc__proofLabel">Already running on 500+ B2B order desks</p>
+      <LogoBelt />
+      <aside class="docend">
+        <p class="docend__head">Tell us which systems your customers run.</p>
+        <a class="btn-os btn-os--fill btn-os--lg" href="/demo/">
+          Book a call
+          <Arrow />
+        </a>
+      </aside>
+    </div>
+  </div>
+</DocLayout>

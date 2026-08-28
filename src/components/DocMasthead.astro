@@ -1,0 +1,48 @@
+---
+/**
+ * The masthead every page below the homepage opens with.
+ *
+ * One shape everywhere: the page's own name as the h1, one line of deck under
+ * it, and the breadcrumb trail above where there is one. That rule is why a
+ * visitor always knows which page they landed on — the nav label, the h1 and
+ * the title tag say the same thing.
+ *
+ * The `dark` variant is the green ground the pricing page uses. It is the same
+ * markup; only the band around it changes.
+ */
+import Breadcrumbs from '~/components/Breadcrumbs.astro';
+import Pattern from '~/components/Pattern.astro';
+import type { Crumb } from '~/lib/schema';
+
+export type Props = {
+  title: string;
+  /** One sentence. The clause in `accent` is emphasised. */
+  sub?: string;
+  accent?: string;
+  /** Omitted on top-level pages, where the only parent is the homepage. */
+  trail?: Crumb[];
+  variant?: 'light' | 'dark';
+};
+
+const { title, sub, accent, trail, variant = 'light' } = Astro.props;
+---
+
+{/* The green ground names its own inner box: it holds the same measure and
+    padding as .doc__inner, but sets the z-index that lifts the type over the
+    pattern corner rather than inheriting it. */}
+<div class={variant === 'dark' ? 'pricehead' : 'doc__head'}>
+  <Pattern />
+  <div class={variant === 'dark' ? 'pricehead__inner' : 'doc__inner'}>
+    {trail && trail.length > 1 && <Breadcrumbs trail={trail} />}
+    <h1 class="doc__title">{title}</h1>
+    {
+      (sub || accent) && (
+        <p class="doc__sub">
+          {sub}
+          {accent && <em>{accent}</em>}
+        </p>
+      )
+    }
+    <slot />
+  </div>
+</div>

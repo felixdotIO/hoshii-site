@@ -1,0 +1,37 @@
+{
+  "page": "pricing",
+  "group": "Common questions",
+  "order": 1,
+  "items": [
+    {
+      "question": "What does Hoshii cost?",
+      "answer": [
+        "Pricing is set per desk on four things: monthly volume, the number of inboxes, which systems Hoshii writes into, and what your security review needs. A thirty‑minute call on your own mail produces the number for your desk."
+      ]
+    },
+    {
+      "question": "How are credits counted?",
+      "answer": [
+        "The work is metered in credits on a monthly allowance, sized with you against an average month. Unused credits roll over rather than expiring."
+      ]
+    },
+    {
+      "question": "What is included in every plan?",
+      "answer": [
+        "Read access to your ERP, every shipped Skill, the Outlook and Gmail add‑in, and EU hosting. Writing into your ERP and a custom security review are scoped separately."
+      ]
+    },
+    {
+      "question": "Is there a free trial?",
+      "answer": [
+        "Not a self‑serve trial. Instead the first run is on your own mail, live on the call, so you see what Hoshii would post to your ERP before anything is signed."
+      ]
+    },
+    {
+      "question": "What does it cost to start?",
+      "answer": [
+        "One system and one inbox is enough to start. There is no minimum commitment and no implementation fee for the ERP systems we are already live with."
+      ]
+    }
+  ]
+}

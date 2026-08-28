@@ -1,0 +1,41 @@
+---
+/**
+ * The trail from the homepage to this page.
+ *
+ * Shown on pages that sit below the top level, where it answers "where am I
+ * and what is above me". Not shown on the homepage or on the top-level landing
+ * pages, where the only thing above them is the homepage the logo already
+ * links to.
+ *
+ * The last item is the current page: text, not a link, and marked
+ * aria-current so it is announced as the page you are on. The matching
+ * BreadcrumbList JSON-LD is emitted by whichever page renders this, from the
+ * same array, so the two cannot disagree.
+ */
+import type { Crumb } from '~/lib/schema';
+
+export type Props = {
+  trail: Crumb[];
+  class?: string;
+};
+
+const { trail, class: className } = Astro.props;
+---
+
+<nav class:list={['crumbs', className]} aria-label="Breadcrumb">
+  <ol class="crumbs__list">
+    {
+      trail.map((crumb, i) =>
+        i === trail.length - 1 ? (
+          <li class="crumbs__item" aria-current="page">
+            {crumb.label}
+          </li>
+        ) : (
+          <li class="crumbs__item">
+            <a href={crumb.href}>{crumb.label}</a>
+          </li>
+        )
+      )
+    }
+  </ol>
+</nav>

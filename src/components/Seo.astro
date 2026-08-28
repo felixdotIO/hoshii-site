@@ -1,0 +1,112 @@
+---
+/**
+ * Everything that goes in <head> for one page.
+ *
+ * One component so that no page can quietly ship without a canonical, and so
+ * the title, the og:title and the twitter title cannot say three different
+ * things. `title` is the page's own name; the suffix is added here.
+ */
+import { SITE } from '~/data/site';
+import { absolute } from '~/lib/urls';
+import { graph } from '~/lib/schema';
+
+export type Props = {
+  /** Page name, without the site suffix. Must be unique across the site. */
+  title: string;
+  /** One sentence, unique across the site, written for a search result. */
+  description: string;
+  /** Site path of this page, with the trailing slash. */
+  path: string;
+  /** Set false on pages that exist at a stable URL but are not the site. */
+  index?: boolean;
+  ogType?: 'website' | 'article';
+  /** Site path to the social card image. Defaults to the site's own. */
+  image?: string;
+  /** Alt text for the card image, so it is described when it is announced. */
+  imageAlt?: string;
+  /** JSON-LD nodes for this page's @graph. */
+  schema?: Record<string, unknown>[];
+  /** Article dates, emitted as og:article metadata where they apply. */
+  publishedTime?: string;
+  modifiedTime?: string;
+};
+
+const {
+  title,
+  description,
+  path,
+  index = true,
+  ogType = 'website',
+  image = SITE.ogImage,
+  imageAlt = 'A B2B order desk at work',
+  schema = [],
+  publishedTime,
+  modifiedTime,
+} = Astro.props;
+
+const fullTitle = `${title} | ${SITE.name}`;
+const canonical = absolute(path);
+const cardImage = absolute(image);
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+{
+  index ? (
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+  ) : (
+    <meta name="robots" content="noindex, nofollow" />
+  )
+}
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+{/* Fonts are same-origin and render-blocking through the stylesheet, so the
+    two weights body copy actually uses are worth a preload. The other five
+    are not: preloading a face the first screen never paints delays the ones
+    it does. */}
+<link
+  rel="preload"
+  href="/assets/fonts/Satoshi-Regular.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin
+/>
+<link
+  rel="preload"
+  href="/assets/fonts/Satoshi-Medium.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin
+/>
+
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:locale" content={SITE.locale} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={cardImage} />
+<meta property="og:image:alt" content={imageAlt} />
+
+{publishedTime && <meta property="article:published_time" content={publishedTime} />}
+{modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={cardImage} />
+<meta name="twitter:image:alt" content={imageAlt} />
+
+<link rel="alternate" type="application/rss+xml" title={`${SITE.name} articles`} href="/rss.xml" />
+
+{
+  schema.length > 0 && (
+    <script type="application/ld+json" is:inline set:html={graph(schema)} />
+  )
+}

@@ -1,0 +1,122 @@
+---
+/**
+ * The booking page.
+ *
+ * Its own layout rather than the document shape: the form is the page, so it
+ * sits beside the argument from the first screen instead of under it. The
+ * agenda below is there because "book a demo" is a vague ask — a visitor is
+ * far likelier to give up thirty minutes when the thirty minutes are itemised.
+ *
+ * No closing CTA. The call to action is the form; a second one under it would
+ * only compete.
+ */
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Breadcrumbs from '~/components/Breadcrumbs.astro';
+import HubspotForm from '~/components/HubspotForm.astro';
+import TeamGrid from '~/components/TeamGrid.astro';
+import LogoBelt from '~/components/LogoBelt.astro';
+import Pattern from '~/components/Pattern.astro';
+import { GTM_TEAM } from '~/data/team';
+import { SITE } from '~/data/site';
+import { organization, website, breadcrumbs, softwareApplication } from '~/lib/schema';
+
+const trail = [
+  { label: 'Home', href: '/' },
+  { label: 'Book a demo', href: '/demo/' },
+];
+
+const CHECKS = [
+  'Tell us what your inbox does to your week.',
+  'Watch Hoshii run one of your own real messages.',
+  'Leave with your price and your setup time.',
+];
+
+const AGENDA = [
+  {
+    when: '0–10',
+    head: 'We start with you',
+    note: 'What you are trying to fix, what you expect from this, and one real message out of your inbox to work with.',
+  },
+  {
+    when: '10–20',
+    head: 'We run it live',
+    note: 'What it reads, what it looks up, what it drafts, and exactly what it would post to your ERP.',
+  },
+  {
+    when: '20–30',
+    head: 'Systems and numbers',
+    note: 'What connecting yours takes, your price at your volume, and what changes for your team on Monday.',
+  },
+];
+---
+
+<BaseLayout
+  title="Book a demo"
+  description="Thirty minutes on a call: we run one real message from your own inbox, then give you your price and your setup time before you hang up."
+  path="/demo/"
+  mainClass="book-page page--demo"
+  schema={[organization(), website(), breadcrumbs(trail), softwareApplication()]}
+>
+  <div class="book">
+    <div class="book__grid">
+      <div class="book__pitch">
+        <Pattern />
+        <Breadcrumbs trail={trail} />
+        <h1 class="book__title">Book a demo</h1>
+        <p class="book__deck">
+          Thirty minutes. One real message out of your own inbox, run live in
+          front of you.
+        </p>
+
+        <TeamGrid members={GTM_TEAM} quotes={false} />
+
+        <ul class="doc__checks">
+          {CHECKS.map((check) => <li>{check}</li>)}
+        </ul>
+
+        <p class="doc__proofLabel">Trusted by 500+ B2B operations teams</p>
+        <LogoBelt />
+      </div>
+
+      <div class="book__form">
+        <HubspotForm
+          formId="4d222eb0-c951-4ddb-8951-f0df5c6f598e"
+          target="demo-form"
+          label="Demo booking"
+          email={SITE.email.sales}
+          subject="Hoshii demo"
+          fallbackLead="The form did not load. Email"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="book__more guides">
+    <div class="doc__inner doc__body">
+      <h2 id="nobody-leaves-this-call-without-a-price">
+        Nobody leaves this call without a price.
+      </h2>
+      <div class="pair">
+        <ol class="agenda">
+          {
+            AGENDA.map((slot) => (
+              <li class="agenda__row">
+                <span class="agenda__when">{slot.when}</span>
+                <span class="agenda__what">
+                  <span class="agenda__head">{slot.head}</span>
+                  <span class="agenda__note">{slot.note}</span>
+                </span>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+      <p>
+        What drives that price is set out on the
+        <a href="/pricing/">pricing page</a>, and the answers to most of what
+        comes up on the call are already on the
+        <a href="/faq/">questions page</a>.
+      </p>
+    </div>
+  </div>
+</BaseLayout>

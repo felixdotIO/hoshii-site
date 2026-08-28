@@ -1,0 +1,61 @@
+{
+  "page": "faq",
+  "group": "Connected systems & integrations",
+  "order": 2,
+  "items": [
+    {
+      "question": "What can Hoshii connect to?",
+      "answer": [
+        "Whatever your answers live in. Hoshii is live with 20+ ERP systems across DACH wholesale, manufacturing and distribution, and there are 1,300+ connectors for the systems around them: CRM, accounting, ticketing, spreadsheets, file shares. If a system has an interface, Hoshii can reach it."
+      ]
+    },
+    {
+      "question": "Do we need to connect our other systems?",
+      "answer": [
+        "No, you do not have to. Hoshii works from day one with just your mailbox: reading, sorting, drafting, following up. Still, the more context it has, the better it gets, so add your CRM, your calendar or your folders read‑only whenever you want that context on your tasks. Connecting your ERP is what turns a draft into a finished entry, so it is worth doing early, but it is built in parallel and nothing waits on it."
+      ]
+    },
+    {
+      "question": "Which ERP systems does Hoshii work with?",
+      "answer": [
+        "Hoshii is live with 20+ ERP systems across DACH wholesale, manufacturing and distribution. If yours is not connected yet, Hoshii can connect to any ERP with an interface."
+      ]
+    },
+    {
+      "question": "What if my ERP is custom or in‑house?",
+      "answer": [
+        "That is fine. A custom or in‑house ERP connects through the Hoshii CDK (Connector Developer Kit) over a REST API, SFTP or Computer Use. You or your IT partner build the connection with whichever method fits, with no off‑the‑shelf integration required."
+      ]
+    },
+    {
+      "question": "What is the difference between a REST API and an SFTP integration?",
+      "answer": [
+        "Two ways to connect, depending on your system. REST is real‑time and two‑way: Hoshii reads and writes live, which suits systems with a modern interface. SFTP is file‑based: structured files are dropped and collected on a schedule, which suits systems without a live API. For systems with no interface at all, Computer Use (Alpha) works the screen directly."
+      ]
+    },
+    {
+      "question": "What is the Hoshii CDK?",
+      "answer": [
+        "The Connector Developer Kit: the toolkit for connecting any ERP to Hoshii, over REST, SFTP or Computer Use. Your team or your IT partner builds the connection with it, and there is no plumbing left for you to maintain afterwards."
+      ]
+    },
+    {
+      "question": "Who builds the ERP connection?",
+      "answer": [
+        "Whoever you would rather have build it. Your own IT team can, with the CDK. So can your ERP provider or your IT consultant, who may already be a Hoshii partner, or can become one. And if you would rather not touch it at all, we will build it with you."
+      ]
+    },
+    {
+      "question": "Does Hoshii replace my ERP?",
+      "answer": [
+        "No. Your ERP stays your system of record. Hoshii is the layer above it, handling the journey from an inbound message to a clean, structured entry."
+      ]
+    },
+    {
+      "question": "How is Hoshii different from OCR or EDI tools?",
+      "answer": [
+        "OCR only extracts text. EDI only works when a customer sends a structured format. Hoshii reads unstructured messages across every channel, works out what is being asked, applies your team’s rules, and prepares both the entry and the reply. That covers the cases OCR and EDI cannot: the email with three changes buried in it, the handwritten order, the “urgent” that means Friday."
+      ]
+    }
+  ]
+}

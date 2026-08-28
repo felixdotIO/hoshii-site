@@ -1,0 +1,49 @@
+---
+/**
+ * The page's full stop: the mark, one claim, one line of context, one button.
+ *
+ * Every page ends on this so a visitor who has read to the bottom always has
+ * the same next step in the same place.
+ */
+import Arrow from '~/components/Arrow.astro';
+import Pattern from '~/components/Pattern.astro';
+
+export type Props = {
+  /** The claim. The clause set in `accent` is emphasised on its own row. */
+  title: string;
+  accent?: string;
+  lead: string;
+  href?: string;
+  label?: string;
+};
+
+const {
+  title,
+  accent,
+  lead,
+  href = '/demo/',
+  label = 'Book a demo',
+} = Astro.props;
+---
+
+<section class="closer" aria-labelledby="closer-title">
+  <Pattern />
+  <div class="closer__inner">
+    <span class="closer__mark" aria-hidden="true">
+      <svg viewBox="0 0 1259 1756" fill="currentColor">
+        <rect x="0" y="0" width="1259" height="413"></rect>
+        <rect x="184" y="605" width="403" height="1151"></rect>
+        <rect x="707" y="605" width="402" height="1151"></rect>
+      </svg>
+    </span>
+    <h2 class="closer__title" id="closer-title">
+      {title}
+      {accent && <em>{accent}</em>}
+    </h2>
+    <p class="closer__lead">{lead}</p>
+    <a class="btn-os btn-os--accent btn-os--lg closer__cta" href={href}>
+      {label}
+      <Arrow />
+    </a>
+  </div>
+</section>

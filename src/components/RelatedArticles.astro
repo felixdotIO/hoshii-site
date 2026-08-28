@@ -1,0 +1,56 @@
+---
+/**
+ * Three more pieces worth reading, under the one just read.
+ *
+ * Hand-picked where the article names them, and otherwise filled from the same
+ * category, newest first. The article itself is always excluded, and so are
+ * drafts. If nothing qualifies, nothing renders: three cards of loosely
+ * related filler is worse than ending the page.
+ */
+import { getCollection, type CollectionEntry } from 'astro:content';
+import ArticleCard from '~/components/ArticleCard.astro';
+
+export type Props = {
+  current: CollectionEntry<'articles'>;
+  heading?: string;
+  limit?: number;
+};
+
+const { current, heading = 'Keep reading', limit = 3 } = Astro.props;
+
+const published = (await getCollection('articles', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
+);
+
+const byId = new Map(published.map((entry) => [entry.id, entry]));
+
+// Hand-picked first, in the order the article lists them.
+const picked = current.data.relatedArticles
+  .map((ref) => byId.get(ref.id))
+  .filter((entry): entry is CollectionEntry<'articles'> => Boolean(entry) && entry!.id !== current.id);
+
+// Then same-category, newest first, to top up.
+const filler = published.filter(
+  (entry) =>
+    entry.id !== current.id &&
+    entry.data.category === current.data.category &&
+    !picked.some((p) => p.id === entry.id)
+);
+
+const related = [...picked, ...filler].slice(0, limit);
+---
+
+{
+  related.length > 0 && (
+    <section class="related" aria-labelledby="related-head">
+      <h2 class="related__head" id="related-head">
+        {heading}
+      </h2>
+      <ul class="res__list">
+        {related.map((article) => (
+          <ArticleCard article={article} />
+        ))}
+      </ul>
+    </section>
+  )
+}

@@ -1,0 +1,109 @@
+---
+/**
+ * Careers: how the team works, who is on it, and what is open.
+ *
+ * The open roles link out to join.com, which is where applications are
+ * actually handled. Each link says the role and the city, so the text
+ * describes the destination on its own.
+ */
+import DocLayout from '~/layouts/DocLayout.astro';
+import TeamGrid from '~/components/TeamGrid.astro';
+import Arrow from '~/components/Arrow.astro';
+import { TEAM } from '~/data/team';
+import { JOBS } from '~/data/jobs';
+import { SITE } from '~/data/site';
+
+const VALUES = [
+  {
+    label: 'Ownership',
+    head: 'Run your area like it’s yours.',
+    body: 'You own outcomes, not busywork. On a small team, real responsibility lands on you from week one.',
+  },
+  {
+    label: 'Direct & kind',
+    head: 'Say it straight.',
+    body: 'We give and take honest feedback early. It is faster, and it is how we get better, without the politics.',
+  },
+  {
+    label: 'Ship, then refine',
+    head: 'Less process, more shipping.',
+    body: 'We would rather put something real in front of customers and improve it than polish in private for months.',
+  },
+  {
+    label: 'Close to the work',
+    head: 'Build for the order desk.',
+    body: 'Every role talks to the people who actually use Hoshii. We solve real operational problems, not hype.',
+  },
+];
+---
+
+<DocLayout
+  title="Careers"
+  description="Open roles at Hoshii in Zürich, how the team works, and the people building the AI-native inbox for B2B operations."
+  path="/careers/"
+  sub="Come build the inbox "
+  accent="B2B operations runs on."
+  trail={[{ label: 'Careers', href: '/careers/' }]}
+  pageClass="page--careers"
+  wide={true}
+  closer={false}
+>
+  <p class="doc__cta">
+    <a class="btn-os btn-os--accent btn-os--fill btn-os--lg" href="#find-your-role">
+      See open roles
+      <Arrow />
+    </a>
+  </p>
+
+  <h2 id="how-we-work">How we work.</h2>
+  <ul class="doc__values">
+    {
+      VALUES.map((value) => (
+        <li>
+          <p class="doc__valueLabel">{value.label}</p>
+          <h3 class="doc__valueHead">{value.head}</h3>
+          <p>{value.body}</p>
+        </li>
+      ))
+    }
+  </ul>
+
+  <h2 id="meet-the-people-building-hoshii">Meet the people building Hoshii.</h2>
+  <TeamGrid members={TEAM} />
+
+  <h2 id="join-early-enough-to-shape-it">Join early enough to shape it.</h2>
+  <p>
+    We are a small team in Zürich, and you would be early: your work genuinely
+    shapes the product, the culture, and the company. What we are building, and
+    why, is on the <a href="/about/">about page</a>.
+  </p>
+
+  <h2 id="find-your-role">Find your role.</h2>
+  <p>
+    Browse every open position and apply in a couple of clicks. New roles are
+    posted here as we grow.
+  </p>
+  <ul class="doc__jobs">
+    {
+      JOBS.map((job) => (
+        <li>
+          <a class="doc__job" href={job.url} target="_blank" rel="noopener">
+            <span class="doc__jobTitle">{job.title}</span>
+            <span class="doc__jobWhere">{job.location}</span>
+            <span class="doc__jobGo" aria-hidden="true">
+              →
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <aside class="docend">
+    <p class="docend__head">Nothing here fits, but you think you should be here anyway?</p>
+    <a class="btn-os btn-os--fill btn-os--lg" href={`mailto:${SITE.email.jobs}`}>
+      Write to us
+      <Arrow />
+    </a>
+  </aside>
+</DocLayout>

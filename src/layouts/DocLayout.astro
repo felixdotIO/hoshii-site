@@ -1,0 +1,132 @@
+---
+/**
+ * The shape every page below the homepage takes: masthead, then one banded
+ * column of content, then the closing ask.
+ *
+ * It exists so that "one masthead everywhere" is enforced by the code rather
+ * than remembered. A page supplies its title, its deck and its body; the
+ * trail, the head metadata, the Organization and WebSite nodes and the
+ * BreadcrumbList all come from here, built from the same values.
+ */
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import DocMasthead from '~/components/DocMasthead.astro';
+import Closer from '~/components/Closer.astro';
+import { organization, website, breadcrumbs, type Crumb } from '~/lib/schema';
+
+export type Props = {
+  title: string;
+  description: string;
+  path: string;
+  /** The h1, where it differs from the title tag. Defaults to the title. */
+  heading?: string;
+  sub?: string;
+  accent?: string;
+  /** Home is prepended here, so a page passes only what is below it. */
+  trail?: Crumb[];
+  index?: boolean;
+  ogType?: 'website' | 'article';
+  image?: string;
+  imageAlt?: string;
+  /** Nodes this page adds to the shared @graph. */
+  schema?: Record<string, unknown>[];
+  publishedTime?: string;
+  modifiedTime?: string;
+  header?: 'full' | 'minimal';
+  /** A wider measure, for the pages that are lists rather than prose. */
+  wide?: boolean;
+  /** A page-specific class, for the handful with their own treatment. */
+  pageClass?: string;
+  /**
+   * Puts the band into two columns, with whatever fills the `aside` slot in
+   * the narrow one. The two form pages use it: the argument on the left, the
+   * form itself on the right, so a visitor who has decided can start typing
+   * without scrolling past the case for it.
+   */
+  split?: boolean;
+  /** Set false where the page ends on its own band. */
+  closer?: boolean;
+  closerTitle?: string;
+  closerAccent?: string;
+  closerLead?: string;
+};
+
+const {
+  title,
+  description,
+  path,
+  heading,
+  sub,
+  accent,
+  trail = [],
+  index = true,
+  ogType = 'website',
+  image,
+  imageAlt,
+  schema = [],
+  publishedTime,
+  modifiedTime,
+  header = 'full',
+  wide = false,
+  pageClass,
+  split = false,
+  closer = true,
+  closerTitle = 'Hoshii is the AI‑native inbox for B2B operations.',
+  closerAccent = 'Reply faster, reduce manual work.',
+  closerLead = 'We’ll show you exactly what Hoshii does with your operations, live, in 30 minutes.',
+} = Astro.props;
+
+const fullTrail: Crumb[] = [{ label: 'Home', href: '/' }, ...trail];
+
+const graph = [
+  organization(),
+  website(),
+  ...(fullTrail.length > 1 ? [breadcrumbs(fullTrail)] : []),
+  ...schema,
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  path={path}
+  index={index}
+  ogType={ogType}
+  image={image}
+  imageAlt={imageAlt}
+  schema={graph}
+  publishedTime={publishedTime}
+  modifiedTime={modifiedTime}
+  header={header}
+  mainClass={['doc', pageClass, wide && 'doc--wide', split && 'doc--split']
+    .filter(Boolean)
+    .join(' ')}
+>
+  <slot name="head" slot="head" />
+
+  <DocMasthead title={heading ?? title} sub={sub} accent={accent} trail={fullTrail}>
+    <slot name="masthead" />
+  </DocMasthead>
+
+  <div class="doc__band guides">
+    {
+      split ? (
+        <div class="doc__inner doc__split">
+          <div class="doc__splitMain doc__body">
+            <slot />
+          </div>
+          <div class="doc__splitAside">
+            <slot name="aside" />
+          </div>
+        </div>
+      ) : (
+        <div class="doc__inner doc__body">
+          <slot />
+        </div>
+      )
+    }
+  </div>
+
+  <slot name="bands" />
+
+  {closer && <Closer title={closerTitle} accent={closerAccent} lead={closerLead} />}
+</BaseLayout>
