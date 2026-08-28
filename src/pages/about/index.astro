@@ -9,6 +9,8 @@
 import DocLayout from '~/layouts/DocLayout.astro';
 import Pattern from '~/components/Pattern.astro';
 import Arrow from '~/components/Arrow.astro';
+import { Image } from 'astro:assets';
+import founders from '~/assets/team/founders.jpg';
 import { FOUNDERS } from '~/data/founders';
 
 const FIGURES = [
@@ -18,13 +20,6 @@ const FIGURES = [
   { value: '4', label: 'Languages handled' },
 ];
 
-const initials = (name: string) =>
-  name
-    .split(/\s+/)
-    .map((word) => word[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase();
 ---
 
 <DocLayout
@@ -67,16 +62,27 @@ const initials = (name: string) =>
     unglamorous work, and the conviction that it deserves better software.
   </p>
 
-  <ul class="doc__team">
+  {/* A photograph of the three of them, rather than three tiles of initials
+      standing in for one. Nobody is named against a position in the frame —
+      the list under it names them without claiming who is who. */}
+  <figure class="found">
+    <Image
+      class="found__shot"
+      src={founders}
+      alt="The three Hoshii founders on a Zürich rooftop, holding an illuminated hoshii sign"
+      widths={[900, 1400, 1800]}
+      sizes="(min-width: 60em) 74rem, 100vw"
+      loading="lazy"
+    />
+  </figure>
+
+  <ul class="found__list">
     {
       FOUNDERS.map((founder) => (
-        <li class="doc__person">
-          <p class="doc__portrait doc__portrait--none" aria-hidden="true">
-            {initials(founder.name)}
-          </p>
-          <p class="doc__personName">{founder.name}</p>
-          <p class="doc__personRole">{founder.role}</p>
-          <blockquote class="doc__personQuote">{founder.quote}</blockquote>
+        <li class="found__person">
+          <p class="found__name">{founder.name}</p>
+          <p class="found__role">{founder.role}</p>
+          <blockquote class="found__quote">{founder.quote}</blockquote>
         </li>
       ))
     }
