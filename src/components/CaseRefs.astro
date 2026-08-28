@@ -1,0 +1,40 @@
+---
+/**
+ * Customer stories as compact references.
+ *
+ * A lighter object than the cards on the customers index: company, the one
+ * line, and the system Hoshii writes into. It exists where a claim has just
+ * been made and the question is "on whose desk" — so the ERP is the fact it
+ * ends on, because that is what a reader is checking for.
+ *
+ * Every line here is the story's own excerpt. Nothing is written for this
+ * component, so a card can never say more than the page it links to.
+ */
+import type { CollectionEntry } from 'astro:content';
+import { customerPath } from '~/lib/paths';
+
+export type Props = {
+  stories: CollectionEntry<'customers'>[];
+};
+
+const { stories } = Astro.props;
+---
+
+<ul class="refs">
+  {
+    stories.map((story) => (
+      <li class="ref">
+        <a class="ref__card" href={customerPath(story)}>
+          <span class="ref__co">{story.data.company}</span>
+          <span class="ref__line">{story.data.excerpt}</span>
+          <span class="ref__foot">
+            <span class="ref__erp">{story.data.erp}</span>
+            <span class="ref__go" aria-hidden="true">
+              →
+            </span>
+          </span>
+        </a>
+      </li>
+    ))
+  }
+</ul>

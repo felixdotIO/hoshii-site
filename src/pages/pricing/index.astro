@@ -18,10 +18,10 @@ import Pattern from '~/components/Pattern.astro';
 import FaqGroups from '~/components/FaqGroups.astro';
 import TeamGrid from '~/components/TeamGrid.astro';
 import LogoBelt from '~/components/LogoBelt.astro';
+import CaseRefs from '~/components/CaseRefs.astro';
 import Arrow from '~/components/Arrow.astro';
 import { GTM_TEAM } from '~/data/team';
 import { SITE } from '~/data/site';
-import { customerPath } from '~/lib/paths';
 import {
   organization,
   website,
@@ -169,24 +169,7 @@ const pricingMail = `mailto:${SITE.email.sales}?subject=Pricing`;
         Three of them, at three very different volumes, writing into three
         different systems. Each one was quoted on the four things above.
       </p>
-      <ul class="refs">
-        {
-          stories.map((story) => (
-            <li class="ref">
-              <a class="ref__card" href={customerPath(story)}>
-                <span class="ref__co">{story.data.company}</span>
-                <span class="ref__line">{story.data.excerpt}</span>
-                <span class="ref__foot">
-                  <span class="ref__erp">{story.data.erp}</span>
-                  <span class="ref__go" aria-hidden="true">
-                    →
-                  </span>
-                </span>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
+      <CaseRefs stories={stories} />
     </div>
   </section>
 

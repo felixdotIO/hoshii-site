@@ -2,22 +2,48 @@
 /**
  * The order processing page.
  *
- * The one product page that exists in this build, and the live site's primary
- * nav link, so /order-processing-skill 301s onto it.
+ * The one product page in this build, and the live site's primary nav link,
+ * so /order-processing-skill 301s onto it.
  *
- * It carries FAQPage data because the "Common questions" section genuinely is
- * a list of questions and answers, and it is built from the same collection
- * entries the section renders.
+ * Built in bands rather than as one column of prose, on the same device as
+ * the pricing page. The page makes four separate claims — it reads anything,
+ * it matches lines, it learns a customer, it runs where the mail already is —
+ * and as a single scroll they ran together into one undifferentiated document.
+ * A band gives each claim its own ground, its own air and a rule across the
+ * full width, so the page reads as four arguments rather than one long one.
+ *
+ * The proof band carries the client marks and three customer stories. No
+ * figure on this page is new: the stories say what they say, and the page
+ * links to them rather than restating them.
+ *
+ * FAQPage data is carried because the questions band genuinely is a list of
+ * questions and answers, built from the same entries the band renders.
  */
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
-import DocLayout from '~/layouts/DocLayout.astro';
-import Pattern from '~/components/Pattern.astro';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import DocMasthead from '~/components/DocMasthead.astro';
 import SkillFlow from '~/components/SkillFlow.astro';
 import FaqGroups from '~/components/FaqGroups.astro';
+import LogoBelt from '~/components/LogoBelt.astro';
+import CaseRefs from '~/components/CaseRefs.astro';
+import Pattern from '~/components/Pattern.astro';
 import Arrow from '~/components/Arrow.astro';
-import { faqPage, softwareApplication, type QA } from '~/lib/schema';
+import {
+  organization,
+  website,
+  softwareApplication,
+  faqPage,
+  breadcrumbs,
+  type QA,
+} from '~/lib/schema';
 import dock from '~/assets/skill/dock.jpg';
+
+const path = '/order-processing/';
+const trail = [
+  { label: 'Home', href: '/' },
+  { label: 'Order processing', href: path },
+];
 
 const groups = (await getCollection('faqs', ({ data }) => data.page === 'order-processing')).sort(
   (a, b) => a.data.order - b.data.order
@@ -28,6 +54,10 @@ const pairs: QA[] = groups.flatMap((group) =>
     question: item.question,
     answer: item.answer.join(' '),
   }))
+);
+
+const stories = (await getCollection('customers', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order
 );
 
 const FORMATS = [
@@ -69,130 +99,176 @@ const SURFACES = [
 ];
 ---
 
-<DocLayout
+<BaseLayout
   title="Order processing"
   description="Hoshii reads inbound B2B orders from PDF, email, Excel, voicemail and handwriting, matches every line to your ERP, and prepares the entry for approval."
-  path="/order-processing/"
-  sub="Every inbound order, read and prepared, "
-  accent="before anyone opens it."
-  trail={[{ label: 'Order processing', href: '/order-processing/' }]}
-  pageClass="page--order-processing"
-  wide={true}
-  closer={false}
-  schema={[softwareApplication(), faqPage(pairs)]}
+  path={path}
+  mainClass="doc page--order-processing doc--wide"
+  schema={[
+    organization(),
+    website(),
+    breadcrumbs(trail),
+    softwareApplication(),
+    faqPage(pairs),
+  ]}
 >
-  <p class="doc__note">Shipped Skill · live on 500+ order desks</p>
+  <DocMasthead
+    title="Order processing"
+    sub="Every inbound order, read and prepared, "
+    accent="before anyone opens it."
+  />
 
-  {/* The page opened on the diagram without this. The claim comes first and
-      the picture illustrates it, not the other way round. */}
-  <p class="doc__standfirst">
-    The Order Processing Skill turns an inbound order into a
-    <strong>ready‑to‑post ERP entry</strong>. It reads the order out of whatever
-    arrived, matches every line to your products, and hands your team one thing
-    to confirm.
-  </p>
+  {/* What it is, and the picture of it. */}
+  <section class="pband guides" aria-label="What the Order Processing Skill does">
+    <div class="doc__inner doc__body pband__inner">
+      <p class="doc__note">Shipped Skill · live on 500+ order desks</p>
+      <p class="doc__standfirst">
+        The Order Processing Skill turns an inbound order into a
+        <strong>ready‑to‑post ERP entry</strong>. It reads the order out of
+        whatever arrived, matches every line to your products, and hands your
+        team one thing to confirm.
+      </p>
+      <SkillFlow />
+    </div>
+  </section>
 
-  <SkillFlow />
+  <section class="pband guides" aria-labelledby="it-reads-whatever-arrived">
+    <div class="doc__inner doc__body pband__inner">
+      <h2 id="it-reads-whatever-arrived">It reads whatever arrived</h2>
+      <p>
+        Your customers do not send clean data. The Skill reads the order out of
+        <strong>PDFs, forwarded email threads, Excel sheets, voicemails and
+        photographs of handwriting</strong>, in any of the languages your desk
+        works in.
+      </p>
+      <ul class="doc__checks">
+        {FORMATS.map((format) => <li><strong>{format.lead}</strong>{format.rest}</li>)}
+      </ul>
+      <p class="doc__note">
+        A PDF reading “bitte liefern Sie zur KW 22: 12× Palette Mehl Type 405, 8×
+        Karton Rapsöl 10 L” comes out as two lines with quantities attached. So
+        does the voicemail that says the same thing out loud.
+      </p>
+    </div>
+  </section>
 
-  <h2 id="it-reads-whatever-arrived">It reads whatever arrived</h2>
-  <p>
-    Your customers do not send clean data. The Skill reads the order out of
-    <strong>PDFs, forwarded email threads, Excel sheets, voicemails and
-    photographs of handwriting</strong>, in any of the languages your desk works
-    in.
-  </p>
-  <ul class="doc__checks">
-    {FORMATS.map((format) => <li><strong>{format.lead}</strong>{format.rest}</li>)}
-  </ul>
-  <p class="doc__note">
-    A PDF reading “bitte liefern Sie zur KW 22: 12× Palette Mehl Type 405, 8×
-    Karton Rapsöl 10 L” comes out as two lines with quantities attached. So does
-    the voicemail that says the same thing out loud.
-  </p>
-
-  <h2 id="it-matches-lines-to-your-products">It matches lines to your products</h2>
-  <p>
-    Reading it is the easy half. Every extracted line is matched to the right
-    product in your ERP and prepared as a clean entry. Your team confirms.
-    <strong>No rekeying, no second screen.</strong>
-  </p>
-  <div class="ptable__wrap">
-    <table class="ptable">
-      <thead>
-        <tr>
-          <th scope="col">The same words, two customers</th>
-          <th scope="col">What arrived</th>
-          <th scope="col">What it means</th>
-          <th scope="col">SKU</th>
-        </tr>
-      </thead>
-      <tbody>
-        {
-          MATCHES.map((row) => (
+  <section class="pband guides" aria-labelledby="it-matches-lines-to-your-products">
+    <div class="doc__inner doc__body pband__inner">
+      <h2 id="it-matches-lines-to-your-products">It matches lines to your products</h2>
+      <p>
+        Reading it is the easy half. Every extracted line is matched to the right
+        product in your ERP and prepared as a clean entry. Your team confirms.
+        <strong>No rekeying, no second screen.</strong>
+      </p>
+      <div class="ptable__wrap">
+        <table class="ptable">
+          <thead>
             <tr>
-              <th scope="row">{row.customer}</th>
-              <td>{row.arrived}</td>
-              <td>{row.means}</td>
-              <td>{row.sku}</td>
+              <th scope="col">The same words, two customers</th>
+              <th scope="col">What arrived</th>
+              <th scope="col">What it means</th>
+              <th scope="col">SKU</th>
             </tr>
+          </thead>
+          <tbody>
+            {
+              MATCHES.map((row) => (
+                <tr>
+                  <th scope="row">{row.customer}</th>
+                  <td>{row.arrived}</td>
+                  <td>{row.means}</td>
+                  <td>{row.sku}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <blockquote class="lift">
+        <p class="lift__text">
+          The same three words meant two different products. Nobody wrote a rule
+          for that.
+        </p>
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="pband guides" aria-labelledby="it-learns-what-each-customer-means">
+    <div class="doc__inner doc__body pband__inner">
+      <h2 id="it-learns-what-each-customer-means">It learns what each customer means</h2>
+      <p>
+        Every confirmation teaches the Skill how a given customer orders, and it
+        applies that from the next order on. This is procedural knowledge: not a
+        model that guesses better in general, but one that knows
+        <strong>how your customers actually write</strong>.
+      </p>
+      <figure class="doc__shot">
+        <Image
+          src={dock}
+          alt="Pallets moving on a loading dock at first light"
+          widths={[700, 1400]}
+          sizes="(min-width: 60em) 44rem, 100vw"
+          loading="lazy"
+        />
+      </figure>
+    </div>
+  </section>
+
+  <section class="pband guides" aria-labelledby="it-runs-inside-outlook-and-gmail">
+    <div class="doc__inner doc__body pband__inner">
+      <h2 id="it-runs-inside-outlook-and-gmail">It runs inside Outlook and Gmail</h2>
+      <p>
+        Nobody has to move. The Skill runs as a
+        <strong>native add‑in for Outlook and Gmail</strong>, so the work appears
+        where the mail already lands. No new tool, no migration, no second login.
+      </p>
+      <ul class="doc__panels">
+        {
+          SURFACES.map((surface) => (
+            <li class="doc__panel" style={`--shot: url('${surface.shot}'); --bloom: ${surface.bloom}`}>
+              <h3 class="doc__panelHead">{surface.head}</h3>
+              <p class="doc__panelBody">{surface.body}</p>
+            </li>
           ))
         }
-      </tbody>
-    </table>
-  </div>
-  <blockquote class="lift">
-    <p class="lift__text">
-      The same three words meant two different products. Nobody wrote a rule for
-      that.
-    </p>
-  </blockquote>
+      </ul>
+    </div>
+  </section>
 
-  <h2 id="it-learns-what-each-customer-means">It learns what each customer means</h2>
-  <p>
-    Every confirmation teaches the Skill how a given customer orders, and it
-    applies that from the next order on. This is procedural knowledge: not a
-    model that guesses better in general, but one that knows
-    <strong>how your customers actually write</strong>. You can see it running on
-    real desks in the <a href="/customers/">customer stories</a>.
-  </p>
-  <figure class="doc__shot">
-    <Image
-      src={dock}
-      alt="Pallets moving on a loading dock at first light"
-      widths={[700, 1400]}
-      sizes="(min-width: 60em) 44rem, 100vw"
-      loading="lazy"
-    />
-  </figure>
+  {/* The proof. Marks, then the three desks running it, each linking to the
+      story rather than repeating it. The wash ground is what sets this band
+      apart from the argument above it. */}
+  <section class="pband pband--refs guides" aria-labelledby="desks-running-it">
+    <div class="doc__inner doc__body pband__inner">
+      <h2 id="desks-running-it">Desks running it today</h2>
+      <p>
+        Three of them, at three very different volumes, writing into three
+        different systems. Each one arrived as mail first.
+      </p>
+      <LogoBelt />
+      <CaseRefs stories={stories} />
+    </div>
+  </section>
 
-  <h2 id="it-runs-inside-outlook-and-gmail">It runs inside Outlook and Gmail</h2>
-  <p>
-    Nobody has to move. The Skill runs as a
-    <strong>native add‑in for Outlook and Gmail</strong>, so the work appears
-    where the mail already lands. No new tool, no migration, no second login.
-  </p>
-  <ul class="doc__panels">
-    {
-      SURFACES.map((surface) => (
-        <li class="doc__panel" style={`--shot: url('${surface.shot}'); --bloom: ${surface.bloom}`}>
-          <h3 class="doc__panelHead">{surface.head}</h3>
-          <p class="doc__panelBody">{surface.body}</p>
-        </li>
-      ))
-    }
-  </ul>
+  <section class="pband pband--faq guides" aria-label="Common questions">
+    <div class="doc__inner doc__body pband__inner">
+      <FaqGroups groups={groups} />
+    </div>
+  </section>
 
-  <FaqGroups groups={groups} />
-
-  <aside class="docend">
-    <Pattern />
-    <p class="docend__head">
-      Bring your most complex order. We will show you what happens to it, live,
-      in 30 minutes.
-    </p>
-    <a class="btn-os btn-os--fill btn-os--lg" href="/demo/">
-      Book a demo
-      <Arrow />
-    </a>
-  </aside>
-</DocLayout>
+  <section class="pband pband--end guides" aria-label="Book a demo">
+    <div class="doc__inner doc__body pband__inner">
+      <aside class="docend">
+        <Pattern />
+        <p class="docend__head">
+          Bring your most complex order. We will show you what happens to it,
+          live, in 30 minutes.
+        </p>
+        <a class="btn-os btn-os--fill btn-os--lg" href="/demo/">
+          Book a demo
+          <Arrow />
+        </a>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
