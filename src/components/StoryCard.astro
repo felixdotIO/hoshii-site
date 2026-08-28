@@ -2,13 +2,19 @@
 /**
  * One customer story in a list.
  *
- * The facts on the foot — the system Hoshii writes into, and the trade — are
- * the ones a reader scans for, so they are pulled out of the prose and
- * labelled. Unlabelled they were two bare lines, and "Microsoft Dynamics"
- * above "Food & beverage" does not say which is which.
+ * Deliberately spare. It carried the company, the headline, the excerpt, the
+ * industry and the system, and the headline and excerpt say the same thing —
+ * "High-volume, multilingual order processing on Microsoft Dynamics" over
+ * "Over 100 orders a day, in German, French and Thai, prepared for Dynamics
+ * automatically". Two sentences of the same claim, plus an industry that
+ * repeats across cards, is what made three of these read as a wall of text.
  *
- * The whole card is the link and the title is the link text, so it is never
- * "read more"; the arrow is the affordance that says so, and is decorative.
+ * The card's job is to be worth opening, not to tell the story. So: whose desk
+ * it is, the claim, and the system Hoshii writes into — the fact a reader is
+ * scanning for. Everything else is on the page behind it.
+ *
+ * The whole card is the link and the headline is the link text, so it is never
+ * "read more"; the arrow says so and is decorative.
  */
 import type { CollectionEntry } from 'astro:content';
 import { customerPath } from '~/lib/paths';
@@ -25,16 +31,8 @@ const { data } = story;
   <a class="story__card" href={customerPath(story)}>
     <span class="story__who">{data.company}</span>
     <span class="story__head">{data.headline}</span>
-    <span class="story__blurb">{data.excerpt}</span>
     <span class="story__foot">
-      <span class="story__facts">
-        <span class="story__label">Writes into</span>
-        <span class="story__erp">{data.erp}</span>
-      </span>
-      <span class="story__facts">
-        <span class="story__label">Industry</span>
-        <span class="story__voice">{data.industry}</span>
-      </span>
+      <span class="story__erp">{data.erp}</span>
       <span class="story__go" aria-hidden="true">→</span>
     </span>
   </a>

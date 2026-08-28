@@ -23,7 +23,6 @@ import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import DocMasthead from '~/components/DocMasthead.astro';
-import SkillFlow from '~/components/SkillFlow.astro';
 import FaqGroups from '~/components/FaqGroups.astro';
 import LogoBelt from '~/components/LogoBelt.astro';
 import CaseRefs from '~/components/CaseRefs.astro';
@@ -153,7 +152,39 @@ const SURFACES = [
         whatever arrived, matches every line to your products, and hands your
         team one thing to confirm.
       </p>
-      <SkillFlow />
+      {/* The node diagram that used to sit here said "things go in, a thing
+          comes out" in the abstract, which is the one thing a reader already
+          assumes. This is the same claim with the actual work shown: the
+          German the customer sent, and the two lines it resolves to. It is the
+          example the page walks through further down, so the page opens on its
+          own evidence. Static — there is nothing here that motion explains. */}
+      <figure class="turn">
+        <div class="turn__side">
+          <p class="turn__cap">What arrived</p>
+          <blockquote class="turn__raw">
+            Guten Tag, bitte liefern Sie zur KW 22: 12× Palette Mehl Type 405,
+            8× Karton Rapsöl 10 L. Besten Dank!
+          </blockquote>
+          <p class="turn__from">PDF attachment · German</p>
+        </div>
+
+        <p class="turn__arrow" aria-hidden="true">→</p>
+
+        <div class="turn__side turn__side--out">
+          <p class="turn__cap">Ready to post</p>
+          <ul class="turn__lines">
+            <li>
+              <span class="turn__item">Mehl Type 405</span>
+              <span class="turn__qty">12 Paletten</span>
+            </li>
+            <li>
+              <span class="turn__item">Rapsöl 10 L</span>
+              <span class="turn__qty">8 Kartons</span>
+            </li>
+          </ul>
+          <p class="turn__from">Deliver week 22 · awaiting one confirmation</p>
+        </div>
+      </figure>
     </div>
   </section>
 

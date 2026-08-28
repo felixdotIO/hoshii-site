@@ -13,6 +13,7 @@
  * not show. The band heading is the h2; every question is an h3 under it.
  */
 import type { CollectionEntry } from 'astro:content';
+import Arrow from '~/components/Arrow.astro';
 
 export type Props = {
   /** Groups from the `faqs` collection, already filtered to this page. */
@@ -57,7 +58,11 @@ const { groups, title, accent, id = 'faq-title' } = Astro.props;
 
       {/* The band answers the common ones; this is for whoever still has one. */}
       <p class="faq__more">
-        More questions? <a href="/demo/">Talk to sales</a>
+        <span>More questions?</span>
+        <a class="btn-os btn-os--accent" href="/demo/">
+          Talk to sales
+          <Arrow />
+        </a>
       </p>
     </div>
   </div>

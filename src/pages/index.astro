@@ -560,53 +560,44 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
 
       <div class="cap__art">
         <Pattern />
+      {/* What this card has to answer is not "does autonomy go up" — a rising
+          bar is a claim a reader cannot check. It is the fear underneath:
+          the person who knows how this customer orders will eventually leave,
+          and the knowledge leaves with them. So the picture shows the
+          knowledge itself: this customer's own shorthand, and what Hoshii now
+          knows it resolves to. The first row is the same example the order
+          processing page works through, so the two pages corroborate rather
+          than each assert separately. */}
       <div class="learnart" aria-hidden="true" data-anim>
-        <p class="learn__cap">Autonomy on one account</p>
+        <p class="learn__cap">
+          What Hoshii knows
+          <span class="learn__acct">A. &amp; B. Rinderknecht</span>
+        </p>
 
-        <div class="learn__plot">
-          <ul class="learn__bars">
-            <li style="--h:22%;--i:0"></li>
-            <li style="--h:27%;--i:1"></li>
-            <li style="--h:33%;--i:2"></li>
-            <li style="--h:54%;--i:3"></li>
-            <li style="--h:59%;--i:4"></li>
-            <li style="--h:76%;--i:5"></li>
-            <li style="--h:82%;--i:6"></li>
-            <li style="--h:95%;--i:7"></li>
-          </ul>
-
-          <ul class="learn__marks">
-            <li style="--col:4;--i:0"></li>
-            <li style="--col:6;--i:1"></li>
-            <li style="--col:8;--i:2"></li>
-          </ul>
-        </div>
-
-        {/* The corrections themselves, each arriving on the same beat as the
-            tick it puts on the axis above. Three rows are always reserved, so
-            the card never reflows as they land.
-
-            The initials are deliberately nobody's: TL, MA and JH would have
-            been Thomas Locher, Marc Adank and Joël Heller, all named elsewhere
-            on this site, and the picture would then be claiming those people
-            made these corrections. */}
-        <ul class="learn__log">
-          <li class="learn__entry" style="--i:0">
-            <span class="learn__who">LM</span>
-            <span class="learn__did">corrected a price lookup</span>
+        <ul class="learn__mem">
+          <li class="learn__row" style="--i:0">
+            <span class="learn__said">“Schrauben, kurz”</span>
+            <span class="learn__to" aria-hidden="true">→</span>
+            <span class="learn__means">Hex bolt M8×18</span>
             <span class="learn__ok">learned</span>
           </li>
-          <li class="learn__entry" style="--i:1">
-            <span class="learn__who">TS</span>
-            <span class="learn__did">added a missing SKU</span>
+          <li class="learn__row" style="--i:1">
+            <span class="learn__said">“wie immer”</span>
+            <span class="learn__to" aria-hidden="true">→</span>
+            <span class="learn__means">Pallet, week + 1</span>
             <span class="learn__ok">learned</span>
           </li>
-          <li class="learn__entry" style="--i:2">
-            <span class="learn__who">RK</span>
-            <span class="learn__did">rerouted a thread</span>
+          <li class="learn__row" style="--i:2">
+            <span class="learn__said">invoices</span>
+            <span class="learn__to" aria-hidden="true">→</span>
+            <span class="learn__means">buchhaltung@</span>
             <span class="learn__ok">learned</span>
           </li>
         </ul>
+
+        <p class="learn__foot">
+          Corrected once, by anyone. <strong>Known on every desk.</strong>
+        </p>
       </div>
       </div>
     </article>

@@ -1199,20 +1199,13 @@ p {
 
 /* Sits under the last answer, on the list's own rule rather than a new one. */
 .faq__more {
-  margin: clamp(1rem, 2.5vw, 1.5rem) 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  margin: clamp(1.25rem, 3vw, 1.75rem) 0 0;
   color: var(--caption);
   font-size: 0.9375rem;
-}
-
-.faq__more a {
-  color: var(--ink);
-  font-weight: 700;
-  text-decoration-color: var(--accent);
-  text-underline-offset: 0.2em;
-}
-
-.faq__more a:hover {
-  color: var(--accent-deep, var(--accent));
 }
 
 .faq__item:last-child {
@@ -2889,11 +2882,13 @@ p {
   position: absolute;
   inset: -14%;
   z-index: 0;
-  opacity: 0.14;
-  /* The interface sits in the middle of this panel, so the pattern keeps the bottom-right
-     corner and leaves the rest -- which the radial it replaces did not. */
-  -webkit-mask-image: linear-gradient(to top left, #000 0%, transparent 56%);
-  mask-image: linear-gradient(to top left, #000 0%, transparent 56%);
+  opacity: 0.2;
+  /* Densest in the bottom-right corner, but carried far enough across the panel
+     that it runs behind the interface tile rather than stopping short of it.
+     At 56% it faded out before reaching the card, so the card sat on bare
+     ground and the pattern read as a corner ornament beside it. */
+  -webkit-mask-image: linear-gradient(to top left, #000 0%, #000 34%, transparent 94%);
+  mask-image: linear-gradient(to top left, #000 0%, #000 34%, transparent 94%);
 }
 
 /* The bloom, reduced to one job: lifting the middle of the panel just enough that
@@ -3501,15 +3496,20 @@ p {
    No figures on the axis. The trend is the claim, and the numbers behind it are
    the customer's own once they are running. */
 
-/* --- Learning ------------------------------------------------------------
-   The claim is that one correction teaches the desk, so the correction and
-   the autonomy it produces have to be one object. They used to be two: three
-   rows of initials, then an unrelated bar chart underneath, with the causal
-   link — the whole point — left for the reader to infer. Nobody did.
+/* --- The knowledge record -------------------------------------------------
+   This card used to draw an autonomy rate: a row of bars climbing toward the
+   accent. It was rebuilt twice and still said nothing a reader could check —
+   a rising number is the claim restated, not evidence for it.
 
-   Now the corrections are ticks on the same axis the bars stand on, placed
-   under the column where the step up happens. The picture states the sentence
-   in the caption instead of decorating it. */
+   What the card has to answer is the fear under the heading. On an order desk
+   one person knows how each customer writes, and when they leave that goes
+   with them. So the picture is the knowledge itself: the customer's own
+   shorthand on the left, what Hoshii resolved it to on the right. The first
+   row is the example the order processing page works through in full, so the
+   two pages corroborate each other rather than each asserting separately.
+
+   The motion earns its place here — each line arrives as it is learned, so
+   what a reader watches is a record filling up. */
 .learnart {
   container-type: inline-size;
   display: grid;
@@ -3524,60 +3524,69 @@ p {
 }
 
 .learn__cap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 0.75rem;
   margin: 0;
-  font-size: clamp(0.5rem, 2.1cqw, 0.75rem);
-  line-height: 1.25;
-}
-
-.learn__cap {
+  padding-bottom: clamp(0.3125rem, 1.3cqw, 0.5rem);
+  border-bottom: 1px solid var(--rule);
   color: var(--ink);
+  font-size: clamp(0.5rem, 2.1cqw, 0.75rem);
   font-weight: 700;
+  line-height: 1.2;
 }
 
-/* --- The corrections ------------------------------------------------------
-   Each entry lands on the same beat as its tick on the axis above, which is
-   what ties the two halves of this picture together: the correction, then the
-   step it produces. Shown rather than summarised — a legend saying "a
-   correction" told the reader the category and none of the substance. */
-.learn__log {
+/* The account this record belongs to. Knowledge here is per customer, which
+   is half the claim, so the name is on the card rather than implied. */
+.learn__acct {
+  color: var(--caption);
+  font-weight: 400;
+}
+
+.learn__mem {
   display: grid;
-  /* Fixed rows, always all three reserved, so the card cannot resize as they
-     arrive. */
-  grid-template-rows: repeat(3, clamp(1.125rem, 4.6cqw, 1.5rem));
+  /* All three rows reserved from the start, so the card cannot resize as they
+     land. */
+  grid-template-rows: repeat(3, clamp(1.25rem, 5cqw, 1.625rem));
   gap: clamp(0.125rem, 0.6cqw, 0.25rem);
   margin: 0;
-  padding-top: clamp(0.375rem, 1.6cqw, 0.625rem);
-  border-top: 1px solid var(--rule);
+  padding: 0;
   list-style: none;
 }
 
-.learn__entry {
+.learn__row {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto;
   align-items: center;
   gap: clamp(0.25rem, 1.4cqw, 0.5rem);
   opacity: 0;
-  animation: learn-entry 9s calc(0.6s + var(--i) * 1.4s) infinite;
+  animation: learn-row 9s calc(0.7s + var(--i) * 1.5s) infinite;
 }
 
-/* Initials, so a correction reads as somebody's rather than the system's. */
-.learn__who {
-  display: grid;
-  place-items: center;
-  width: clamp(0.875rem, 3.6cqw, 1.1875rem);
-  aspect-ratio: 1;
-  border-radius: 999px;
-  background: var(--green);
-  color: var(--bone);
-  font-size: clamp(0.3125rem, 1.35cqw, 0.4375rem);
-  font-weight: 700;
-  letter-spacing: 0.02em;
+/* The customer's words, set apart from ours: quoted, and in the caption tone
+   so the resolved value is the thing that reads as settled. */
+.learn__said {
+  overflow: hidden;
+  color: var(--caption);
+  font-size: clamp(0.4375rem, 1.8cqw, 0.625rem);
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.learn__did {
+.learn__to {
+  color: var(--accent);
+  font-size: clamp(0.4375rem, 1.7cqw, 0.5625rem);
+  line-height: 1;
+}
+
+.learn__means {
   overflow: hidden;
   color: var(--ink);
   font-size: clamp(0.4375rem, 1.8cqw, 0.625rem);
+  font-weight: 700;
   line-height: 1.2;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -3588,14 +3597,27 @@ p {
   border-radius: 999px;
   background: color-mix(in srgb, var(--accent) 14%, #ffffff);
   color: var(--accent-deep, var(--accent));
-  font-size: clamp(0.3125rem, 1.35cqw, 0.4375rem);
+  font-size: clamp(0.3125rem, 1.3cqw, 0.4375rem);
   font-weight: 700;
   line-height: 1.35;
   white-space: nowrap;
 }
 
+.learn__foot {
+  margin: 0;
+  padding-top: clamp(0.3125rem, 1.3cqw, 0.5rem);
+  border-top: 1px solid var(--rule);
+  color: var(--caption);
+  font-size: clamp(0.4375rem, 1.75cqw, 0.625rem);
+  line-height: 1.35;
+}
+
+.learn__foot strong {
+  color: var(--ink);
+}
+
 /* Lands, then stays for the rest of the cycle: the point is that it is kept. */
-@keyframes learn-entry {
+@keyframes learn-row {
   0%,
   2% {
     opacity: 0;
@@ -3609,96 +3631,6 @@ p {
   98%,
   100% {
     opacity: 0;
-  }
-}
-
-/* The plot is one grid, eight columns wide. Bars and ticks share it, which is
-   what puts a correction under the rise it caused rather than beside it. */
-.learn__plot {
-  display: grid;
-  gap: clamp(0.25rem, 1.2cqw, 0.4375rem);
-}
-
-.learn__bars,
-.learn__marks {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: clamp(0.25rem, 1.6cqw, 0.5rem);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.learn__bars {
-  align-items: end;
-  height: clamp(3rem, 15cqw, 5rem);
-  border-bottom: 1px solid rgba(42, 35, 32, 0.18);
-  /* The ramp runs from this to the accent across the series. */
-  --bar-low: color-mix(in srgb, var(--sage) 46%, #ffffff);
-}
-
-.learn__bars li {
-  height: var(--h);
-  border-radius: 0.09375rem 0.09375rem 0 0;
-  transform-origin: bottom;
-  scale: 1 0;
-  animation: bar-grow 9s calc(var(--i) * 0.62s) infinite;
-  /* Graded rather than switched: the claim is that autonomy compounds, so the
-     colour compounds with it. The flat value is the fallback where calc()
-     inside color-mix is not understood. */
-  background: var(--bar-low);
-  background: color-mix(in srgb, var(--accent) calc(var(--i) * 13%), var(--bar-low));
-}
-
-/* A tick sits in its own column, so it lands under the bar it explains.
-   Deliberately unlabelled: three captions under an eight-column chart this
-   small collide whatever you do with them, and a nowrap label also widens its
-   grid column, which pushed the ticks out of line with the bars they point at.
-   The legend under the plot names them once instead. */
-.learn__marks {
-  height: 0.375rem;
-}
-
-.learn__marks li {
-  grid-column: var(--col);
-  justify-self: center;
-  width: 1.5px;
-  height: 100%;
-  border-radius: 1px;
-  background: var(--accent);
-  transform-origin: top;
-  scale: 1 0;
-  animation: learn-mark 9s calc(0.6s + var(--i) * 1.4s) infinite;
-}
-
-/* Each correction appears as its column arrives, and stays. */
-@keyframes learn-mark {
-  0%,
-  6% {
-    scale: 1 0;
-  }
-  14%,
-  92% {
-    scale: 1 1;
-  }
-  98%,
-  100% {
-    scale: 1 0;
-  }
-}
-
-@keyframes bar-grow {
-  0%,
-  4% {
-    scale: 1 0;
-  }
-  14%,
-  92% {
-    scale: 1 1;
-  }
-  98%,
-  100% {
-    scale: 1 0;
   }
 }
 
@@ -3866,26 +3798,16 @@ p {
 @media (prefers-reduced-motion: reduce) {
   .lane,
   .lmail,
-  .lmail__tag,
-  .learn__marks li,
-  .learn__bars li {
+  .lmail__tag {
     animation: none;
   }
 
-  /* The corrections are the point of the picture, so with no motion they are
-     simply all present rather than absent. */
-  .learn__marks li {
-    scale: 1 1;
-  }
-
-  .learn__entry {
+  /* The record is the point of the picture, so with no motion every line is
+     simply present rather than absent. */
+  .learn__row {
     animation: none;
     opacity: 1;
     translate: 0 0;
-  }
-
-  .learn__bars li {
-    scale: 1 1;
   }
 
   /* No cycle at all: everything simply present. */
@@ -5721,8 +5643,10 @@ p {
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: 0.5rem;
-  padding: clamp(1.375rem, 2.75vw, 1.875rem);
+  gap: clamp(0.625rem, 1.6vw, 0.875rem);
+  /* Roomier than it was. Three dense cards side by side read as one block of
+     text; the air is what separates them into three objects. */
+  padding: clamp(1.75rem, 3.4vw, 2.5rem);
   background: var(--bone);
   color: var(--ink);
   text-decoration: none;
@@ -5747,12 +5671,12 @@ a.story__card:focus-visible {
 }
 
 .story__head {
-  /* Room to be the card's subject. At the resources size, 17px, it competed
-     with the blurb rather than leading it. */
-  font-size: clamp(1.125rem, 1.6vw, 1.25rem);
+  /* The card's one piece of substance, so it takes the weight the excerpt used
+     to share with it. */
+  font-size: clamp(1.25rem, 1.9vw, 1.5rem);
   font-weight: 700;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
   text-wrap: balance;
 }
 
@@ -5762,19 +5686,15 @@ a.story__card:focus-visible {
   line-height: 1.5;
 }
 
-/* Ruled off and pushed to the foot, so cards of differing blurb length still
-   line their facts up. The two facts sit side by side with the arrow pushed to
-   the end, which fills a foot that was previously two short lines with a lot of
-   nothing beside them. */
+/* Ruled off and pushed to the foot, so cards of differing headline length
+   still line their systems up. */
 .story__foot {
   display: flex;
-  align-items: end;
-  gap: clamp(1rem, 3vw, 2rem);
+  align-items: center;
+  gap: 1rem;
   margin-top: auto;
-  padding-top: 0.875rem;
+  padding-top: clamp(1rem, 2.2vw, 1.375rem);
   border-top: 1px solid var(--rule);
-  font-size: 0.8125rem;
-  line-height: 1.3;
 }
 
 .story__facts {
@@ -6404,9 +6324,7 @@ a.story__card:focus-visible .story__go {
   .lmail,
   .lmail__tag,
   .answer__dots i,
-  .learn__marks li,
-  .learn__bars li,
-  .learn__entry,
+  .learn__row,
   .chatband__q::after {
     animation: none !important;
   }
@@ -7224,6 +7142,113 @@ a.story__card:focus-visible .story__go {
 .doc__band > .pat { --pat-mod: 34px; }
 .book__pitch .pat { --pat-mod: 38px; }
 
+
+/* --- The turn ------------------------------------------------------------
+   What arrived, and what it becomes. This replaces a node diagram whose whole
+   statement was "several things go in, one thing comes out" — which is what a
+   reader assumes before arriving. Showing the German the customer actually
+   sent, beside the two lines it resolves to, is the same claim with the work
+   in it, and it is the example the page walks through below. */
+.doc__body .turn {
+  display: grid;
+  gap: clamp(1rem, 2.5vw, 1.75rem);
+  align-items: stretch;
+  margin: clamp(1.75rem, 4vw, 2.5rem) 0 0;
+  padding: 0;
+  max-width: none;
+}
+
+@media (min-width: 46em) {
+  .doc__body .turn {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+  }
+}
+
+.turn__side {
+  display: grid;
+  align-content: start;
+  gap: 0.625rem;
+  padding: clamp(1.125rem, 2.4vw, 1.625rem);
+  background: var(--wash);
+  box-shadow: 0 0 0 1px var(--rule);
+}
+
+/* The result sits on white: it is the finished thing, and the contrast is what
+   says so. */
+.turn__side--out {
+  background: var(--white);
+}
+
+.turn__cap {
+  margin: 0;
+  max-width: none;
+  color: var(--caption);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+/* Set as what it is: somebody else's words, in their language. */
+.turn__raw {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: var(--ink);
+  font-size: clamp(0.9375rem, 1.2vw, 1.0625rem);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.turn__from {
+  margin: 0;
+  max-width: none;
+  color: var(--caption);
+  font-size: 0.8125rem;
+  line-height: 1.35;
+}
+
+.turn__lines {
+  display: grid;
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0;
+  max-width: none;
+  list-style: none;
+}
+
+.turn__lines li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: none;
+  padding-bottom: 0.375rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.turn__item {
+  color: var(--ink);
+  font-size: clamp(0.9375rem, 1.2vw, 1.0625rem);
+  font-weight: 700;
+}
+
+.turn__qty {
+  color: var(--ink);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.turn__arrow {
+  margin: 0;
+  max-width: none;
+  color: var(--accent);
+  font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+  line-height: 1;
+  text-align: center;
+}
 
 /* --- Case studies -------------------------------------------------------
    A centred article column. Everything inside it spans it edge to edge -- prose,
