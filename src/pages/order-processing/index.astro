@@ -28,6 +28,7 @@ import LogoBelt from '~/components/LogoBelt.astro';
 import CaseRefs from '~/components/CaseRefs.astro';
 import Pattern from '~/components/Pattern.astro';
 import { CLIENTS } from '~/data/clients';
+import outlook from '~/assets/integrations/outlook.png';
 import Arrow from '~/components/Arrow.astro';
 import {
   organization,
@@ -184,33 +185,50 @@ const SURFACES = [
 
         <div class="cap__art">
           <Pattern />
-          <div class="turnart" data-anim>
-            <div class="turnart__in">
-              <p class="turnart__cap">What arrived</p>
-              <p class="turnart__raw">
-                Guten Tag, bitte liefern Sie zur KW 22: 12× Palette Mehl Type
-                405, 8× Karton Rapsöl 10 L. Besten Dank!
+
+          {/* A real inbox, the real action, and the entry it produces. The
+              panel that used to sit here showed a message and a result with
+              nothing between them, so the one thing the Skill actually does —
+              a person reading it and posting it in one click — was the part
+              left out. */}
+          <div class="mailart" data-anim>
+            <p class="mailart__bar">
+              <Image src={outlook} alt="" widths={[64, 128]} sizes="16px" loading="lazy" />
+              <span>Inbox</span>
+              <span class="mailart__count">3 new</span>
+            </p>
+
+            <div class="mailart__mail">
+              <p class="mailart__from">
+                <span class="mailart__dot" aria-hidden="true">B</span>
+                Berger Industrietechnik
               </p>
-              <p class="turnart__from">PDF attachment · German</p>
+              <p class="mailart__subj">Order for week 22</p>
+              <p class="mailart__body">
+                Hello, please deliver in week 22: 12 pallets of flour type 405
+                and 8 cartons of rapeseed oil, 10 L. Many thanks!
+              </p>
+              <p class="mailart__att" aria-hidden="true">order-2214.pdf</p>
             </div>
 
-            <p class="turnart__arrow" aria-hidden="true">↓</p>
+            <p class="mailart__act">
+              <span class="mailart__btn">Add to ERP</span>
+              <span class="mailart__cursor" aria-hidden="true"></span>
+            </p>
 
-            <div class="turnart__out">
-              <p class="turnart__cap">Ready to post</p>
-              <ul class="turnart__lines">
+            <div class="mailart__erp">
+              <p class="mailart__cap">Entered in your ERP</p>
+              <ul class="mailart__lines">
                 <li style="--i:0">
-                  <span class="turnart__item">Mehl Type 405</span>
-                  <span class="turnart__qty">12 Paletten</span>
+                  <span class="mailart__item">Flour type 405</span>
+                  <span class="mailart__qty">12 pallets</span>
                 </li>
                 <li style="--i:1">
-                  <span class="turnart__item">Rapsöl 10 L</span>
-                  <span class="turnart__qty">8 Kartons</span>
+                  <span class="mailart__item">Rapeseed oil 10 L</span>
+                  <span class="mailart__qty">8 cartons</span>
                 </li>
               </ul>
-              <p class="turnart__note" style="--i:2">
-                Deliver week 22 · awaiting one confirmation
-              </p>
+              <p class="mailart__done" style="--i:2">Delivery week 22 · posted</p>
             </div>
           </div>
         </div>
