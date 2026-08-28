@@ -7218,8 +7218,93 @@ a.story__card:focus-visible {
   padding-block: clamp(1.5rem, 4vw, 2.5rem) clamp(2rem, 5vw, 3.5rem);
 }
 
-.case > p {
-  max-width: none;
+/* Prose sits at the site's own measure, and only prose. The container stays
+   wide so the media, the figures and the pull quotes can break past it — that
+   contrast is the page's structure. Without this the case ran at about 95
+   characters a line against 75 everywhere else, which is what made it read as
+   an undifferentiated wall. */
+.case > p,
+.case > ul:not([class]),
+.case > ol:not([class]),
+.case > h2,
+.case > h3,
+.art__body > p,
+.art__body > ul:not([class]),
+.art__body > ol:not([class]),
+.art__body > h2,
+.art__body > h3 {
+  max-width: 39rem;
+}
+
+/* And the rhythm between them. These paragraphs sit one level below
+   `.doc__body`, so the site's own `> p` spacing never reached them and they
+   ran together with no gap at all — which is what made a perfectly ordinary
+   case study read as a wall of text. Same 1em the rest of the site uses. */
+.case > p,
+.case > ul:not([class]),
+.case > ol:not([class]),
+.art__body > p,
+.art__body > ul:not([class]),
+.art__body > ol:not([class]) {
+  margin: 0 0 1em;
+  text-wrap: pretty;
+}
+
+/* A subheading needs air above it and little below: it belongs to what
+   follows, not to what it interrupts. */
+.case > h2,
+.case > h3,
+.art__body > h2,
+.art__body > h3 {
+  margin: clamp(2rem, 4vw, 2.75rem) 0 0.5rem;
+}
+
+/* --- The facts rail -------------------------------------------------------
+   What a reader scans a case study for before deciding to read it: the trade,
+   the system Hoshii writes into, and when. Set as a real definition list on a
+   hairline, in the caption idiom the contents list and the sources already
+   use, so it reads as apparatus rather than as content. */
+.case__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  margin: 0 0 clamp(1.75rem, 4vw, 2.5rem);
+  padding: 1rem 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.case__facts div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.case__facts dt {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--caption);
+}
+
+.case__facts dd {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* The media leads, and breaks past the reading measure so the column below it
+   reads as the narrower thing. */
+.case__media {
+  margin: 0 0 clamp(1.75rem, 4vw, 2.5rem);
+}
+
+.case__media img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: var(--wash);
 }
 
 /* Weight only, never a second colour: the accent already belongs to the pull

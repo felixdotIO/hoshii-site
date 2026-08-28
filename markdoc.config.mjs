@@ -1,4 +1,4 @@
-import { defineMarkdocConfig } from '@astrojs/markdoc/config';
+import { defineMarkdocConfig, nodes } from '@astrojs/markdoc/config';
 
 /**
  * Markdoc, which is the format Keystatic writes.
@@ -8,8 +8,16 @@ import { defineMarkdocConfig } from '@astrojs/markdoc/config';
  * anchor ids the table of contents links to are unchanged from before the
  * migration, and no already-shared deep link moves.
  *
- * Nothing is added here that authors cannot see in the editor. A Markdoc tag
- * that renders a component would be invisible in Keystatic's preview, so if
- * one is ever needed it belongs in `components` on the field, not here.
+ * The one override: Markdoc wraps a document in an `<article>` of its own.
+ * That put an `<article>` inside the `<article>` each template already
+ * provides — a redundant landmark — and, less visibly, it broke every
+ * `.case > p` and `.art__body > p` rule in the stylesheet, because the
+ * paragraphs were no longer direct children. The prose silently lost its
+ * measure and ran at about 95 characters a line. Rendering the document as
+ * nothing puts the paragraphs back where the CSS expects them.
  */
-export default defineMarkdocConfig({});
+export default defineMarkdocConfig({
+  nodes: {
+    document: { ...nodes.document, render: null },
+  },
+});

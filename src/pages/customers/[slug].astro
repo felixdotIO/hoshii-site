@@ -73,21 +73,38 @@ const schema = [
   closerAccent="Let us show you on your own mail."
   closerLead="We’ll show you exactly what Hoshii does with your operations, live, in 30 minutes."
 >
-  <ul class="art__meta" slot="masthead">
-    <li>{data.industry}</li>
-    <li>{data.erp}</li>
-    <li><time datetime={isoDay(data.publishedAt)}>{readableDate(data.publishedAt)}</time></li>
-  </ul>
-
   <article class="case">
+    {/* What a reader checks before committing to the piece. */}
+    <dl class="case__facts">
+      <div>
+        <dt>Industry</dt>
+        <dd>{data.industry}</dd>
+      </div>
+      <div>
+        <dt>Writes into</dt>
+        <dd>{data.erp}</dd>
+      </div>
+      <div>
+        <dt>Published</dt>
+        <dd>
+          <time datetime={isoDay(data.publishedAt)}>{readableDate(data.publishedAt)}</time>
+        </dd>
+      </div>
+    </dl>
+
+    {/* The answer before the account of it, so a reader and an answer engine
+        meet the same summary. The articles have always opened this way; the
+        cases did not, and started cold on the first paragraph of narrative. */}
+    <p class="art__lede">{data.excerpt}</p>
+
     {
       data.coverImage && (
-        <figure class="art__hero">
+        <figure class="case__media">
           <Image
             src={data.coverImage}
             alt={data.coverImageAlt ?? ''}
-            widths={[640, 960, 1280]}
-            sizes="(min-width: 60em) 40rem, 100vw"
+            widths={[768, 1536]}
+            sizes="(min-width: 60em) 48rem, 100vw"
             loading="eager"
           />
         </figure>
@@ -109,7 +126,7 @@ const schema = [
 
     {
       data.videoId && (
-        <div class="cam__frame">
+        <div class="cam__frame case__media">
           <iframe
             src={`https://fast.wistia.net/embed/iframe/${data.videoId}?videoFoam=true`}
             title={data.videoTitle ?? `${data.company} on running Hoshii`}
