@@ -8288,10 +8288,17 @@ a.ref__card:hover .ref__go {
   margin: 0 0 2rem;
 }
 
+/* Cropped to a ratio rather than trusting the file, for the same reason
+   .res__shot is: the post art is a mixed set, and two of the originals are
+   540x960 portraits. Left to their own proportions they rendered over 1100px
+   tall in a 640px column — a full screen of gradient before a word of the
+   piece. The card already cropped; the hero did not. */
 .art__hero img {
   display: block;
   width: 100%;
-  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: var(--wash);
 }
 
 .art__hero figcaption {

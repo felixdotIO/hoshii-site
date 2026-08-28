@@ -13,6 +13,7 @@
  */
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import DocMasthead from '~/components/DocMasthead.astro';
+import Pattern from '~/components/Pattern.astro';
 
 const ELSEWHERE = [
   { href: '/', label: 'The homepage' },
@@ -39,6 +40,7 @@ const ELSEWHERE = [
   />
 
   <div class="doc__band guides">
+    <Pattern />
     <div class="doc__inner doc__body">
       <p>
         If you followed a link from somewhere on this site, we would like to fix

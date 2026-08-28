@@ -108,6 +108,30 @@ for (const file of htmlFiles) {
   }
   jsBytes.set(url, inlineJs);
 
+  /**
+   * Pattern coverage. The decorative layer was injected by script in the
+   * static build, so markup ported from it carried none — six of nine hosts
+   * shipped bare and nothing complained, because a missing background looks
+   * like a design choice rather than a fault.
+   *
+   * Every host element must therefore have a `.pat` child. `.askrow` is the
+   * one that takes two, a left and a right half.
+   */
+  const PATTERN_HOSTS = [
+    'doc__head', 'closer', 'pitch__panel', 'cap__art', 'shift__art--flow',
+    'docend', 'doc__band', 'book__pitch', 'pricehead',
+  ];
+  let expected = 0;
+  for (const host of PATTERN_HOSTS) {
+    expected += (html.match(new RegExp(`class="[^"]*\\b${host}\\b`, 'g')) ?? []).length;
+  }
+  // The ask row carries a half on each side.
+  expected += 2 * (html.match(/class="[^"]*\baskrow\b/g) ?? []).length;
+  const layers = (html.match(/class="pat[ "]/g) ?? []).length;
+  if (layers !== expected) {
+    fail(`${url}: ${layers} pattern layers for ${expected} hosts — a band is missing its pattern`);
+  }
+
   for (const m of html.matchAll(/(?:src|href|content)="(\/[^"]+\.(?:jpg|jpeg|png|svg|webp|avif|woff2|xml|txt))"/g)) {
     assetRefs.add(m[1]);
   }
@@ -264,6 +288,6 @@ console.log(
     `one h1 each; heading order intact; every image has alt; ` +
     `no framework runtime on any public page (max ${Math.max(...jsBytes.values())} bytes of inline script); ` +
     `${assetRefs.size} asset references resolve; ${REDIRECTS.length} redirects land in one hop; ` +
-    `sitemap excludes noindex; JSON-LD parses; ` +
+    `sitemap excludes noindex; JSON-LD parses; every pattern host has its layer; ` +
     `route table resolves redirects, slashes, Keystatic and static files correctly.`
 );

@@ -24,6 +24,14 @@ const stories = (await getCollection('customers', ({ data }) => !data.draft)).so
  * the videos are on the page; nothing is claimed about them beyond what they
  * say themselves.
  */
+/** Every number here is stated by one of the case studies behind this page. */
+const FIGURES = [
+  { value: '500+', label: 'teams running Hoshii' },
+  { value: '20+', label: 'ERP systems written into' },
+  { value: '4', label: 'languages handled' },
+  { value: '100+', label: 'orders a day at the largest' },
+];
+
 const onCamera = [
   {
     company: 'Adank Davos AG',
@@ -66,11 +74,19 @@ const itemList = {
 >
   <LogoBelt />
 
-  <h2 id="written-stories">The full stories</h2>
-  <ul class="story__list">
-    {stories.map((story) => <StoryCard story={story} />)}
+  <ul class="figs">
+    {
+      FIGURES.map((figure) => (
+        <li class="figs__item">
+          <span class="figs__n">{figure.value}</span>
+          <span class="figs__l">{figure.label}</span>
+        </li>
+      ))
+    }
   </ul>
 
+  {/* Video first, then the written cases. Someone hearing a customer say it is
+      worth more than someone reading us say it, so the camera leads. */}
   <h2 id="customers-on-camera">Customers, on camera</h2>
   <ul class="cam__list">
     {
@@ -93,6 +109,11 @@ const itemList = {
         </li>
       ))
     }
+  </ul>
+
+  <h2 id="case-studies">Case studies</h2>
+  <ul class="story__list">
+    {stories.map((story) => <StoryCard story={story} />)}
   </ul>
 
   <p>

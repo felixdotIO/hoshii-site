@@ -5,8 +5,15 @@
  * The photograph is decorative next to the name printed under it — announcing
  * "photo of Daniel Nydegger" straight before the text "Daniel Nydegger" is a
  * duplicate, not a description — so alt is deliberately empty.
+ *
+ * `Picture`, not `Image`, and that is load-bearing rather than a preference.
+ * Four rules in the stylesheet place the portrait with `.doc__person picture`
+ * — on the booking and pricing pages it is what makes the photo span both grid
+ * rows. A bare `<img>` satisfies none of them, so the portrait took a single
+ * cell and pushed the role into the 44px column, where it wrapped mid-phrase.
+ * The element is part of the layout contract, not just a wrapper.
  */
-import { Image } from 'astro:assets';
+import { Picture } from 'astro:assets';
 import type { TeamMember } from '~/data/team';
 
 export type Props = {
@@ -21,10 +28,11 @@ const { members, quotes = true } = Astro.props;
   {
     members.map((member) => (
       <li class="doc__person">
-        <Image
+        <Picture
           class="doc__portrait"
           src={member.photo}
           alt=""
+          formats={['avif', 'webp']}
           widths={[290, 580]}
           sizes="(min-width: 60em) 14rem, 40vw"
           loading="lazy"
