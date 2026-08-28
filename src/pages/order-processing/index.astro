@@ -190,49 +190,73 @@ const SURFACES = [
         <div class="cap__art">
           <Pattern />
 
-          {/* A real inbox, the real action, and the entry it produces. The
-              panel that used to sit here showed a message and a result with
-              nothing between them, so the one thing the Skill actually does —
-              a person reading it and posting it in one click — was the part
-              left out. */}
-          <div class="mailart" data-anim>
-            <p class="mailart__bar">
-              <Image src={outlook} alt="" widths={[64, 128]} sizes="16px" loading="lazy" />
-              <span>Inbox</span>
-              <span class="mailart__count">3 new</span>
-            </p>
+          {/* The hard case, not the easy one. A mail that spells out every
+              line is not the problem an order desk has — "the usual, next
+              Wednesday" is, because answering it means knowing what this
+              customer always orders and which Wednesday they mean. So the
+              mail is vague, the resolution is shown, and the ERP is its own
+              window opening beside it rather than a panel in the same card. */}
+          <div class="deskart" data-anim>
+            <div class="win win--mail">
+              <p class="win__bar">
+                <span class="win__dots" aria-hidden="true"></span>
+                <Image src={outlook} alt="" widths={[64, 128]} sizes="14px" loading="lazy" />
+                <span class="win__name">Outlook</span>
+              </p>
 
-            <div class="mailart__mail">
-              <p class="mailart__from">
-                <span class="mailart__dot" aria-hidden="true">B</span>
-                Berger Industrietechnik
-              </p>
-              <p class="mailart__subj">Order for week 22</p>
-              <p class="mailart__body">
-                Hello, please deliver in week 22: 12 pallets of flour type 405
-                and 8 cartons of rapeseed oil, 10 L. Many thanks!
-              </p>
-              <p class="mailart__att" aria-hidden="true">order-2214.pdf</p>
+              <div class="win__body">
+                <p class="mail__meta">
+                  <span class="mail__dot" aria-hidden="true">B</span>
+                  <span class="mail__who">Berger Industrietechnik</span>
+                  <span class="mail__when">09:12</span>
+                </p>
+                <p class="mail__subj">Order</p>
+                <p class="mail__text">
+                  Hi, next Wednesday the usual again please. Many thanks!
+                </p>
+                <p class="mail__actions" aria-hidden="true">
+                  <span>Reply</span><span>Reply all</span><span>Forward</span>
+                </p>
+              </div>
             </div>
 
-            <p class="mailart__act">
-              <span class="mailart__btn">Add to ERP</span>
-              <span class="mailart__cursor" aria-hidden="true"></span>
-            </p>
+            {/* The two things a person would have had to know. */}
+            <ul class="resolve">
+              <li style="--i:0">
+                <span class="resolve__said">“the usual”</span>
+                <span class="resolve__to" aria-hidden="true">→</span>
+                <span class="resolve__means">their standing two lines</span>
+              </li>
+              <li style="--i:1">
+                <span class="resolve__said">“next Wednesday”</span>
+                <span class="resolve__to" aria-hidden="true">→</span>
+                <span class="resolve__means">delivery week 22</span>
+              </li>
+            </ul>
 
-            <div class="mailart__erp">
-              <p class="mailart__cap">Entered in your ERP</p>
-              <ul class="mailart__lines">
-                <li style="--i:0">
-                  <span class="mailart__item">Flour type 405</span>
-                  <span class="mailart__qty">12 pallets</span>
-                </li>
-                <li style="--i:1">
-                  <span class="mailart__item">Rapeseed oil 10 L</span>
-                  <span class="mailart__qty">8 cartons</span>
-                </li>
-              </ul>
-              <p class="mailart__done" style="--i:2">Delivery week 22 · posted</p>
+            <div class="win win--erp">
+              <p class="win__bar">
+                <span class="win__dots" aria-hidden="true"></span>
+                <span class="win__name">ERP · Order entry</span>
+                <span class="win__tag">draft</span>
+              </p>
+
+              <div class="win__body">
+                <ul class="erp__lines">
+                  <li>
+                    <span class="erp__item">Flour type 405</span>
+                    <span class="erp__qty">12 pallets</span>
+                  </li>
+                  <li>
+                    <span class="erp__item">Rapeseed oil 10 L</span>
+                    <span class="erp__qty">8 cartons</span>
+                  </li>
+                </ul>
+                <p class="erp__foot">
+                  <span class="erp__when">Delivery week 22</span>
+                  <span class="erp__btn">Confirm</span>
+                </p>
+              </div>
             </div>
           </div>
         </div>
