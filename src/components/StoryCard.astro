@@ -1,8 +1,14 @@
 ---
 /**
- * One customer story in a list. The facts on the foot — the system Hoshii
- * writes into, and the industry — are the ones a reader scans for, so they are
- * pulled out of the prose rather than left inside it.
+ * One customer story in a list.
+ *
+ * The facts on the foot — the system Hoshii writes into, and the trade — are
+ * the ones a reader scans for, so they are pulled out of the prose and
+ * labelled. Unlabelled they were two bare lines, and "Microsoft Dynamics"
+ * above "Food & beverage" does not say which is which.
+ *
+ * The whole card is the link and the title is the link text, so it is never
+ * "read more"; the arrow is the affordance that says so, and is decorative.
  */
 import type { CollectionEntry } from 'astro:content';
 import { customerPath } from '~/lib/paths';
@@ -21,8 +27,15 @@ const { data } = story;
     <span class="story__head">{data.headline}</span>
     <span class="story__blurb">{data.excerpt}</span>
     <span class="story__foot">
-      <span class="story__erp">{data.erp}</span>
-      <span class="story__voice">{data.industry}</span>
+      <span class="story__facts">
+        <span class="story__label">Writes into</span>
+        <span class="story__erp">{data.erp}</span>
+      </span>
+      <span class="story__facts">
+        <span class="story__label">Industry</span>
+        <span class="story__voice">{data.industry}</span>
+      </span>
+      <span class="story__go" aria-hidden="true">→</span>
     </span>
   </a>
 </li>

@@ -83,6 +83,31 @@ const MATCHES = [
   },
 ];
 
+/** Where a reader of this page actually wants to go next. */
+const NEXT = [
+  {
+    title: 'What it costs',
+    blurb:
+      'What sets the number: how much mail lands, in how many inboxes, and which systems Hoshii writes into.',
+    label: 'Pricing',
+    href: '/pricing/',
+  },
+  {
+    title: 'Desks running it',
+    blurb:
+      'Three order desks at three very different volumes, each writing into a different ERP.',
+    label: 'Customer stories',
+    href: '/customers/',
+  },
+  {
+    title: 'The rest of the questions',
+    blurb:
+      'What Hoshii connects to, where the data lives, and what it takes to start.',
+    label: 'Questions',
+    href: '/faq/',
+  },
+];
+
 const SURFACES = [
   {
     head: 'Tagged the moment it lands',
@@ -247,6 +272,36 @@ const SURFACES = [
       </p>
       <LogoBelt />
       <CaseRefs stories={stories} />
+    </div>
+  </section>
+
+  {/* Framer's version of this page ends on an "Explore next" grid of related
+      skills. The idea is right — a product page should hand a reader the next
+      one — but the pages it links to (email triage, the skill library,
+      continuous learning) do not exist in this build, and linking to them
+      would be three 404s. These are the real destinations a reader wants from
+      here, so the band keeps the shape and drops the fiction. */}
+  <section class="pband guides" aria-labelledby="explore-next">
+    <div class="doc__inner doc__body pband__inner">
+      <h2 id="explore-next">Explore next</h2>
+      <ul class="refs">
+        {
+          NEXT.map((item) => (
+            <li class="ref">
+              <a class="ref__card" href={item.href}>
+                <span class="ref__co">{item.title}</span>
+                <span class="ref__line">{item.blurb}</span>
+                <span class="ref__foot">
+                  <span class="ref__erp">{item.label}</span>
+                  <span class="ref__go" aria-hidden="true">
+                    →
+                  </span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </section>
 

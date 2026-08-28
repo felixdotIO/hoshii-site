@@ -5685,20 +5685,46 @@ a.story__card:focus-visible {
 }
 
 /* Ruled off and pushed to the foot, so cards of differing blurb length still
-   line their facts up. */
+   line their facts up. The two facts sit side by side with the arrow pushed to
+   the end, which fills a foot that was previously two short lines with a lot of
+   nothing beside them. */
 .story__foot {
-  /* Two rows on a whole-pixel grid, always both reserved. Stacking with flex and
-     reserving the height with a min-height in em left the rule 1-3px out of step
-     between neighbours: at 13px type, 1.4 line-height is 18.2px and the fraction
-     compounded across two rows and a gap. Fixed 1.25rem rows cannot drift. */
-  display: grid;
-  grid-template-rows: repeat(2, 1.25rem);
-  align-content: start;
+  display: flex;
+  align-items: end;
+  gap: clamp(1rem, 3vw, 2rem);
   margin-top: auto;
   padding-top: 0.875rem;
   border-top: 1px solid var(--rule);
   font-size: 0.8125rem;
-  line-height: 1.25rem;
+  line-height: 1.3;
+}
+
+.story__facts {
+  display: grid;
+  gap: 0.125rem;
+}
+
+/* Named, because "Microsoft Dynamics" over "Food & beverage" does not say
+   which of the two is which. */
+.story__label {
+  color: var(--caption);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* The affordance. It leans in on hover, so the card answers the pointer. */
+.story__go {
+  margin-left: auto;
+  color: var(--accent);
+  font-size: 1rem;
+  line-height: 1;
+  transition: translate 0.2s var(--ease);
+}
+
+a.story__card:hover .story__go,
+a.story__card:focus-visible .story__go {
+  translate: 0.1875rem 0;
 }
 
 /* The system Hoshii writes into is the fact a reader is scanning for, so it
