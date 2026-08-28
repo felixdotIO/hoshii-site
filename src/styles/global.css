@@ -2885,19 +2885,20 @@ p {
 
 .cap__art .pat {
   background-image: url('/assets/pattern.svg');
-  background-size: 340px auto;
+  /* A finer motif than the belt's, so the texture reads at the size these
+     wells actually are rather than as a few large triangles behind a card. */
+  background-size: 220px auto;
   background-position: right bottom;
   background-repeat: repeat;
   position: absolute;
   inset: -14%;
   z-index: 0;
-  opacity: 0.15;
-  /* A corner presence rather than a covering. Carried far enough to pass under
-     the edge of the interface tile — which is what the z-index fix is for —
-     but nowhere near filling the panel, which made the whole well read as
-     patterned paper instead of as a surface with a corner of texture on it. */
-  -webkit-mask-image: linear-gradient(to top left, #000 0%, #000 14%, transparent 66%);
-  mask-image: linear-gradient(to top left, #000 0%, #000 14%, transparent 66%);
+  opacity: 0.13;
+  /* Held to the bottom-right corner. It carried across most of the panel and
+     read as patterned paper; it is texture on one corner of a surface, and it
+     still passes under the tile's edge, which is what the z-index fix is for. */
+  -webkit-mask-image: linear-gradient(to top left, #000 0%, #000 8%, transparent 44%);
+  mask-image: linear-gradient(to top left, #000 0%, #000 8%, transparent 44%);
 }
 
 /* The bloom, reduced to one job: lifting the middle of the panel just enough that
