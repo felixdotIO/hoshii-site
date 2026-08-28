@@ -2885,20 +2885,22 @@ p {
 
 .cap__art .pat {
   background-image: url('/assets/pattern.svg');
-  /* A finer motif than the belt's, so the texture reads at the size these
-     wells actually are rather than as a few large triangles behind a card. */
-  background-size: 220px auto;
+  /* Fine enough to read as a texture on the surface rather than as tiling. At
+     220px the triangles were large against their own fade, so the motif and
+     the falloff fought and the corner looked patchy. */
+  background-size: 132px auto;
   background-position: right bottom;
   background-repeat: repeat;
   position: absolute;
   inset: -14%;
   z-index: 0;
-  opacity: 0.13;
-  /* Held to the bottom-right corner. It carried across most of the panel and
-     read as patterned paper; it is texture on one corner of a surface, and it
-     still passes under the tile's edge, which is what the z-index fix is for. */
-  -webkit-mask-image: linear-gradient(to top left, #000 0%, #000 8%, transparent 44%);
-  mask-image: linear-gradient(to top left, #000 0%, #000 8%, transparent 44%);
+  opacity: 0.16;
+  /* Radial from the corner, not linear across the panel. A linear mask fades
+     along one axis, which leaves a straight diagonal edge running through the
+     well — the seam is what made it look pasted on rather than part of the
+     surface. A radial anchored in the corner has no edge anywhere. */
+  -webkit-mask-image: radial-gradient(115% 115% at 100% 100%, #000 0%, rgba(0, 0, 0, 0.55) 22%, transparent 58%);
+  mask-image: radial-gradient(115% 115% at 100% 100%, #000 0%, rgba(0, 0, 0, 0.55) 22%, transparent 58%);
 }
 
 /* The bloom, reduced to one job: lifting the middle of the panel just enough that
