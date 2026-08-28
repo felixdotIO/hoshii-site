@@ -7375,6 +7375,37 @@ a.story__card:focus-visible .story__go {
   }
 }
 
+/* --- The Skill hero ------------------------------------------------------
+   The opening column had no top: a small note, a paragraph of caption-grey
+   body copy and a row of marks, all at roughly one weight. It now runs
+   badge, statement, support, proof — the statement on the same scale the
+   home page gives every capability heading. */
+.skill__badge {
+  margin: 0;
+  max-width: none;
+  color: var(--accent);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.pband .cap__copy .cap__head {
+  margin: clamp(0.875rem, 2vw, 1.25rem) 0 0;
+  max-width: 18ch;
+}
+
+/* The clause that names the outcome takes the accent, the way the mastheads
+   and the closing bands set their second line. */
+.pband .cap__copy .cap__head em {
+  display: block;
+  color: var(--accent);
+  font-style: normal;
+}
+
+.pband .cap__copy .cap__lead {
+  max-width: 42ch;
+}
+
 /* --- Who runs this Skill --------------------------------------------------
    Three named desks rather than the whole client belt: the claim on this page
    is about this Skill, not the customer list. */
@@ -7390,11 +7421,22 @@ a.story__card:focus-visible .story__go {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: clamp(1.25rem, 3vw, 2.25rem);
-  margin: 0.875rem 0 0;
+  gap: clamp(1.5rem, 3.5vw, 2.75rem);
+  margin: 1rem 0 0;
   padding: 0;
   max-width: none;
   list-style: none;
+}
+
+/* Each mark carries its own tuned height — the set runs from a square lockup
+   to a wide script — so they are scaled together rather than reset to one
+   value, which would make the wide ones tiny and the square ones huge. A shade
+   larger than the belt's, because three marks standing still carry less than
+   eight moving past. */
+.skillby .proof__logo {
+  scale: 1.15;
+  transform-origin: left center;
+  opacity: 0.8;
 }
 
 .doc__body .skillby li {

@@ -150,20 +150,24 @@ const SURFACES = [
   {/* Copy left, the work itself on the right — the shape the homepage uses for
       every capability, so the product page opens the way the site argues
       everywhere else. */}
-  <section class="pband guides" aria-label="What the Order Processing Skill does">
+  <section class="pband guides" aria-labelledby="what-it-does">
     <div class="doc__inner doc__body pband__inner">
       <article class="cap">
         <div class="cap__copy">
-          <p class="doc__note">Shipped Skill · live on 500+ order desks</p>
-          <p class="doc__standfirst">
-            The Order Processing Skill turns an inbound order into a
-            <strong>ready‑to‑post ERP entry</strong>. It reads the order out of
-            whatever arrived, matches every line to your products, and hands
-            your team one thing to confirm.
+          <p class="skill__badge">Shipped Skill · live on 500+ order desks</p>
+
+          {/* The band had no dominant element: a small note, a paragraph of
+              caption-grey body copy, and some logos. The claim is split into a
+              statement and its support now, on the same two type sizes the
+              home page gives every capability, so the column has a top. */}
+          <h2 class="cap__head" id="what-it-does">
+            An inbound order becomes a <em>ready‑to‑post ERP entry.</em>
+          </h2>
+          <p class="cap__lead">
+            It reads the order out of whatever arrived, matches every line to
+            your products, and hands your team one thing to confirm.
           </p>
 
-          {/* Named desks running this particular Skill, not the whole client
-              list: the claim here is about this page's subject. */}
           <p class="skillby__cap">Running this Skill</p>
           <ul class="skillby">
             {
@@ -174,7 +178,7 @@ const SURFACES = [
                     src={client.src}
                     alt={client.name}
                     widths={[300, 480]}
-                    sizes="140px"
+                    sizes="150px"
                     loading="lazy"
                   />
                 </li>
