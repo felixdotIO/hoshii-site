@@ -99,13 +99,14 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
   </section>
 
   <!-- Logo strip ------------------------------------------------------ -->
-    <section class="proof" aria-label="Customers">
-<p class="proof__label">
-  Trusted by <span class="proof__count">500+</span> B2B operations teams
-</p>
-<div class="proof__viewport">
-  <LogoBelt label="Companies running Hoshii" />
-</div>
+  {/* `proof--rolling` carries the animation. In the static build a script
+      added it after cloning the track; both copies are in the HTML here, so
+      the class is too. */}
+  <section class="proof proof--rolling" aria-label="Customers">
+    <p class="proof__label">
+      Trusted by <span class="proof__count">500+</span> B2B operations teams
+    </p>
+    <LogoBelt variant="proof" label="Companies running Hoshii" />
   </section>
 
   <!-- Pitch band ------------------------------------------------------ -->
@@ -791,39 +792,76 @@ lead="We’ll show you exactly what Hoshii does with your operations, live, in 3
 </BaseLayout>
 
 
-{/* Two enhancements, both on content that is already in the HTML. The hero
-    shows the "without Hoshii" photograph by default and the toggle swaps it;
-    the role panels highlight one of six paragraphs that are all rendered. With
-    the script absent the page still states everything it has to state. */}
-<script>
-  // Hero: before / after.
-  const frame = document.querySelector<HTMLElement>('.hero__frame');
-  const gauge = document.querySelector<HTMLElement>('.hero__gauge');
-  gauge?.addEventListener('click', (event) => {
-    const button = (event.target as HTMLElement).closest<HTMLButtonElement>('.hero__state');
-    if (!button || !frame) return;
-    frame.dataset.show = button.dataset.state ?? 'before';
-    for (const other of gauge.querySelectorAll<HTMLButtonElement>('.hero__state')) {
-      const on = other === button;
-      other.classList.toggle('is-on', on);
-      other.setAttribute('aria-pressed', String(on));
-    }
-  });
+{/* The hero's before/after control, and nothing else.
+    The role panels below it are pure CSS — `.pitch__panel:has(.prole:hover)`
+    lights the matching paragraph — so they need no script and get none.
 
-  // Role panels: pointing at one names the paragraph it belongs to.
-  const panel = document.querySelector<HTMLElement>('.pitch__panel');
-  const roles = Array.from(document.querySelectorAll<HTMLElement>('.prole'));
-  const swaps = Array.from(document.querySelectorAll<HTMLElement>('.pswap'));
-  const show = (role: string | null) => {
-    for (const swap of swaps) swap.classList.toggle('is-on', swap.dataset.role === role);
-    for (const item of roles) item.classList.toggle('is-on', item.dataset.role === role);
-    panel?.classList.toggle('has-role', role !== null);
-  };
-  for (const role of roles) {
-    // Pointer and keyboard both, so the panel is not mouse-only.
-    role.addEventListener('mouseenter', () => show(role.dataset.role ?? null));
-    role.addEventListener('focus', () => show(role.dataset.role ?? null));
-    role.addEventListener('mouseleave', () => show(null));
-    role.addEventListener('blur', () => show(null));
+    All six paragraphs and both photographs are in the HTML. Without this
+    script the committed state still shows and the buttons still read; what is
+    lost is only the hover preview. */}
+<script>
+  // Before / with. Two photographs of the same floor, cross-faded. The state
+  // lives on the frame so the CSS owns which one is showing; this only records
+  // the choice and the preview on top of it.
+  const frame = document.querySelector<HTMLElement>('.hero__frame');
+  if (frame) {
+    const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('.hero__state'));
+    // What the control is set to. Previews come and go over it.
+    let chosen = frame.dataset.show;
+
+    // Moves the picture and the highlight together, so the toggle follows the
+    // pointer rather than sitting still while the picture changes underneath.
+    const show = (want: string | undefined, preview?: boolean) => {
+      if (!want) return;
+      frame.dataset.show = want;
+      for (const button of buttons) {
+        const on = button.dataset.state === want;
+        // Coerced: classList.toggle ignores an `undefined` second argument and
+        // toggles instead of forcing, which strands the highlight on the wrong
+        // label once a preview ends.
+        button.classList.toggle('is-hot', Boolean(preview) && on);
+        if (preview) continue;
+        button.classList.toggle('is-on', on);
+        // aria-pressed, not aria-selected: these are toggle buttons, not tabs.
+        // No panel is being revealed, one picture is swapped for another.
+        button.setAttribute('aria-pressed', String(on));
+      }
+    };
+
+    const rest = () => {
+      for (const button of buttons) button.classList.remove('is-hot');
+      show(chosen);
+    };
+
+    const other = () => (chosen === 'before' ? 'after' : 'before');
+
+    for (const button of buttons) {
+      button.addEventListener('click', () => {
+        chosen = button.dataset.state;
+        rest();
+      });
+      // Reaching for a label previews that state, so the control can be read
+      // before it is committed to.
+      button.addEventListener('pointerenter', (event) => {
+        if (event.pointerType === 'touch') return;
+        show(button.dataset.state, true);
+      });
+    }
+
+    // Hovering the picture shows the other state and takes the highlight with
+    // it, so the comparison happens without anyone having to find the control.
+    frame.addEventListener('pointerenter', (event) => {
+      if (event.pointerType === 'touch') return;
+      show(other(), true);
+    });
+    frame.addEventListener('pointerleave', rest);
+
+    // The control sits inside the frame, so leaving it does not leave the
+    // picture — the pointer is back on the photograph, which is a preview.
+    const gauge = document.querySelector<HTMLElement>('.hero__gauge');
+    gauge?.addEventListener('pointerleave', (event) => {
+      if (event.pointerType === 'touch') return;
+      show(other(), true);
+    });
   }
 </script>

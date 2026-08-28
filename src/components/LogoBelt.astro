@@ -2,41 +2,85 @@
 /**
  * A rolling belt of client marks.
  *
- * Two identical tracks, because a marquee loops without a seam only if what
- * scrolls away has already been replaced by a copy. The animation is CSS, so
- * this ships no JavaScript, and it pauses on hover and for anyone who has
- * asked the system to reduce motion.
+ * There are two of these devices in the stylesheet and they are not
+ * interchangeable — which is worth stating, because using the wrong one is
+ * silent. The CSS for each is scoped, so the wrong markup gets no layout at
+ * all: the tracks stack vertically and slide off the side of the page,
+ * unclipped, with no error anywhere.
  *
- * The second track is the same eight logos again, so it is `aria-hidden` and
- * its images carry empty alt: a screen reader should hear each company once.
+ *  - `proof` — the homepage strip. `.proof__viewport` does the clipping and
+ *    the edge fade; `.proof__belt` is the moving element and slides -50%,
+ *    which is one track width because it holds exactly two. The animation is
+ *    on `.proof--rolling`, so that class has to be present.
+ *
+ *  - `belt` — the subpage strip. `.belt` clips and fades, each
+ *    `.belt__track` moves independently by -100%. Its CSS is scoped to
+ *    `.doc__body .belt` and `.book__pitch .belt`, so it only works inside a
+ *    document body or the booking page's pitch column.
+ *
+ * Both are CSS animations: this component ships no JavaScript. Both pause on
+ * hover and honour reduced motion.
+ *
+ * Either way the track is rendered twice, because a marquee loops without a
+ * seam only if what scrolls away has already been replaced by a copy. The
+ * second copy is `aria-hidden` and its images carry empty alt, so a screen
+ * reader hears each company once.
  */
 import { Image } from 'astro:assets';
 import { CLIENTS } from '~/data/clients';
 
 export type Props = {
+  /** Which of the two devices this is. See the note above. */
+  variant?: 'belt' | 'proof';
   label?: string;
 };
 
-const { label = 'Companies running Hoshii' } = Astro.props;
+const { variant = 'belt', label = 'Companies running Hoshii' } = Astro.props;
+
+const isProof = variant === 'proof';
+const trackClass = isProof ? 'proof__track' : 'belt__track';
 ---
 
-<div class="belt" role="group" aria-label={label}>
-  {
-    [false, true].map((isCopy) => (
-      <ul class="belt__track" aria-hidden={isCopy ? 'true' : undefined}>
-        {CLIENTS.map((client) => (
-          <li>
-            <Image
-              class={`proof__logo proof__logo--${client.key} proof__logo--${client.ink}`}
-              src={client.src}
-              alt={isCopy ? '' : client.name}
-              widths={[300, 480]}
-              sizes="180px"
-              loading="lazy"
-            />
-          </li>
+{
+  isProof ? (
+    <div class="proof__viewport">
+      <div class="proof__belt">
+        {[false, true].map((isCopy) => (
+          <ul class={trackClass} aria-hidden={isCopy ? 'true' : undefined} aria-label={isCopy ? undefined : label}>
+            {CLIENTS.map((client) => (
+              <li>
+                <Image
+                  class={`proof__logo proof__logo--${client.key} proof__logo--${client.ink}`}
+                  src={client.src}
+                  alt={isCopy ? '' : client.name}
+                  widths={[300, 480]}
+                  sizes="180px"
+                  loading="lazy"
+                />
+              </li>
+            ))}
+          </ul>
         ))}
-      </ul>
-    ))
-  }
-</div>
+      </div>
+    </div>
+  ) : (
+    <div class="belt" role="group" aria-label={label}>
+      {[false, true].map((isCopy) => (
+        <ul class={trackClass} aria-hidden={isCopy ? 'true' : undefined}>
+          {CLIENTS.map((client) => (
+            <li>
+              <Image
+                class={`proof__logo proof__logo--${client.key} proof__logo--${client.ink}`}
+                src={client.src}
+                alt={isCopy ? '' : client.name}
+                widths={[300, 480]}
+                sizes="180px"
+                loading="lazy"
+              />
+            </li>
+          ))}
+        </ul>
+      ))}
+    </div>
+  )
+}
