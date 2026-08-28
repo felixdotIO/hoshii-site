@@ -11,19 +11,13 @@
  * only compete.
  */
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import Breadcrumbs from '~/components/Breadcrumbs.astro';
 import HubspotForm from '~/components/HubspotForm.astro';
 import TeamGrid from '~/components/TeamGrid.astro';
 import LogoBelt from '~/components/LogoBelt.astro';
 import Pattern from '~/components/Pattern.astro';
 import { GTM_TEAM } from '~/data/team';
 import { SITE } from '~/data/site';
-import { organization, website, breadcrumbs, softwareApplication } from '~/lib/schema';
-
-const trail = [
-  { label: 'Home', href: '/' },
-  { label: 'Book a demo', href: '/demo/' },
-];
+import { organization, website, softwareApplication } from '~/lib/schema';
 
 const CHECKS = [
   'Tell us what your inbox does to your week.',
@@ -55,13 +49,12 @@ const AGENDA = [
   description="Thirty minutes on a call: we run one real message from your own inbox, then give you your price and your setup time before you hang up."
   path="/demo/"
   mainClass="book-page page--demo"
-  schema={[organization(), website(), breadcrumbs(trail), softwareApplication()]}
+  schema={[organization(), website(), softwareApplication()]}
 >
   <div class="book">
     <div class="book__grid">
       <div class="book__pitch">
         <Pattern />
-        <Breadcrumbs trail={trail} />
         <h1 class="book__title">Book a demo</h1>
         <p class="book__deck">
           Thirty minutes. One real message out of your own inbox, run live in

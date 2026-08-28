@@ -81,7 +81,10 @@ const fullTrail: Crumb[] = [{ label: 'Home', href: '/' }, ...trail];
 const graph = [
   organization(),
   website(),
-  ...(fullTrail.length > 1 ? [breadcrumbs(fullTrail)] : []),
+  // Emitted only when the trail is actually on the page: BreadcrumbList is
+  // meant to describe a visible trail, and markup for one that is not shown is
+  // a structured-data mismatch rather than a free win.
+  ...(fullTrail.length > 2 ? [breadcrumbs(fullTrail)] : []),
   ...schema,
 ];
 ---

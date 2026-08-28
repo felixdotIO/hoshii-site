@@ -8170,9 +8170,13 @@ a.ref__card:hover .ref__go {
 /* --- Breadcrumbs ----------------------------------------------------------
    A real ordered list, because it is one: the order carries the meaning. The
    separator is painted rather than written, so it is never read out. */
+/* Set quiet. The trail is orientation, not navigation anyone came for, so it
+   sits under the masthead at the smallest size still comfortably legible --
+   12px, not lower, because it carries real links. */
 .crumbs {
-  padding: 0.875rem 0 0;
-  font-size: 0.8125rem;
+  padding: 0.75rem 0 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.01em;
 }
 
 .crumbs__list {
@@ -8214,8 +8218,8 @@ a.ref__card:hover .ref__go {
 }
 
 .crumbs__item[aria-current='page'] {
-  color: var(--ink);
-  font-weight: 500;
+  color: var(--caption);
+  font-weight: 400;
 }
 
 /* On the dark mastheads the trail sits on green. */

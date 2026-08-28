@@ -33,7 +33,10 @@ const { title, sub, accent, trail, variant = 'light' } = Astro.props;
 <div class={variant === 'dark' ? 'pricehead' : 'doc__head'}>
   <Pattern />
   <div class={variant === 'dark' ? 'pricehead__inner' : 'doc__inner'}>
-    {trail && trail.length > 1 && <Breadcrumbs trail={trail} />}
+    {/* Only where there is a step between Home and this page. On a top-level
+        page the trail reads "Home > Pricing", which tells a reader nothing the
+        logo does not already, and puts a row of chrome above every masthead. */}
+    {trail && trail.length > 2 && <Breadcrumbs trail={trail} />}
     <h1 class="doc__title">{title}</h1>
     {
       (sub || accent) && (
