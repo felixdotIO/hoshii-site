@@ -629,34 +629,29 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
 
       <div class="cap__art">
         <Pattern />
-      <div class="handart" aria-hidden="true" data-anim>
-        <p class="grant__title">What Hoshii may do</p>
-        <p class="grant__cols"><span>Area</span><span>Access</span></p>
-        <ul class="grant">
-          <li class="grant__row">
-            <span class="grant__what">ERP order entry</span>
-            <span class="grant__state grant__state--write">Writing</span>
-          </li>
-          <li class="grant__row grant__row--turns" style="--i:0">
-            <span class="grant__what">Stock enquiries</span>
-            <span class="grant__state">
-              <span class="grant__was">Suggests only</span>
-              <span class="grant__now">Writing</span>
-            </span>
-          </li>
-          <li class="grant__row grant__row--turns" style="--i:1">
-            <span class="grant__what">Delivery changes</span>
-            <span class="grant__state">
-              <span class="grant__was">Suggests only</span>
-              <span class="grant__now">Writing</span>
-            </span>
-          </li>
-          <li class="grant__row">
-            <span class="grant__what">Credit notes</span>
-            <span class="grant__state grant__state--read">Read only</span>
-          </li>
-        </ul>
-        <p class="grant__foot"><strong>You decide.</strong> Read access becomes write access only when you say so.</p>
+      {/* A four-row permission table asked a reader to notice two pills quietly
+          swapping their own text, and carried the word "Writing" in two
+          different colours with nothing to say why they differed. The copy
+          beside it is simpler than that: Hoshii proposes something worth
+          handing over, and you pick. So the picture is one proposal and the two
+          answers to it — the choice is the structure, not a footnote under it.
+          Static, because there is nothing here that motion explains. */}
+      <div class="handart" aria-hidden="true">
+        <p class="ask__cap">Hoshii suggests</p>
+
+        <p class="ask__what">Hand over stock enquiries</p>
+        <p class="ask__why">
+          They arrive most days and are answered the same way every time.
+        </p>
+
+        <p class="ask__acts">
+          <span class="ask__yes">Hand it over</span>
+          <span class="ask__no">Not yet</span>
+        </p>
+
+        <p class="ask__foot">
+          <strong>You decide.</strong> Nothing is written into a system until you do.
+        </p>
       </div>
       </div>
     </article>
