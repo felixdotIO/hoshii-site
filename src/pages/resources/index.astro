@@ -10,6 +10,8 @@
  */
 import { getCollection } from 'astro:content';
 import DocLayout from '~/layouts/DocLayout.astro';
+import Arrow from '~/components/Arrow.astro';
+import Pattern from '~/components/Pattern.astro';
 import ArticleCard from '~/components/ArticleCard.astro';
 import { SITE } from '~/data/site';
 import { absolute } from '~/lib/urls';
@@ -50,6 +52,7 @@ const itemList = {
   trail={[{ label: 'Resources', href: '/resources/' }]}
   pageClass="page--resources"
   wide={true}
+  closer={false}
   schema={[itemList]}
 >
   <link slot="head" rel="alternate" type="application/rss+xml" title={`${SITE.name} articles`} href="/rss.xml" />
@@ -71,11 +74,21 @@ const itemList = {
 
   <p class="res__empty" data-empty hidden>Nothing filed under that yet.</p>
 
-  <p>
+  <p class="doc__note">
     Every piece here is also in the <a href="/rss.xml">RSS feed</a>. For what
-    customers say in their own words, read the <a href="/customers/">customer
-    stories</a>; for the short answers, the <a href="/faq/">questions page</a>.
+    customers say in their own words, read the
+    <a href="/customers/">customer stories</a>; for the short answers, the
+    <a href="/faq/">questions page</a>.
   </p>
+
+  <aside class="docend">
+    <Pattern />
+    <p class="docend__head">Rather see it running on your own mail than read about it?</p>
+    <a class="btn-os btn-os--fill btn-os--lg" href="/demo/">
+      Book a demo
+      <Arrow />
+    </a>
+  </aside>
 </DocLayout>
 
 {/* Twelve lines, no framework, and the page is complete without them. */}
