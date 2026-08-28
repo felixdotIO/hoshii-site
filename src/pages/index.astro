@@ -560,38 +560,29 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
 
       <div class="cap__art">
         <Pattern />
-      <div class="learnart" aria-hidden="true">
-        <ul class="lfix" data-anim>
-            <li class="lfix__row" style="--i:0">
-              <span class="lfix__by">LM</span>
-              <span class="lfix__what">corrected a draft</span>
-              <span class="lfix__ok">learned</span>
-            </li>
-            <li class="lfix__row" style="--i:1">
-              <span class="lfix__by">TS</span>
-              <span class="lfix__what">added a missing lookup</span>
-              <span class="lfix__ok">learned</span>
-            </li>
-            <li class="lfix__row" style="--i:2">
-              <span class="lfix__by">RK</span>
-              <span class="lfix__what">rerouted a thread</span>
-              <span class="lfix__ok">learned</span>
-            </li>
-        </ul>
+      <div class="learnart" aria-hidden="true" data-anim>
+        <p class="learn__cap">Autonomy on one account</p>
 
-        <div class="lrate" data-anim>
-          <p class="lrate__cap">Autonomy rate</p>
-          <ul class="lrate__bars">
-            <li style="--h:24%;--i:0"></li>
-            <li style="--h:30%;--i:1"></li>
-            <li style="--h:36%;--i:2"></li>
-            <li style="--h:43%;--i:3"></li>
-            <li style="--h:55%;--i:4"></li>
-            <li style="--h:66%;--i:5"></li>
-            <li style="--h:78%;--i:6"></li>
-            <li style="--h:92%;--i:7"></li>
+        <div class="learn__plot">
+          <ul class="learn__bars">
+            <li style="--h:22%;--i:0"></li>
+            <li style="--h:27%;--i:1"></li>
+            <li style="--h:33%;--i:2"></li>
+            <li style="--h:54%;--i:3"></li>
+            <li style="--h:59%;--i:4"></li>
+            <li style="--h:76%;--i:5"></li>
+            <li style="--h:82%;--i:6"></li>
+            <li style="--h:95%;--i:7"></li>
+          </ul>
+
+          <ul class="learn__marks">
+            <li style="--col:4;--i:0"></li>
+            <li style="--col:6;--i:1"></li>
+            <li style="--col:8;--i:2"></li>
           </ul>
         </div>
+
+        <p class="learn__foot"><span class="learn__key" aria-hidden="true"></span>A correction, made once. Handled from then on.</p>
       </div>
       </div>
     </article>
@@ -624,40 +615,33 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
       <div class="cap__art">
         <Pattern />
       <div class="handart" aria-hidden="true" data-anim>
-        <p class="hand__title">What Hoshii may do</p>
-        <p class="hand__cols"><span>Area</span><span>Write</span><span>Status</span></p>
-        <ul class="hand">
-          <li class="hand__row hand__row--set">
-            <span class="hand__what">ERP order entry</span>
-            <span class="hand__track"><span class="hand__knob"></span></span>
-            <span class="hand__state"><span class="hand__now">Approved</span></span>
+        <p class="grant__title">What Hoshii may do</p>
+        <p class="grant__cols"><span>Area</span><span>Access</span></p>
+        <ul class="grant">
+          <li class="grant__row">
+            <span class="grant__what">ERP order entry</span>
+            <span class="grant__state grant__state--write">Writing</span>
           </li>
-          <li class="hand__row hand__row--cross" style="--i:0">
-            <span class="hand__what">Stock enquiries</span>
-            <span class="hand__track"><span class="hand__knob"></span></span>
-            <span class="hand__state"
-              ><span class="hand__was">Suggested</span
-              ><span class="hand__now">Approved</span></span
-            >
+          <li class="grant__row grant__row--turns" style="--i:0">
+            <span class="grant__what">Stock enquiries</span>
+            <span class="grant__state">
+              <span class="grant__was">Suggests only</span>
+              <span class="grant__now">Writing</span>
+            </span>
           </li>
-          <li class="hand__row hand__row--cross" style="--i:1">
-            <span class="hand__what">Delivery changes</span>
-            <span class="hand__track"><span class="hand__knob"></span></span>
-            <span class="hand__state"
-              ><span class="hand__was">Suggested</span
-              ><span class="hand__now">Approved</span></span
-            >
+          <li class="grant__row grant__row--turns" style="--i:1">
+            <span class="grant__what">Delivery changes</span>
+            <span class="grant__state">
+              <span class="grant__was">Suggests only</span>
+              <span class="grant__now">Writing</span>
+            </span>
           </li>
-          <li class="hand__row hand__row--held">
-            <span class="hand__what">Credit notes</span>
-            <span class="hand__track"><span class="hand__knob"></span></span>
-            <span class="hand__state"><span class="hand__was">Read only</span></span>
+          <li class="grant__row">
+            <span class="grant__what">Credit notes</span>
+            <span class="grant__state grant__state--read">Read only</span>
           </li>
         </ul>
-        <p class="hand__foot">
-          <span class="hand__write">You decide</span>
-          <span class="hand__scope">A person still approves the work</span>
-        </p>
+        <p class="grant__foot"><strong>You decide.</strong> Read access becomes write access only when you say so.</p>
       </div>
       </div>
     </article>
