@@ -19,6 +19,9 @@ import IconSprite from '~/components/IconSprite.astro';
 import LogoBelt from '~/components/LogoBelt.astro';
 import Faq from '~/components/Faq.astro';
 import Cta from '~/components/Cta.astro';
+import Pattern from '~/components/Pattern.astro';
+import Announce from '~/components/Announce.astro';
+import CursorPill from '~/components/CursorPill.astro';
 import Closer from '~/components/Closer.astro';
 import {
   organization,
@@ -61,6 +64,13 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
   path="/"
   schema={[organization(), website(), softwareApplication(), faqPage(pairs)]}
 >
+  <Announce
+    slot="above-header"
+    tag="Operations Forward 26"
+    text="If your inbox runs your day, join us in Zürich on 23 September."
+    href="https://luma.com/rddz10p7"
+  />
+
   <IconSprite />
 
   <!-- Hero — copy left, the product right ----------------------------- -->
@@ -112,6 +122,7 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
   <!-- Pitch band ------------------------------------------------------ -->
   <section class="pitch guides" aria-labelledby="pitch-text">
     <div class="pitch__panel">
+      <Pattern />
       <div class="pitch__lede">
         <p class="pitch__text" id="pitch-text">
         <span class="pitch__brand">Hoshii</span> is the AI&#8209;native inbox for B2B operations. It
@@ -300,6 +311,7 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
         <article class="shift__card">
           <h3 class="shift__label">Your inbox with Hoshii</h3>
           <div class="shift__art shift__art--flow" data-anim>
+            <Pattern />
             <div class="flow" aria-hidden="true">
               <svg class="flow__glow" viewBox="0 0 400 285">
                 <defs>
@@ -431,6 +443,7 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
       </div>
 
       <div class="cap__art">
+        <Pattern />
       <div class="sortart" data-anim aria-hidden="true">
         <div class="inbox">
           <p class="inbox__bar">
@@ -496,6 +509,7 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
       </div>
 
       <div class="cap__art">
+        <Pattern />
       <div class="suckart" aria-hidden="true">
         <div class="suckart__field">
           <span class="item shot shot--knowledge" style="--i:0"><Image src={wheelKnowledge} alt="" loading="lazy" /></span>
@@ -544,6 +558,7 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
       </div>
 
       <div class="cap__art">
+        <Pattern />
       <div class="learnart" aria-hidden="true">
         <ul class="lfix" data-anim>
             <li class="lfix__row" style="--i:0">
@@ -598,6 +613,7 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
       </div>
 
       <div class="cap__art">
+        <Pattern />
       <div class="handart" aria-hidden="true" data-anim>
         <p class="hand__title">What Hoshii may do</p>
         <p class="hand__cols"><span>Area</span><span>Write</span><span>Status</span></p>
@@ -792,6 +808,10 @@ lead="We’ll show you exactly what Hoshii does with your operations, live, in 3
 </BaseLayout>
 
 
+{/* The cursor label lives outside main: it is fixed, follows the pointer, and
+    belongs to no section. */}
+<CursorPill />
+
 {/* The hero's before/after control, and nothing else.
     The role panels below it are pure CSS — `.pitch__panel:has(.prole:hover)`
     lights the matching paragraph — so they need no script and get none.
@@ -800,6 +820,8 @@ lead="We’ll show you exactly what Hoshii does with your operations, live, in 3
     script the committed state still shows and the buttons still read; what is
     lost is only the hover preview. */}
 <script>
+  import '~/scripts/enhance';
+
   // Before / with. Two photographs of the same floor, cross-faded. The state
   // lives on the frame so the CSS owns which one is showing; this only records
   // the choice and the preview on top of it.

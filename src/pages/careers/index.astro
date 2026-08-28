@@ -7,6 +7,7 @@
  * describes the destination on its own.
  */
 import DocLayout from '~/layouts/DocLayout.astro';
+import Pattern from '~/components/Pattern.astro';
 import TeamGrid from '~/components/TeamGrid.astro';
 import Arrow from '~/components/Arrow.astro';
 import { TEAM } from '~/data/team';
@@ -100,6 +101,7 @@ const VALUES = [
   </ul>
 
   <aside class="docend">
+    <Pattern />
     <p class="docend__head">Nothing here fits, but you think you should be here anyway?</p>
     <a class="btn-os btn-os--fill btn-os--lg" href={`mailto:${SITE.email.jobs}`}>
       Write to us

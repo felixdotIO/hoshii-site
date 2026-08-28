@@ -45,6 +45,7 @@ const urlOf = (f) => '/' + relative(OUT, f).replace(/index\.html$/, '').replaceA
 const titles = new Map();
 const descriptions = new Map();
 const assetRefs = new Set();
+const jsBytes = new Map();
 
 for (const file of htmlFiles) {
   const html = await readFile(file, 'utf8');
@@ -88,10 +89,24 @@ for (const file of htmlFiles) {
     if (!/\balt\b/.test(img)) fail(`${url}: <img> with no alt attribute`);
   }
 
-  // No public page may pull in a framework runtime.
+  /**
+   * A public page may carry a little inline script — the homepage needs one
+   * for the scroll gate, the marquee and the typewriter — but it must never
+   * pull in a framework runtime. React is installed for the Keystatic editor
+   * and must stay there.
+   *
+   * The budget is on inline bytes, so the enhancement layer cannot quietly
+   * grow into an application without someone deciding to raise the number.
+   */
   for (const src of html.matchAll(/<script[^>]+src="(\/_astro\/[^"]+)"/g)) {
-    fail(`${url}: loads a bundled script (${src[1]}) — public pages must ship no JS`);
+    fail(`${url}: loads a bundled script (${src[1]}) — public pages ship inline enhancements only`);
   }
+  const inlineJs = [...html.matchAll(/<script type="module">(.*?)<\/script>/gs)]
+    .reduce((n, m) => n + m[1].length, 0);
+  if (inlineJs > 8000) {
+    fail(`${url}: ${inlineJs} bytes of inline script, over the 8000 budget`);
+  }
+  jsBytes.set(url, inlineJs);
 
   for (const m of html.matchAll(/(?:src|href|content)="(\/[^"]+\.(?:jpg|jpeg|png|svg|webp|avif|woff2|xml|txt))"/g)) {
     assetRefs.add(m[1]);
@@ -246,7 +261,8 @@ if (failures.length) {
 
 console.log(
   `✓ ${pages} pages: titles, descriptions and canonicals unique and present; ` +
-    `one h1 each; heading order intact; every image has alt; no JS on public pages; ` +
+    `one h1 each; heading order intact; every image has alt; ` +
+    `no framework runtime on any public page (max ${Math.max(...jsBytes.values())} bytes of inline script); ` +
     `${assetRefs.size} asset references resolve; ${REDIRECTS.length} redirects land in one hop; ` +
     `sitemap excludes noindex; JSON-LD parses; ` +
     `route table resolves redirects, slashes, Keystatic and static files correctly.`

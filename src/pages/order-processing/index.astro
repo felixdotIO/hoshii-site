@@ -12,6 +12,7 @@
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import DocLayout from '~/layouts/DocLayout.astro';
+import Pattern from '~/components/Pattern.astro';
 import SkillFlow from '~/components/SkillFlow.astro';
 import FaqGroups from '~/components/FaqGroups.astro';
 import Arrow from '~/components/Arrow.astro';
@@ -174,6 +175,7 @@ const SURFACES = [
   <FaqGroups groups={groups} />
 
   <aside class="docend">
+    <Pattern />
     <p class="docend__head">
       Bring your most complex order. We will show you what happens to it, live,
       in 30 minutes.

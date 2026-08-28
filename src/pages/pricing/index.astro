@@ -14,6 +14,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import DocMasthead from '~/components/DocMasthead.astro';
+import Pattern from '~/components/Pattern.astro';
 import FaqGroups from '~/components/FaqGroups.astro';
 import TeamGrid from '~/components/TeamGrid.astro';
 import LogoBelt from '~/components/LogoBelt.astro';
@@ -206,6 +207,7 @@ const pricingMail = `mailto:${SITE.email.sales}?subject=Pricing`;
   <section class="pband pband--end guides" aria-label="Talk to sales">
     <div class="doc__inner doc__body pband__inner">
       <aside class="docend">
+    <Pattern />
         <p class="docend__head">Nobody leaves this call without a price.</p>
         <a class="btn-os btn-os--fill btn-os--lg" href="/demo/">
           Talk to sales

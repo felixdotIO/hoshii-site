@@ -1,0 +1,27 @@
+---
+/**
+ * The event bar above the header.
+ *
+ * Kept as data rather than prose so the date it stops being true is visible in
+ * one place. It is dismissible, and the dismissal is not remembered: this is a
+ * banner, not a consent notice, and persisting it would need storage the site
+ * otherwise has no reason to touch.
+ */
+export type Props = {
+  tag: string;
+  text: string;
+  href: string;
+  linkLabel?: string;
+};
+
+const { tag, text, href, linkLabel = 'Register' } = Astro.props;
+---
+
+<div class="announce">
+  <p class="announce__text">
+    <strong class="announce__tag">{tag}</strong>
+    {text}
+    <a class="announce__link" href={href} target="_blank" rel="noopener">{linkLabel} &rarr;</a>
+  </p>
+  <button class="announce__close" type="button" aria-label="Dismiss">&times;</button>
+</div>

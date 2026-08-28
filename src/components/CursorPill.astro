@@ -1,0 +1,25 @@
+---
+/**
+ * The label that follows the pointer across the industry panels, in place of
+ * the arrow.
+ *
+ * The panels are links and the pointer should say where to. Purely decorative
+ * duplication of what the panel already links to, so it is hidden from
+ * assistive technology, and the `cursor: none` that hides the real arrow is
+ * applied by script rather than in the stylesheet — a failed script leaves a
+ * visible cursor rather than none at all.
+ */
+---
+
+<div class="cursorpill" aria-hidden="true">
+  Book a demo
+  <svg viewBox="0 0 16 16" width="13" height="13">
+    <path
+      d="M3.2 8h9M8.6 4.4 12.2 8l-3.6 3.6"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"></path>
+  </svg>
+</div>
