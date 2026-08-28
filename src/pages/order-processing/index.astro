@@ -78,9 +78,19 @@ const SURFACES = [
   trail={[{ label: 'Order processing', href: '/order-processing/' }]}
   pageClass="page--order-processing"
   wide={true}
+  closer={false}
   schema={[softwareApplication(), faqPage(pairs)]}
 >
   <p class="doc__note">Shipped Skill · live on 500+ order desks</p>
+
+  {/* The page opened on the diagram without this. The claim comes first and
+      the picture illustrates it, not the other way round. */}
+  <p class="doc__standfirst">
+    The Order Processing Skill turns an inbound order into a
+    <strong>ready‑to‑post ERP entry</strong>. It reads the order out of whatever
+    arrived, matches every line to your products, and hands your team one thing
+    to confirm.
+  </p>
 
   <SkillFlow />
 
