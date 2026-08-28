@@ -8170,13 +8170,44 @@ a.ref__card:hover .ref__go {
 /* --- Breadcrumbs ----------------------------------------------------------
    A real ordered list, because it is one: the order carries the meaning. The
    separator is painted rather than written, so it is never read out. */
-/* Set quiet. The trail is orientation, not navigation anyone came for, so it
-   sits under the masthead at the smallest size still comfortably legible --
-   12px, not lower, because it carries real links. */
+/* End-matter, not chrome. The trail sits at the foot of the piece with the
+   sources and the byline, and takes their rule and their rhythm so the three
+   read as one closing block rather than three unrelated strips.
+
+   12px, and not smaller: these are real links and they have to stay tappable. */
 .crumbs {
-  padding: 0.75rem 0 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
   font-size: 0.75rem;
   letter-spacing: 0.01em;
+}
+
+.crumbs--end {
+  margin: 2.5rem 0 0;
+  padding: 1.25rem 0 0;
+  border-top: 1px solid var(--rule);
+}
+
+/* The one mark that says which way this goes. A trail at the top walks you
+   down into the page; at the foot the useful direction is back up, and the
+   arrow is the cheapest way to say so. */
+.crumbs__up {
+  flex: 0 0 auto;
+  width: 0.875rem;
+  height: 0.875rem;
+  color: var(--accent);
+  translate: 0 0.125rem;
+}
+
+.crumbs__up svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .crumbs__list {
@@ -8217,9 +8248,28 @@ a.ref__card:hover .ref__go {
   border-bottom-color: currentColor;
 }
 
+.crumbs a {
+  color: var(--ink);
+}
+
+/* You already know which page you are on; the section above it is the offer. */
 .crumbs__item[aria-current='page'] {
   color: var(--caption);
   font-weight: 400;
+}
+
+/* A long article title should not wrap the trail onto three lines, but it must
+   not be hidden either: indexing is mobile-first, so `display: none` here would
+   hide from the rendered page an item the BreadcrumbList still claims. Truncated
+   instead — the text stays in the page and stays visible. */
+@media (max-width: 40em) {
+  .crumbs__item[aria-current='page'] {
+    display: block;
+    max-width: 14ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
 /* On the dark mastheads the trail sits on green. */

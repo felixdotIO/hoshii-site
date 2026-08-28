@@ -2,15 +2,29 @@
 /**
  * The trail from the homepage to this page.
  *
- * Shown on pages that sit below the top level, where it answers "where am I
- * and what is above me". Not shown on the homepage or on the top-level landing
- * pages, where the only thing above them is the homepage the logo already
- * links to.
+ * It lives at the **foot** of the page, with the sources and the byline,
+ * rather than above the masthead. Two reasons, one of each kind:
  *
- * The last item is the current page: text, not a link, and marked
- * aria-current so it is announced as the page you are on. The matching
- * BreadcrumbList JSON-LD is emitted by whichever page renders this, from the
- * same array, so the two cannot disagree.
+ *  - Design. Above the h1 it is a strip of chrome competing with the headline
+ *    at the one moment the headline should arrive on its own. It read as
+ *    bolted on because it was: a widget above the content rather than part of
+ *    it.
+ *  - Function. On arrival nobody needs it — the page names itself and the logo
+ *    goes home. After the piece, "where am I and what is above me" is a live
+ *    question, and this is the answer in the place the question gets asked.
+ *
+ * Nothing is lost for search. Google reads BreadcrumbList from the JSON-LD,
+ * which has no position on the page; it only requires that the trail actually
+ * exists, which it does. The schema is still emitted from this same array, so
+ * the two cannot disagree.
+ *
+ * Still a real ordered list, because the order carries the meaning, and still
+ * marked `aria-current` on the last item. The separator is painted rather than
+ * written, so it is never read out.
+ *
+ * The weighting inverts at the foot. A top breadcrumb emphasises where you
+ * are; down here you already know, and the useful thing is the section above —
+ * so the ancestors carry the ink and the current page recedes.
  */
 import type { Crumb } from '~/lib/schema';
 
@@ -23,6 +37,13 @@ const { trail, class: className } = Astro.props;
 ---
 
 <nav class:list={['crumbs', className]} aria-label="Breadcrumb">
+  {/* The one mark that says which way this goes: back up, not further in. */}
+  <span class="crumbs__up" aria-hidden="true">
+    <svg viewBox="0 0 16 16" focusable="false">
+      <path d="M8 12.8V3.2M4.4 6.8 8 3.2l3.6 3.6"></path>
+    </svg>
+  </span>
+
   <ol class="crumbs__list">
     {
       trail.map((crumb, i) =>

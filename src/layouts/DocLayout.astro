@@ -10,6 +10,7 @@
  */
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import DocMasthead from '~/components/DocMasthead.astro';
+import Breadcrumbs from '~/components/Breadcrumbs.astro';
 import Closer from '~/components/Closer.astro';
 import Pattern from '~/components/Pattern.astro';
 import { organization, website, breadcrumbs, type Crumb } from '~/lib/schema';
@@ -118,6 +119,7 @@ const graph = [
         <div class="doc__inner doc__split">
           <div class="doc__splitMain doc__body">
             <slot />
+            {fullTrail.length > 2 && <Breadcrumbs trail={fullTrail} class="crumbs--end" />}
           </div>
           <div class="doc__splitAside">
             <slot name="aside" />
@@ -126,6 +128,7 @@ const graph = [
       ) : (
         <div class="doc__inner doc__body">
           <slot />
+          {fullTrail.length > 2 && <Breadcrumbs trail={fullTrail} class="crumbs--end" />}
         </div>
       )
     }

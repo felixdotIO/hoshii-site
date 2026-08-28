@@ -10,7 +10,6 @@
  * The `dark` variant is the green ground the pricing page uses. It is the same
  * markup; only the band around it changes.
  */
-import Breadcrumbs from '~/components/Breadcrumbs.astro';
 import Pattern from '~/components/Pattern.astro';
 import type { Crumb } from '~/lib/schema';
 
@@ -19,7 +18,10 @@ export type Props = {
   /** One sentence. The clause in `accent` is emphasised. */
   sub?: string;
   accent?: string;
-  /** Omitted on top-level pages, where the only parent is the homepage. */
+  /**
+   * Kept on the props because pages pass it, but the masthead no longer draws
+   * it: the trail is end-matter now and DocLayout renders it at the foot.
+   */
   trail?: Crumb[];
   variant?: 'light' | 'dark';
 };
@@ -33,10 +35,6 @@ const { title, sub, accent, trail, variant = 'light' } = Astro.props;
 <div class={variant === 'dark' ? 'pricehead' : 'doc__head'}>
   <Pattern />
   <div class={variant === 'dark' ? 'pricehead__inner' : 'doc__inner'}>
-    {/* Only where there is a step between Home and this page. On a top-level
-        page the trail reads "Home > Pricing", which tells a reader nothing the
-        logo does not already, and puts a row of chrome above every masthead. */}
-    {trail && trail.length > 2 && <Breadcrumbs trail={trail} />}
     <h1 class="doc__title">{title}</h1>
     {
       (sub || accent) && (
