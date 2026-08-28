@@ -1197,6 +1197,24 @@ p {
   border-top: 1px solid var(--rule);
 }
 
+/* Sits under the last answer, on the list's own rule rather than a new one. */
+.faq__more {
+  margin: clamp(1rem, 2.5vw, 1.5rem) 0 0;
+  color: var(--caption);
+  font-size: 0.9375rem;
+}
+
+.faq__more a {
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 0.2em;
+}
+
+.faq__more a:hover {
+  color: var(--accent-deep, var(--accent));
+}
+
 .faq__item:last-child {
   border-bottom: 1px solid var(--rule);
 }
@@ -3505,8 +3523,7 @@ p {
     0 6px 18px rgba(28, 34, 26, 0.1);
 }
 
-.learn__cap,
-.learn__foot {
+.learn__cap {
   margin: 0;
   font-size: clamp(0.5rem, 2.1cqw, 0.75rem);
   line-height: 1.25;
@@ -3517,15 +3534,82 @@ p {
   font-weight: 700;
 }
 
-.learn__foot {
-  color: var(--caption);
+/* --- The corrections ------------------------------------------------------
+   Each entry lands on the same beat as its tick on the axis above, which is
+   what ties the two halves of this picture together: the correction, then the
+   step it produces. Shown rather than summarised — a legend saying "a
+   correction" told the reader the category and none of the substance. */
+.learn__log {
+  display: grid;
+  /* Fixed rows, always all three reserved, so the card cannot resize as they
+     arrive. */
+  grid-template-rows: repeat(3, clamp(1.125rem, 4.6cqw, 1.5rem));
+  gap: clamp(0.125rem, 0.6cqw, 0.25rem);
+  margin: 0;
+  padding-top: clamp(0.375rem, 1.6cqw, 0.625rem);
+  border-top: 1px solid var(--rule);
+  list-style: none;
 }
 
-.learn__foot::before {
-  content: '';
-  display: block;
-  margin: 0 0 clamp(0.375rem, 1.6cqw, 0.625rem);
-  border-top: 1px solid var(--rule);
+.learn__entry {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(0.25rem, 1.4cqw, 0.5rem);
+  opacity: 0;
+  animation: learn-entry 9s calc(0.6s + var(--i) * 1.4s) infinite;
+}
+
+/* Initials, so a correction reads as somebody's rather than the system's. */
+.learn__who {
+  display: grid;
+  place-items: center;
+  width: clamp(0.875rem, 3.6cqw, 1.1875rem);
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background: var(--green);
+  color: var(--bone);
+  font-size: clamp(0.3125rem, 1.35cqw, 0.4375rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.learn__did {
+  overflow: hidden;
+  color: var(--ink);
+  font-size: clamp(0.4375rem, 1.8cqw, 0.625rem);
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.learn__ok {
+  padding: 0.15em 0.45em;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 14%, #ffffff);
+  color: var(--accent-deep, var(--accent));
+  font-size: clamp(0.3125rem, 1.35cqw, 0.4375rem);
+  font-weight: 700;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+/* Lands, then stays for the rest of the cycle: the point is that it is kept. */
+@keyframes learn-entry {
+  0%,
+  2% {
+    opacity: 0;
+    translate: -0.25rem 0;
+  }
+  9%,
+  92% {
+    opacity: 1;
+    translate: 0 0;
+  }
+  98%,
+  100% {
+    opacity: 0;
+  }
 }
 
 /* The plot is one grid, eight columns wide. Bars and ticks share it, which is
@@ -3585,18 +3669,6 @@ p {
   transform-origin: top;
   scale: 1 0;
   animation: learn-mark 9s calc(0.6s + var(--i) * 1.4s) infinite;
-}
-
-/* The legend's own tick, so the mark in the plot is identified rather than
-   guessed at. */
-.learn__key {
-  display: inline-block;
-  width: 1.5px;
-  height: 0.5rem;
-  margin-right: 0.375rem;
-  border-radius: 1px;
-  background: var(--accent);
-  translate: 0 0.0625rem;
 }
 
 /* Each correction appears as its column arrives, and stays. */
@@ -3804,6 +3876,12 @@ p {
      simply all present rather than absent. */
   .learn__marks li {
     scale: 1 1;
+  }
+
+  .learn__entry {
+    animation: none;
+    opacity: 1;
+    translate: 0 0;
   }
 
   .learn__bars li {
@@ -5727,10 +5805,15 @@ a.story__card:focus-visible .story__go {
   translate: 0.1875rem 0;
 }
 
-/* The system Hoshii writes into is the fact a reader is scanning for, so it
-   carries ink weight; the attribution stays quiet under it. */
+/* The system Hoshii writes into is the fact a reader is scanning for. Same
+   chip the reference cards use, so the two devices read as one family. */
 .story__erp {
+  justify-self: start;
+  padding: 0.25em 0.6em;
+  border-radius: 999px;
+  background: var(--wash);
   color: var(--ink);
+  font-size: 0.75rem;
   font-weight: 700;
 }
 
@@ -6323,6 +6406,7 @@ a.story__card:focus-visible .story__go {
   .answer__dots i,
   .learn__marks li,
   .learn__bars li,
+  .learn__entry,
   .chatband__q::after {
     animation: none !important;
   }
@@ -7807,6 +7891,11 @@ a.story__card:focus-visible .story__go {
   background: var(--white);
 }
 
+.pband .doc__body a.ref__card:hover .ref__go,
+.pband .doc__body a.ref__card:focus-visible .ref__go {
+  translate: 0.1875rem 0;
+}
+
 .pband .doc__body a.ref__card:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: -2px;
@@ -7837,15 +7926,21 @@ a.story__card:focus-visible .story__go {
   border-top: 1px solid var(--rule);
 }
 
+/* A chip, not a coloured word. In the accent beside an arrow it read as the
+   link — but the card is the link and this is a fact about the customer. */
 .ref__erp {
-  color: var(--accent-deep);
-  font-size: 0.8125rem;
+  padding: 0.25em 0.6em;
+  border-radius: 999px;
+  background: var(--wash);
+  color: var(--ink);
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.01em;
 }
 
 .ref__go {
-  color: var(--caption);
+  color: var(--accent);
+  transition: translate 0.2s var(--ease);
   transition: transform 0.2s var(--ease), color 0.2s var(--ease);
 }
 
@@ -7950,6 +8045,10 @@ a.ref__card:hover .ref__go {
   font-size: 1rem;
 }
 
+/* Specific enough to beat `.pband .doc__body > p:first-of-type`, which this
+   note is — it follows the team row, so the lead-paragraph rule was collapsing
+   it flat against the portraits. */
+.pband--talk .doc__body .doc__team + .doc__note,
 .pband--talk .doc__body .doc__note {
   margin: clamp(1.25rem, 2.5vw, 1.75rem) 0 0;
 }

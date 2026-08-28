@@ -582,7 +582,31 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
           </ul>
         </div>
 
-        <p class="learn__foot"><span class="learn__key" aria-hidden="true"></span>A correction, made once. Handled from then on.</p>
+        {/* The corrections themselves, each arriving on the same beat as the
+            tick it puts on the axis above. Three rows are always reserved, so
+            the card never reflows as they land.
+
+            The initials are deliberately nobody's: TL, MA and JH would have
+            been Thomas Locher, Marc Adank and Joël Heller, all named elsewhere
+            on this site, and the picture would then be claiming those people
+            made these corrections. */}
+        <ul class="learn__log">
+          <li class="learn__entry" style="--i:0">
+            <span class="learn__who">LM</span>
+            <span class="learn__did">corrected a price lookup</span>
+            <span class="learn__ok">learned</span>
+          </li>
+          <li class="learn__entry" style="--i:1">
+            <span class="learn__who">TS</span>
+            <span class="learn__did">added a missing SKU</span>
+            <span class="learn__ok">learned</span>
+          </li>
+          <li class="learn__entry" style="--i:2">
+            <span class="learn__who">RK</span>
+            <span class="learn__did">rerouted a thread</span>
+            <span class="learn__ok">learned</span>
+          </li>
+        </ul>
       </div>
       </div>
     </article>
@@ -605,7 +629,7 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
             that does it is a page of its own, and this is the one place on the
             homepage where a reader is already asking to see it. */}
         <p class="cap__act">
-          <a class="btn-os btn-os--fill" href="/order-processing/">
+          <a class="btn-os btn-os--accent" href="/order-processing/">
             Explore order processing
             <Arrow />
           </a>
