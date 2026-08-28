@@ -27,6 +27,7 @@ import FaqGroups from '~/components/FaqGroups.astro';
 import LogoBelt from '~/components/LogoBelt.astro';
 import CaseRefs from '~/components/CaseRefs.astro';
 import Pattern from '~/components/Pattern.astro';
+import { CLIENTS } from '~/data/clients';
 import Arrow from '~/components/Arrow.astro';
 import {
   organization,
@@ -81,6 +82,9 @@ const MATCHES = [
     sku: '7720',
   },
 ];
+
+/** Named desks running this Skill. Each is on the customer list already. */
+const USERS = CLIENTS.filter((c) => ['schuetzengarten', 'stutzer', 'chiefs'].includes(c.key));
 
 /** Where a reader of this page actually wants to go next. */
 const NEXT = [
@@ -142,49 +146,75 @@ const SURFACES = [
     accent="before anyone opens it."
   />
 
-  {/* What it is, and the picture of it. */}
+  {/* Copy left, the work itself on the right — the shape the homepage uses for
+      every capability, so the product page opens the way the site argues
+      everywhere else. */}
   <section class="pband guides" aria-label="What the Order Processing Skill does">
     <div class="doc__inner doc__body pband__inner">
-      <p class="doc__note">Shipped Skill · live on 500+ order desks</p>
-      <p class="doc__standfirst">
-        The Order Processing Skill turns an inbound order into a
-        <strong>ready‑to‑post ERP entry</strong>. It reads the order out of
-        whatever arrived, matches every line to your products, and hands your
-        team one thing to confirm.
-      </p>
-      {/* The node diagram that used to sit here said "things go in, a thing
-          comes out" in the abstract, which is the one thing a reader already
-          assumes. This is the same claim with the actual work shown: the
-          German the customer sent, and the two lines it resolves to. It is the
-          example the page walks through further down, so the page opens on its
-          own evidence. Static — there is nothing here that motion explains. */}
-      <figure class="turn">
-        <div class="turn__side">
-          <p class="turn__cap">What arrived</p>
-          <blockquote class="turn__raw">
-            Guten Tag, bitte liefern Sie zur KW 22: 12× Palette Mehl Type 405,
-            8× Karton Rapsöl 10 L. Besten Dank!
-          </blockquote>
-          <p class="turn__from">PDF attachment · German</p>
-        </div>
+      <article class="cap">
+        <div class="cap__copy">
+          <p class="doc__note">Shipped Skill · live on 500+ order desks</p>
+          <p class="doc__standfirst">
+            The Order Processing Skill turns an inbound order into a
+            <strong>ready‑to‑post ERP entry</strong>. It reads the order out of
+            whatever arrived, matches every line to your products, and hands
+            your team one thing to confirm.
+          </p>
 
-        <p class="turn__arrow" aria-hidden="true">→</p>
-
-        <div class="turn__side turn__side--out">
-          <p class="turn__cap">Ready to post</p>
-          <ul class="turn__lines">
-            <li>
-              <span class="turn__item">Mehl Type 405</span>
-              <span class="turn__qty">12 Paletten</span>
-            </li>
-            <li>
-              <span class="turn__item">Rapsöl 10 L</span>
-              <span class="turn__qty">8 Kartons</span>
-            </li>
+          {/* Named desks running this particular Skill, not the whole client
+              list: the claim here is about this page's subject. */}
+          <p class="skillby__cap">Running this Skill</p>
+          <ul class="skillby">
+            {
+              USERS.map((client) => (
+                <li>
+                  <Image
+                    class={`proof__logo proof__logo--${client.key} proof__logo--${client.ink}`}
+                    src={client.src}
+                    alt={client.name}
+                    widths={[300, 480]}
+                    sizes="140px"
+                    loading="lazy"
+                  />
+                </li>
+              ))
+            }
           </ul>
-          <p class="turn__from">Deliver week 22 · awaiting one confirmation</p>
         </div>
-      </figure>
+
+        <div class="cap__art">
+          <Pattern />
+          <div class="turnart" data-anim>
+            <div class="turnart__in">
+              <p class="turnart__cap">What arrived</p>
+              <p class="turnart__raw">
+                Guten Tag, bitte liefern Sie zur KW 22: 12× Palette Mehl Type
+                405, 8× Karton Rapsöl 10 L. Besten Dank!
+              </p>
+              <p class="turnart__from">PDF attachment · German</p>
+            </div>
+
+            <p class="turnart__arrow" aria-hidden="true">↓</p>
+
+            <div class="turnart__out">
+              <p class="turnart__cap">Ready to post</p>
+              <ul class="turnart__lines">
+                <li style="--i:0">
+                  <span class="turnart__item">Mehl Type 405</span>
+                  <span class="turnart__qty">12 Paletten</span>
+                </li>
+                <li style="--i:1">
+                  <span class="turnart__item">Rapsöl 10 L</span>
+                  <span class="turnart__qty">8 Kartons</span>
+                </li>
+              </ul>
+              <p class="turnart__note" style="--i:2">
+                Deliver week 22 · awaiting one confirmation
+              </p>
+            </div>
+          </div>
+        </div>
+      </article>
     </div>
   </section>
 
