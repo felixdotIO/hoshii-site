@@ -116,10 +116,15 @@ for (const file of htmlFiles) {
    *
    * Every host element must therefore have a `.pat` child. `.askrow` is the
    * one that takes two, a left and a right half.
+   *
+   * `.doc__band` is deliberately NOT a host. The homepage's copy of the
+   * original script listed it; every subpage's copy did not, and the subpages
+   * are what the design was drawn against — a layer there sits in the outer
+   * margin beside the content rather than behind it.
    */
   const PATTERN_HOSTS = [
     'doc__head', 'closer', 'pitch__panel', 'cap__art', 'shift__art--flow',
-    'docend', 'doc__band', 'book__pitch', 'pricehead',
+    'docend', 'book__pitch', 'pricehead',
   ];
   let expected = 0;
   for (const host of PATTERN_HOSTS) {

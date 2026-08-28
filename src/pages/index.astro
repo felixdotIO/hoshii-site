@@ -23,6 +23,7 @@ import Pattern from '~/components/Pattern.astro';
 import Announce from '~/components/Announce.astro';
 import CursorPill from '~/components/CursorPill.astro';
 import Closer from '~/components/Closer.astro';
+import Arrow from '~/components/Arrow.astro';
 import {
   organization,
   website,
@@ -610,6 +611,15 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
             <p class="cap__ptext">Writing orders into your ERP is live now. Every skill after it takes the same route: surfaced, agreed, then built.</p>
           </li>
         </ul>
+        {/* The card describes handing work over in general; the shipped Skill
+            that does it is a page of its own, and this is the one place on the
+            homepage where a reader is already asking to see it. */}
+        <p class="cap__act">
+          <a class="btn-os btn-os--accent" href="/order-processing/">
+            Explore order processing
+            <Arrow />
+          </a>
+        </p>
       </div>
 
       <div class="cap__art">

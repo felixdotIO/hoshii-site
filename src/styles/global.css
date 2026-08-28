@@ -2809,6 +2809,12 @@ p {
   border-top: 1px solid var(--rule);
 }
 
+/* The one capability with a page behind it gets a way through to it. Sits on
+   the same rhythm as the points above rather than inventing its own. */
+.cap__act {
+  margin: clamp(1.375rem, 3vw, 2rem) 0 0;
+}
+
 .cap__pname {
   margin: 0 0 0.25rem;
   color: var(--ink);

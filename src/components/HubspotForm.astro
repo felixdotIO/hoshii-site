@@ -8,8 +8,15 @@
  *  - The fallback is in the HTML, not built by the script. A visitor with the
  *    embed blocked — which in DACH is a routine consent outcome, not an edge
  *    case — sees a real mailto route in the initial response rather than an
- *    empty box. The script hides it once the form is mounted.
+ *    empty box.
  *  - The embed loads `defer`, so it never blocks first paint.
+ *
+ * The fallback is withdrawn by watching the target element fill, not by
+ * HubSpot's `onFormReady` callback. That callback was what this used to do and
+ * it did not fire, which produced the worst possible result: "The form did not
+ * load" sitting under a perfectly loaded form. A MutationObserver depends on
+ * nothing but the DOM, so the only way the message can now survive is if the
+ * form genuinely is not there.
  */
 export type Props = {
   /** HubSpot form id. The portal and region are the same for both forms. */
@@ -31,32 +38,58 @@ const REGION = 'eu1';
 const mailto = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
 ---
 
-<div class="doc__embed doc__embed--form">
+<div
+  class="doc__embed doc__embed--form"
+  data-hsform
+  data-form-id={formId}
+  data-portal={PORTAL}
+  data-region={REGION}
+  data-target={target}
+>
   <div id={target} role="group" aria-label={label}></div>
 
-  <p class="doc__standin" id={`${target}-standin`}>
+  <p class="doc__standin">
     {fallbackLead} <a href={mailto}>{email}</a>
   </p>
 </div>
 
-<script
-  is:inline
-  defer
-  src="https://js-eu1.hsforms.net/forms/embed/v2.js"
-  data-hs-form={formId}
-  data-hs-target={target}
-  data-hs-portal={PORTAL}
-  data-hs-region={REGION}
-  onload={`(function(s){
-    if (!window.hbspt) return;
-    hbspt.forms.create({
-      region: s.dataset.hsRegion,
-      portalId: s.dataset.hsPortal,
-      formId: s.dataset.hsForm,
-      target: '#' + s.dataset.hsTarget,
-      onFormReady: function () {
-        var standin = document.getElementById(s.dataset.hsTarget + '-standin');
-        if (standin) standin.hidden = true;
-      }
+<script>
+  /**
+   * Mount each HubSpot form on the page, and withdraw its fallback the moment
+   * the target actually fills.
+   */
+  const mounts = document.querySelectorAll<HTMLElement>('[data-hsform]');
+
+  for (const mount of mounts) {
+    const id = mount.dataset.target;
+    const target = id ? document.getElementById(id) : null;
+    const standin = mount.querySelector<HTMLElement>('.doc__standin');
+    if (!target || !standin) continue;
+
+    // The form is there the instant anything is injected into the target,
+    // whether HubSpot renders inline or drops in an iframe.
+    const watch = new MutationObserver(() => {
+      if (target.childElementCount === 0) return;
+      standin.hidden = true;
+      watch.disconnect();
     });
-  })(this)`}></script>
+    watch.observe(target, { childList: true, subtree: true });
+
+    const script = document.createElement('script');
+    script.src = 'https://js-eu1.hsforms.net/forms/embed/v2.js';
+    script.defer = true;
+    script.addEventListener('load', () => {
+      const hbspt = (window as unknown as { hbspt?: any }).hbspt;
+      // Blocked or stubbed by a consent tool: the fallback stays, which is
+      // exactly what it is for.
+      if (!hbspt?.forms) return;
+      hbspt.forms.create({
+        region: mount.dataset.region,
+        portalId: mount.dataset.portal,
+        formId: mount.dataset.formId,
+        target: `#${id}`,
+      });
+    });
+    document.head.appendChild(script);
+  }
+</script>
