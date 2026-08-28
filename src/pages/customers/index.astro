@@ -36,6 +36,14 @@ const FIGURES = [
 
 const onCamera = [
   {
+    company: 'Max Schwarz AG',
+    wistia: '213shm0tsd',
+    headline: 'A night of Swiss‑German voicemails, ERP‑ready before the workday starts',
+    voice: 'Thomas Locher, Head of Sales',
+    // The only one of the three with a written case behind it.
+    story: '/customers/max-schwarz/',
+  },
+  {
     company: 'Adank Davos AG',
     wistia: 'l3tbbb0g61',
     headline: 'Phone and PDF orders land in the ERP without the retyping',
@@ -108,6 +116,12 @@ const itemList = {
             <p class="cam__who">{customer.company}</p>
             <p class="cam__head">{customer.headline}</p>
             <p class="cam__voice">{customer.voice}</p>
+            {customer.story && (
+              <a class="cam__more" href={customer.story}>
+                Read the full story
+                <span class="cam__go" aria-hidden="true">→</span>
+              </a>
+            )}
           </div>
         </li>
       ))
@@ -118,14 +132,6 @@ const itemList = {
   <ul class="story__list">
     {stories.map((story) => <StoryCard story={story} />)}
   </ul>
-
-  {/* The two onward routes, set as a caption rather than left as a paragraph
-      of body copy hanging under the cards with no treatment. */}
-  <p class="doc__note">
-    For the reasoning rather than the results, read the
-    <a href="/resources/">resources</a>. For what happens to an order once it
-    arrives, see <a href="/order-processing/">order processing</a>.
-  </p>
 
   <aside class="docend">
     <Pattern />
