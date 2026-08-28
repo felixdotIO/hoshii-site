@@ -3570,13 +3570,19 @@ p {
 }
 
 .lrate__bars {
+  /* The ramp runs from this to the accent across the series -- see below. */
+  --bar-low: color-mix(in srgb, var(--sage) 46%, #ffffff);
   display: flex;
   align-items: flex-end;
-  gap: clamp(0.1875rem, 1cqw, 0.375rem);
-  height: clamp(2.5rem, 11cqw, 4rem);
+  /* Wider gaps and slimmer columns: eight fat blocks read as blocks, eight
+     slim ones read as a trend, which is the only thing this chart says. */
+  gap: clamp(0.25rem, 1.6cqw, 0.5rem);
+  height: clamp(3rem, 13cqw, 4.75rem);
   margin: 0;
   padding: 0;
   list-style: none;
+  /* Bars need something to stand on or they float in the card. */
+  border-bottom: 1px solid rgba(42, 35, 32, 0.16);
 }
 
 /* Each bar grows to its own height in turn, so the chart builds left to right
@@ -3584,16 +3590,17 @@ p {
 .lrate__bars li {
   flex: 1 1 0;
   height: var(--h);
-  border-radius: 0.125rem 0.125rem 0 0;
-  background: color-mix(in srgb, var(--sage) 58%, #ffffff);
+  border-radius: 0.09375rem 0.09375rem 0 0;
   transform-origin: bottom;
   scale: 1 0;
   animation: bar-grow 9s calc(var(--i) * 0.62s) infinite;
-}
-
-/* The last stretch is where the compounding shows, so it carries the accent. */
-.lrate__bars li:nth-last-child(-n + 3) {
-  background: var(--accent);
+  /* Graded, not switched. Five sage bars then three orange ones drew a line
+     where nothing happens; the claim is that autonomy compounds, so the colour
+     has to compound with it. Each bar mixes a little further toward the accent,
+     so the series arrives rather than jumps. The flat value is the fallback
+     wherever calc() inside color-mix is not understood. */
+  background: var(--bar-low);
+  background: color-mix(in srgb, var(--accent) calc(var(--i) * 13%), var(--bar-low));
 }
 
 @keyframes lfix-in {
