@@ -1,3 +1,4 @@
+
 ---
 /**
  * The homepage.
@@ -36,6 +37,7 @@ import heroAfter from '~/assets/img/hero-after.jpg';
 import heroBefore from '~/assets/img/hero-before.jpg';
 import thomasLocher from '~/assets/img/thomas-locher.jpg';
 import wheelChat from '~/assets/img/wheel-chat.png';
+import closerElevator from '~/assets/img/closer-elevator.png';
 import wheelConnectors from '~/assets/img/wheel-connectors.png';
 import wheelKnowledge from '~/assets/img/wheel-knowledge.png';
 import zurichStrip from '~/assets/img/zurich-strip.jpg';
@@ -254,8 +256,12 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
       <div class="shift__pair">
         <!-- Today: a line that never closes ---------------------------- -->
         <article class="shift__card">
-          <h3 class="shift__label">Your inbox today</h3>
+          <h3 class="shift__label">Without Hoshii</h3>
           <div class="shift__art shift__art--today" data-anim>
+            <p class="shift__count">
+              <span class="shift__num">7+</span>
+              steps, four tools
+            </p>
             <div class="today" aria-hidden="true">
               <div class="today__rail">
                 <div class="today__belt">
@@ -264,7 +270,7 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
                   <li class="today__chip">Read the order</li>
                   <li class="today__chip">Look up customer</li>
                   <li class="today__chip">Retype lines</li>
-                  <li class="today__chip">Post to ERP</li>
+                  <li class="today__chip">Post to systems of record</li>
                   <li class="today__chip">Write confirmation</li>
                   <li class="today__chip">Send</li>
                 </ol>
@@ -273,17 +279,12 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
                   <li class="today__chip">Read the order</li>
                   <li class="today__chip">Look up customer</li>
                   <li class="today__chip">Retype lines</li>
-                  <li class="today__chip">Post to ERP</li>
+                  <li class="today__chip">Post to systems of record</li>
                   <li class="today__chip">Write confirmation</li>
                   <li class="today__chip">Send</li>
                 </ol>
                 </div>
               </div>
-
-              <p class="today__note">
-                <span class="today__count">7+</span>
-                steps. Then again, for the next one.
-              </p>
 
               <div class="today__stack">
                 <div class="today__sheet today__sheet--c"></div>
@@ -302,29 +303,41 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
 
           <p class="shift__body">
             Open the mail, look up the customer, check stock, retype the
-            lines, post to the ERP. Seven or more steps per order, held
-            together by whoever has done it longest. Nothing you fix today
-            makes tomorrow faster.
+            lines, post to the systems of record. Held together by whoever has
+            done it longest, and nothing you fix today makes tomorrow faster.
           </p>
         </article>
 
         <!-- With Hoshii: everything converges -------------------------- -->
         <article class="shift__card">
-          <h3 class="shift__label">Your inbox with Hoshii</h3>
+          <h3 class="shift__label">
+            <span class="shift__badge" aria-hidden="true">
+              <svg viewBox="0 0 1259 1756" fill="currentColor">
+                <rect x="0" y="0" width="1259" height="413"/>
+                <rect x="184" y="605" width="403" height="1151"/>
+                <rect x="707" y="605" width="402" height="1151"/>
+              </svg>
+            </span>
+            With Hoshii
+          </h3>
           <div class="shift__art shift__art--flow" data-anim>
             <Pattern />
+            <p class="shift__count">
+              <span class="shift__num">One</span>
+              unified workspace
+            </p>
             <div class="flow" aria-hidden="true">
               <svg class="flow__glow" viewBox="0 0 400 285">
                 <defs>
                   <linearGradient id="flow-in" x1="0" x2="1" y1="0" y2="0">
-                    <stop offset="0" stop-color="#fd4b00" stop-opacity=".1"/>
-                    <stop offset=".45" stop-color="#fd4b00" stop-opacity=".05"/>
+                    <stop offset="0" stop-color="#fd4b00" stop-opacity=".12"/>
+                    <stop offset=".45" stop-color="#fd4b00" stop-opacity=".06"/>
                     <stop offset="1" stop-color="#fd4b00" stop-opacity="0"/>
                   </linearGradient>
                   <linearGradient id="flow-out" x1="1" x2="0" y1="0" y2="0">
-                    <stop offset="0" stop-color="#133021" stop-opacity=".3"/>
-                    <stop offset=".45" stop-color="#133021" stop-opacity=".17"/>
-                    <stop offset="1" stop-color="#133021" stop-opacity="0"/>
+                    <stop offset="0" stop-color="#ffffff" stop-opacity=".2"/>
+                    <stop offset=".45" stop-color="#e8f0e4" stop-opacity=".11"/>
+                    <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
                   </linearGradient>
                   <radialGradient id="flow-core">
                     <stop offset="0" stop-color="#ffffff" stop-opacity=".95"/>
@@ -351,13 +364,15 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
                   <path d="M239 142.5H313"/>
                   <path d="M239 142.5C270 142.5 276 228 313 228"/>
                 </g>
+                {/* One short dash per wire. Quieter than anything that carries a
+                    payload, and the only thing on this panel that moves. */}
                 <g class="flow__pulses">
                   <path d="M87 57C124 57 130 142.5 161 142.5" style="--d: 0s" pathLength="100"/>
-                  <path d="M87 142.5H161" style="--d: 1.1s" pathLength="100"/>
-                  <path d="M87 228C124 228 130 142.5 161 142.5" style="--d: 2.2s" pathLength="100"/>
-                  <path d="M239 142.5C270 142.5 276 57 313 57" style="--d: .55s" pathLength="100"/>
-                  <path d="M239 142.5H313" style="--d: 1.65s" pathLength="100"/>
-                  <path d="M239 142.5C270 142.5 276 228 313 228" style="--d: 2.75s" pathLength="100"/>
+                  <path d="M87 142.5H161" style="--d: 1.267s" pathLength="100"/>
+                  <path d="M87 228C124 228 130 142.5 161 142.5" style="--d: 2.533s" pathLength="100"/>
+                  <path d="M239 142.5C270 142.5 276 57 313 57" style="--d: .633s" pathLength="100"/>
+                  <path d="M239 142.5H313" style="--d: 1.9s" pathLength="100"/>
+                  <path d="M239 142.5C270 142.5 276 228 313 228" style="--d: 3.167s" pathLength="100"/>
                 </g>
               </svg>
 
@@ -387,17 +402,17 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
 
               <p class="flow__tile flow__tile--o1">
                 <span class="flow__glyph">
-                  <svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-search" transform="translate(12 12) scale(0.9917) translate(-12.62 -12.62)" stroke-width="1.513"/></svg>
+                  <svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-money"/></svg>
                 </span>
               </p>
               <p class="flow__tile flow__tile--o2">
                 <span class="flow__glyph">
-                  <svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-drafted" transform="translate(12 12) scale(0.9862) translate(-12.00 -12.50)" stroke-width="1.521"/></svg>
+                  <svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-smile"/></svg>
                 </span>
               </p>
               <p class="flow__tile flow__tile--o3">
                 <span class="flow__glyph">
-                  <svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-reply" transform="translate(12 12) scale(1.0580) translate(-12.38 -13.37)" stroke-width="1.418"/></svg>
+                  <svg class="vox" viewBox="0 0 24 24" aria-hidden="true"><use href="#ico-clock"/></svg>
                 </span>
               </p>
             </div>
@@ -453,7 +468,7 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
           <div class="inbox__body"></div>
         </div>
         <ul class="lanes">
-            <li class="lane" style="--i:0;--from:118.9%;--fy:-542.2%">
+            <li class="lane" style="--i:0;--dir:1;--r:0">
               <p class="lane__name">Order desk</p>
               <div class="lane__slot">
                 <div class="lmail">
@@ -462,7 +477,7 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
                 </div>
               </div>
             </li>
-            <li class="lane" style="--i:1;--from:0%;--fy:-442.2%">
+            <li class="lane" style="--i:1;--dir:0;--r:1">
               <p class="lane__name">Service</p>
               <div class="lane__slot">
                 <div class="lmail">
@@ -471,7 +486,7 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
                 </div>
               </div>
             </li>
-            <li class="lane" style="--i:2;--from:-118.9%;--fy:-342.2%">
+            <li class="lane" style="--i:2;--dir:-1;--r:2">
               <p class="lane__name">Sales</p>
               <div class="lane__slot">
                 <div class="lmail">
@@ -551,8 +566,8 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
             <p class="cap__ptext">Correct it once. It works that way from then on.</p>
           </li>
           <li class="cap__point">
-            <h4 class="cap__pname">Per customer, and across the company</h4>
-            <p class="cap__ptext">The fix belongs to the account, not to the person who made it. Whoever opens the next order already has it.</p>
+            <h4 class="cap__pname">Saved on the account, not in someone&rsquo;s head</h4>
+            <p class="cap__ptext">One person corrects it once. Everyone who handles that customer afterwards gets the same answer, whether or not they were there when it was learned.</p>
           </li>
         </ul>
 
@@ -568,36 +583,116 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
           knows it resolves to. The first row is the same example the order
           processing page works through, so the two pages corroborate rather
           than each assert separately. */}
+      {/* Correct once, and the next order is already right on somebody else's
+          screen. Three beats on one card, because the claim has three parts and
+          a list of things Hoshii already knows showed none of them: it showed
+          the result and never the correction that produced it, nor the fact
+          that the correction outlives the person who made it.
+
+          Everything that changes between beats is two elements stacked in one
+          grid cell and cross-faded, so the card never resizes and nothing
+          reflows under the reader. */}
+      {/* Where the retyping actually happens: a mail on one side, the system of
+          record on the other, and the mapping between them. The card used to
+          show a value being corrected with nothing around it, so the correction
+          had no place and no cost. Here it lands in a field of a second system,
+          which is the work.
+
+          Order 1 is typed twice, once wrong and once by hand. Order 2 is the
+          same shorthand from the same customer and it goes straight in. */}
       <div class="learnart" aria-hidden="true" data-anim>
-        <p class="learn__cap">
-          What Hoshii knows
-          <span class="learn__acct">A. &amp; B. Rinderknecht</span>
-        </p>
+        <div class="lrn">
+          {/* The confirmation takes the whole card for a second rather than
+              arriving as a chip in a corner. A correction that is only recorded
+              looks like an edit; this is the product answering. */}
+          <span class="lrn__flash" aria-hidden="true">
+            <svg class="lrn__flashtick" viewBox="0 0 32 32"><path d="m8.5 16.8 5.4 5.4L23.5 11"/></svg>
+            Learned
+          </span>
+          <div class="lrn__win lrn__win--mail">
+            <p class="lrn__bar">
+              <span class="lrn__logo">
+                <svg viewBox="0 0 1259 1756" fill="currentColor" aria-hidden="true">
+                  <rect x="0" y="0" width="1259" height="413"/>
+                  <rect x="184" y="605" width="403" height="1151"/>
+                  <rect x="707" y="605" width="402" height="1151"/>
+                </svg>
+              </span>
+              <span class="lrn__app">Unibox</span>
+            </p>
 
-        <ul class="learn__mem">
-          <li class="learn__row" style="--i:0">
-            <span class="learn__said">“Schrauben, kurz”</span>
-            <span class="learn__to" aria-hidden="true">→</span>
-            <span class="learn__means">Hex bolt M8×18</span>
-            <span class="learn__ok">learned</span>
-          </li>
-          <li class="learn__row" style="--i:1">
-            <span class="learn__said">“wie immer”</span>
-            <span class="learn__to" aria-hidden="true">→</span>
-            <span class="learn__means">Pallet, week + 1</span>
-            <span class="learn__ok">learned</span>
-          </li>
-          <li class="learn__row" style="--i:2">
-            <span class="learn__said">invoices</span>
-            <span class="learn__to" aria-hidden="true">→</span>
-            <span class="learn__means">buchhaltung@</span>
-            <span class="learn__ok">learned</span>
-          </li>
-        </ul>
+            {/* Two views of the same window: the inbox, and the message once it
+                is open. The card used to show a quotation floating in a bar,
+                which is a caption pretending to be a screen. Order one arrives
+                in the list and is opened; order two only ever arrives, because
+                by then nobody has to read it. */}
+            <span class="lrn__body">
+              <span class="lrn__view lrn__view--list">
+                <span class="lrn__mrow lrn__mrow--in">
+                  <span class="lrn__unread" aria-hidden="true"></span>
+                  <span class="lrn__mwho">A.&nbsp;&amp;&nbsp;B. Rinderknecht</span>
+                  <span class="lrn__mprev">the short bolts again, please</span>
+                </span>
+                <span class="lrn__mrow">
+                  <span class="lrn__mwho">Frei Logistik</span>
+                  <span class="lrn__mprev">Delivery note 88214</span>
+                </span>
+                <span class="lrn__mrow">
+                  <span class="lrn__mwho">Meier AG</span>
+                  <span class="lrn__mprev">Question on the price list</span>
+                </span>
+              </span>
 
-        <p class="learn__foot">
-          Corrected once, by anyone. <strong>Known on every desk.</strong>
-        </p>
+              <span class="lrn__view lrn__view--open">
+                <span class="lrn__ofrom">A.&nbsp;&amp;&nbsp;B. Rinderknecht</span>
+                <span class="lrn__otext">
+                  Hi, <span class="lrn__hl">the short bolts</span> again, please.
+                  Many thanks!
+                </span>
+              </span>
+            </span>
+          </div>
+
+          <span class="lrn__map" aria-hidden="true">
+            <span class="lrn__wire"></span>
+            <span class="lrn__dot"></span>
+          </span>
+
+          <div class="lrn__win lrn__win--erp">
+            <p class="lrn__bar">
+              <span class="lrn__app">System of record</span>
+              <span class="lrn__ord">
+                <span class="lrn__o lrn__o--1">Order 1</span>
+                <span class="lrn__o lrn__o--2">Order 2</span>
+              </span>
+            </p>
+
+            <p class="lrn__lines">
+              {/* Who wrote what. Without the two names the line was a value
+                  changing on its own: it has to be legible that Hoshii put the
+                  wrong bolt in and a person took it out again, because that is
+                  the correction the whole card is about. */}
+              <span class="lrn__line lrn__line--fix">
+                <span class="lrn__was">
+                  <span class="lrn__by">Hoshii</span>
+                  <span class="lrn__val">M8&times;20<span class="lrn__strike"></span></span>
+                </span>
+                <span class="lrn__typed">
+                  <span class="lrn__by lrn__by--you">You</span>
+                  <span class="lrn__type">
+                    <span class="lrn__is">Hex bolt M8&times;18</span>
+                    <span class="lrn__caret"></span>
+                  </span>
+                </span>
+              </span>
+              <span class="lrn__line lrn__line--auto">
+                <span class="lrn__by">Hoshii</span>
+                <span class="lrn__is">Hex bolt M8&times;18</span>
+                <span class="lrn__tag">from the account</span>
+              </span>
+            </p>
+          </div>
+        </div>
       </div>
       </div>
     </article>
@@ -605,15 +700,15 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
     <article class="cap cap--flip" data-tone="d">
       <div class="cap__copy">
         <h3 class="cap__head">Finally, hand off repetitive work to us</h3>
-        <p class="cap__lead">You see where the week actually goes. Hoshii reads the same picture and suggests what to take off your team. You pick, we build the skill, and read access becomes write access.</p>
+        <p class="cap__lead">Hoshii sees which jobs your team does over and over, and proposes the ones worth handing over. You approve each one, and Hoshii goes from only reading your systems to writing into them.</p>
         <ul class="cap__points">
           <li class="cap__point">
-            <h4 class="cap__pname">Hoshii suggests, you decide</h4>
-            <p class="cap__ptext">Analytics shows where time is lost. Pattern recognition proposes the areas worth handing over. The call stays yours.</p>
+            <h4 class="cap__pname">Nothing is handed over until you say so</h4>
+            <p class="cap__ptext">Hoshii can only ever propose. You say yes or not yet, one job at a time, and you can take it back.</p>
           </li>
           <li class="cap__point">
-            <h4 class="cap__pname">ERP writing today, more to come</h4>
-            <p class="cap__ptext">Writing orders into your ERP is live now. Every skill after it takes the same route: surfaced, agreed, then built.</p>
+            <h4 class="cap__pname">Order writing is live today</h4>
+            <p class="cap__ptext">Hoshii already writes orders into your system of record. Everything it takes on after that arrives the same way: noticed, proposed, agreed, then built.</p>
           </li>
         </ul>
         {/* The card describes handing work over in general; the shipped Skill
@@ -635,23 +730,68 @@ const pairs: QA[] = faqGroups.flatMap((group) =>
           beside it is simpler than that: Hoshii proposes something worth
           handing over, and you pick. So the picture is one proposal and the two
           answers to it — the choice is the structure, not a footnote under it.
-          Static, because there is nothing here that motion explains. */}
-      <div class="handart" aria-hidden="true">
-        <p class="ask__cap">Hoshii suggests</p>
+          The card composes itself, then waits: see the note in the
+          stylesheet for why it must never press its own button. */}
+      {/* Shown, not stated. The card used to open on a sentence saying the
+          same seven steps happen every time; now the same job arrives three
+          times in front of you and you watch it happen, which is the thing the
+          sentence was standing in for. Then the proposal. Then the choice, and
+          it waits there: this card never presses its own button.
 
-        <p class="ask__what">Hand over stock enquiries</p>
-        <p class="ask__why">
-          They arrive most days and are answered the same way every time.
-        </p>
+          Four states in one stage cell, cross-faded, so the card holds its size
+          and nothing reflows under the reader. */}
+      <div class="handart" aria-hidden="true" data-anim>
+        <div class="hnd">
+          <p class="hnd__head">
+            <span class="hnd__caps">
+              <span class="hnd__cap hnd__cap--1">This week</span>
+              <span class="hnd__cap hnd__cap--2">Hoshii suggests</span>
+            </span>
+          </p>
 
-        <p class="ask__acts">
-          <span class="ask__yes">Hand it over</span>
-          <span class="ask__no">Not yet</span>
-        </p>
+          <span class="hnd__stage">
+            <span class="hnd__step hnd__step--seen">
+              <span class="hnd__task" style="--i:0">
+                <span class="hnd__tjob">Order confirmation</span>
+                <span class="hnd__twho">Meier AG</span>
+              </span>
+              <span class="hnd__task" style="--i:1">
+                <span class="hnd__tjob">Order confirmation</span>
+                <span class="hnd__twho">Brauer &amp; Co</span>
+              </span>
+              <span class="hnd__task" style="--i:2">
+                <span class="hnd__tjob">Order confirmation</span>
+                <span class="hnd__twho">Nyffeler AG</span>
+              </span>
+            </span>
 
-        <p class="ask__foot">
-          <strong>You decide.</strong> Nothing is written into a system until you do.
-        </p>
+            <span class="hnd__step hnd__step--ask">
+              <span class="hnd__what">Hand over order writing to the ERP</span>
+              <span class="hnd__acts">
+                <span class="hnd__yes">Hand it over</span>
+                <span class="hnd__no">Not yet</span>
+              </span>
+            </span>
+
+            <span class="hnd__step hnd__step--run">
+              <span class="hnd__perm">
+                <span class="hnd__was">Read</span>
+                <span class="hnd__to" aria-hidden="true">&rarr;</span>
+                <span class="hnd__now">Read and write</span>
+              </span>
+              <span class="hnd__wrote">
+                <svg class="hnd__tick" viewBox="0 0 16 16" aria-hidden="true"><path d="m3.4 8.3 3 3 6.2-6.4"/></svg>
+                Order 4417 written
+              </span>
+            </span>
+          </span>
+
+          <p class="hnd__foot">
+            <span class="hnd__f hnd__f--1">The same job, over and over.</span>
+            <span class="hnd__f hnd__f--2"><strong>You decide.</strong> Nothing is written into a system until you do.</span>
+            <span class="hnd__f hnd__f--3"><strong>Once you do,</strong> it runs on its own and you keep the approval.</span>
+          </p>
+        </div>
       </div>
       </div>
     </article>
@@ -807,6 +947,8 @@ accent="before they start."
 title="Hoshii is the AI‑native inbox for B2B operations."
 accent="Reply faster, reduce manual work."
 lead="We’ll show you exactly what Hoshii does with your operations, live, in 30 minutes."
+photo={closerElevator}
+photoAlt="A man in a suit holding a lift door open"
   />
 </BaseLayout>
 
@@ -823,8 +965,6 @@ lead="We’ll show you exactly what Hoshii does with your operations, live, in 3
     script the committed state still shows and the buttons still read; what is
     lost is only the hover preview. */}
 <script>
-  import '~/scripts/enhance';
-
   // Before / with. Two photographs of the same floor, cross-faded. The state
   // lives on the frame so the CSS owns which one is showing; this only records
   // the choice and the preview on top of it.

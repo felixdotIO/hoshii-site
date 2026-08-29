@@ -6,7 +6,7 @@
     {
       "question": "What is the Order Processing Skill?",
       "answer": [
-        "It is a Hoshii Skill that reads inbound B2B orders from email, PDF, Excel, voicemail and photographs, matches each line to a product in your ERP, and prepares an entry your team confirms in one click."
+        "It is a capability you give your Agent. The Agent reads inbound B2B orders from email, PDF, Excel, voicemail and photographs, matches each line to a product in your ERP, and prepares an entry your team confirms in one click."
       ]
     },
     {
@@ -30,7 +30,7 @@
     {
       "question": "How does it handle customers who order the same thing differently?",
       "answer": [
-        "Every confirmation is training data for that customer. The same phrase can resolve to different products for different customers, and the Skill applies what it learned from the next order on."
+        "Every confirmation and correction is saved against that customer, not against the person who made it. The same phrase can mean different products for different customers, and your Agent applies what it learned from the next order on."
       ]
     }
   ]

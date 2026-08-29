@@ -1,5 +1,12 @@
 /**
- * The homepage's scene behaviour.
+ * The site's scene behaviour.
+ *
+ * Loaded from BaseLayout, so it runs on every page. It used to be imported by
+ * the home page alone, which meant the scroll gate below existed only there:
+ * the logo marquee on every subpage, and both loops on the order processing
+ * page, ran for as long as the tab was open whether or not anyone was looking.
+ * Everything in here past the gate finds its own elements or does nothing, so
+ * on a page without them the file costs a lookup that returns null.
  *
  * This exists because the port initially shipped none of it, on a "zero
  * JavaScript" rule that turned out to be the wrong target. The brief asks for
@@ -35,10 +42,25 @@ function gateAnimations() {
   const hosts = document.querySelectorAll('[data-anim]');
   if (!hosts.length || !('IntersectionObserver' in window)) return;
 
-  document.documentElement.classList.add('anim-gated');
+  const root = document.documentElement;
+  root.classList.add('anim-gated');
+
+  /* Having the constructor is not the same as the callback running. Embedded
+     and headless views exist where an observer is created, accepts targets and
+     never reports, and there the gate is a trap rather than a saving: every
+     loop sits paused on frame zero, and the scenes whose first frame fades in
+     from nothing sit blank. So the gate is released if nothing has been
+     reported shortly after it goes on. The failure mode stays the one this file
+     promises -- everything moves, not nothing does. */
+  let reported = false;
+  const release = window.setTimeout(() => {
+    if (!reported) root.classList.remove('anim-gated');
+  }, 1200);
 
   const io = new IntersectionObserver(
     (entries) => {
+      reported = true;
+      window.clearTimeout(release);
       for (const entry of entries) {
         entry.target.classList.toggle('anim-live', entry.isIntersecting);
       }

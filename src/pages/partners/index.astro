@@ -5,12 +5,16 @@
  * Split layout, so the form sits beside the argument rather than under it.
  * A partner who has already decided can start typing without scrolling.
  */
+import { Image } from 'astro:assets';
 import DocLayout from '~/layouts/DocLayout.astro';
 import Pattern from '~/components/Pattern.astro';
 import HubspotForm from '~/components/HubspotForm.astro';
 import LogoBelt from '~/components/LogoBelt.astro';
 import Arrow from '~/components/Arrow.astro';
 import { SITE } from '~/data/site';
+import csbSystem from '~/assets/partners/csb-system.webp';
+import querformat from '~/assets/partners/querformat.png';
+import vinx from '~/assets/partners/vinx.png';
 
 const PROPS = [
   {
@@ -25,6 +29,28 @@ const PROPS = [
     claim: 'Grow recurring revenue while we handle the AI heavy lifting in the background.',
     why: 'You build the connector once. It serves every client you have on that system.',
   },
+];
+
+/* The three we are already building with, on the site's own logo treatment
+ * rather than in tiles of their own. `kind` picks which of the two, and it is
+ * decided by the file, not by taste -- the same rule the customer belt runs on:
+ *
+ *   alpha  a logo with real transparency, flattened to a black silhouette.
+ *          CSB and querformat both carry an alpha channel, which is also what
+ *          rescues querformat: it ships as white type and is invisible on a pale
+ *          ground until it is flattened.
+ *   paper  a logo that ships on a white rectangle. brightness(0) would paint the
+ *          rectangle too, so it is multiplied against the ground instead, which
+ *          drops the white and leaves the artwork. VinX is a palette PNG with no
+ *          alpha at all, so it is this one.
+ *
+ * Heights differ per mark rather than widths: a stacked lockup and a wide
+ * wordmark set to one width read as two very different sizes.
+ */
+const PARTNERS = [
+  { name: 'CSB-System', logo: csbSystem, h: '2.75rem', kind: 'alpha' },
+  { name: 'querformat', logo: querformat, h: '1.25rem', kind: 'alpha' },
+  { name: 'VinX', logo: vinx, h: '2.375rem', kind: 'paper' },
 ];
 
 const AUDIENCES = [
@@ -64,6 +90,30 @@ const AUDIENCES = [
       ))
     }
   </ul>
+
+  {/* Directly under the three claims, because that is what it answers: the
+      claims say we integrate with the systems your customers already run, and
+      these are three of them. At the foot of the page it was a footnote. */}
+  <div class="plogos">
+    <p class="plogos__label">Partners we are already building with</p>
+    <ul class="plogos__row">
+      {
+        PARTNERS.map((partner) => (
+          <li class="plogos__cell">
+            <Image
+              class:list={['plogos__mark', `proof__logo--${partner.kind}`]}
+              src={partner.logo}
+              alt={partner.name}
+              style={`--h: ${partner.h}`}
+              widths={[240, 480]}
+              sizes="12rem"
+              loading="lazy"
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
 
   <h2 id="who-this-is-for">Who this is for</h2>
   <ul class="doc__panels">

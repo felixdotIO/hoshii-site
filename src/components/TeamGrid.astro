@@ -19,9 +19,22 @@ import type { TeamMember } from '~/data/team';
 export type Props = {
   members: TeamMember[];
   quotes?: boolean;
+  /**
+   * How wide the portrait actually renders, per page. It is not decoration:
+   * the source files are 580px on the long edge and there is no more than
+   * that, so a box the browser thinks is small enough for the 290w file, or a
+   * box wider than 290 CSS px on a 2x screen, is a visibly soft portrait. The
+   * careers grid renders them near 290; the two booking rails render 52px
+   * avatars and should not be pulling the 580w file for them.
+   */
+  sizes?: string;
 };
 
-const { members, quotes = true } = Astro.props;
+const {
+  members,
+  quotes = true,
+  sizes = '(min-width: 56em) 18rem, (min-width: 40em) 40vw, 45vw',
+} = Astro.props;
 ---
 
 <ul class="doc__team">
@@ -34,7 +47,7 @@ const { members, quotes = true } = Astro.props;
           alt=""
           formats={['avif', 'webp']}
           widths={[290, 580]}
-          sizes="(min-width: 60em) 14rem, 40vw"
+          sizes={sizes}
           loading="lazy"
         />
         <p class="doc__personName">{member.name}</p>

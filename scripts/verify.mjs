@@ -124,7 +124,7 @@ for (const file of htmlFiles) {
    */
   const PATTERN_HOSTS = [
     'doc__head', 'closer', 'pitch__panel', 'cap__art', 'shift__art--flow',
-    'docend', 'book__pitch', 'pricehead',
+    'docend', 'book__pitch', 'pricehead', 'phero', 'pexplain',
   ];
   let expected = 0;
   for (const host of PATTERN_HOSTS) {
@@ -281,6 +281,52 @@ for (const probe of ['/favicon.svg', '/robots.txt', '/sitemap.xml', '/rss.xml'])
   if (resolve(probe).kind !== 'file') fail(`${probe}: does not serve as a file`);
 }
 
+/**
+ * A keyframe nobody plays, and an animation nobody defined.
+ *
+ * Both halves of the same failure, and it has cost this build several rounds:
+ * a block replacement in `global.css` slices between two anchors and silently
+ * swallows whatever sits between them. CSS drops what it cannot match without
+ * a word, so the build stays green, this script stayed green, and the only
+ * symptom is a picture on the page that no longer moves. The order-processing
+ * scene shipped twice with three of its four beats dead -- thirteen `desk-*`
+ * keyframes defined and not one of them referenced.
+ *
+ * Runs on the built stylesheet, so it sees what the browser sees.
+ */
+{
+  const cssFiles = files.filter((f) => f.endsWith('.css'));
+  for (const file of cssFiles) {
+    const css = await readFile(file, 'utf8');
+    const defined = new Set([...css.matchAll(/@keyframes\s+([\w-]+)/g)].map((m) => m[1]));
+
+    /* Strip the @keyframes bodies first: percentage selectors inside them can
+       carry `animation-timing-function`, and a name must not count as used
+       because it appears in its own definition. */
+    const body = css.replace(/@keyframes\s+[\w-]+\s*\{(?:[^{}]|\{[^{}]*\})*\}/g, '');
+    const used = new Set(
+      [...body.matchAll(/animation(?:-name)?\s*:([^;}]*)/g)].flatMap((m) =>
+        [...m[1].matchAll(/[\w-]+/g)].map((t) => t[0])
+      )
+    );
+
+    /* `seq-scene-bc` is a documented spare: a scene shape kept for a host whose
+       last two beats are one picture. Anything else unreferenced is a rule that
+       has gone missing. */
+    const SPARES = new Set(['seq-scene-bc']);
+    for (const name of defined) {
+      if (!used.has(name) && !SPARES.has(name)) {
+        fail(`${relative(OUT, file)}: @keyframes ${name} is never referenced — the rule that played it has been deleted`);
+      }
+    }
+    for (const name of used) {
+      if (/^(?:desk|seq|lrn|hnd|mark|flow|sort|suck|learn)-/.test(name) && !defined.has(name)) {
+        fail(`${relative(OUT, file)}: animation-name: ${name} has no @keyframes`);
+      }
+    }
+  }
+}
+
 const pages = htmlFiles.length;
 if (failures.length) {
   console.error(`\n${failures.length} problem(s) across ${pages} pages:\n`);
@@ -294,5 +340,6 @@ console.log(
     `no framework runtime on any public page (max ${Math.max(...jsBytes.values())} bytes of inline script); ` +
     `${assetRefs.size} asset references resolve; ${REDIRECTS.length} redirects land in one hop; ` +
     `sitemap excludes noindex; JSON-LD parses; every pattern host has its layer; ` +
+    `every keyframe is played and every animation is defined; ` +
     `route table resolves redirects, slashes, Keystatic and static files correctly.`
 );

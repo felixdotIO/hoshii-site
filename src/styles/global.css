@@ -137,6 +137,16 @@
   --ease-spring: cubic-bezier(0.34, 1.5, 0.64, 1);
   /* Symmetric, for anything that travels and stops -- a stroke being drawn. */
   --ease-draw: cubic-bezier(0.4, 0, 0.6, 1);
+  /* Accelerating, for anything leaving or being pulled away. The mirror of
+     --ease-out, and the curve that makes a gather read as a gather rather than
+     as a zoom: things being drawn towards something speed up as they go. */
+  --ease-in: cubic-bezier(0.55, 0, 1, 0.45);
+  /* Slow, fast, slow. For a body crossing a distance between two rests -- a card
+     moving from a list into a column. Steeper in the middle than --ease-draw,
+     so the travel reads as travel rather than as a drift. */
+  --ease-move: cubic-bezier(0.62, 0, 0.24, 1);
+  /* Almost all tail. For the last settle after a hit. */
+  --ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* --- Reset --------------------------------------------------------------- */
@@ -728,7 +738,7 @@ p {
   padding-inline: 0.05em;
   /* One animation, four stops: draw, hold, then erase in the same direction it
      drew. The stroke is the vehicle, not the destination. */
-  animation: hero-marker 2060ms 400ms var(--ease-draw) forwards;
+  animation: hero-marker 2060ms 400ms linear forwards;
 }
 
 /* Once the stroke has landed, the words brighten in the order it drew them.
@@ -758,20 +768,30 @@ p {
       0 - 35%    draw, left to right
      35 - 73%    hold, while the words turn green
      73 - 100%   erase, left to right */
+/* The curve is declared per segment, not on the shorthand. One curve over the
+   whole 2060ms spends its acceleration on the draw and its tail on the erase,
+   with the hold in between eating the middle -- so the stroke started slow and
+   ended at full speed, and the erase began at full speed and crawled off. Two
+   symmetric curves, one per stroke, is what makes a pen stroke read as a pen
+   stroke: it starts, it moves, it stops. `linear` on the shorthand hands the
+   timing to these. */
 @keyframes hero-marker {
   0% {
     background-size: 0% 1.02em;
     background-position-x: 0%;
+    animation-timing-function: var(--ease-draw);
   }
 
   35% {
     background-size: 100% 1.02em;
     background-position-x: 0%;
+    animation-timing-function: linear;
   }
 
   73% {
     background-size: 100% 1.02em;
     background-position-x: 100%;
+    animation-timing-function: var(--ease-draw);
   }
 
   100% {
@@ -1278,6 +1298,143 @@ p {
      pattern around all four edges -- four times as much of it as the band needs. */
   -webkit-mask-image: linear-gradient(to top left, #000 0%, transparent 62%);
   mask-image: linear-gradient(to top left, #000 0%, transparent 62%);
+}
+
+/* --- The closing band with a photograph ---------------------------------
+   One page carries a picture into its sign-off, and with one the band stops
+   being a centred stack: the ask goes left, ranged, and the photograph holds
+   the right. Below 60em it goes back to one column with the picture underneath,
+   because a portrait beside four lines of type at phone width is two things
+   competing for a third of the screen each.
+
+   Scoped to `.closer--photo` throughout, so the twenty-three pages that end on
+   the plain centred version are not touched by any of it. */
+/* Shorter than the plain sign-off, not taller. This band carries a picture as
+   well as the ask, so it was running to 845px stacked and nearly 800px in two
+   columns; the base padding is cut here rather than on `.closer`, which the
+   other twenty-three pages still use as it is. */
+/* The green sits between the page's own two guide lines, on the same
+   `--guide-col` the FAQ above it uses, so the band's edges land exactly where
+   every rule further up the page lands. Full bleed was tried and it read as a
+   slab dropped over the layout rather than as the last band of it. */
+.closer--photo {
+  --guide-col: 88rem;
+  width: min(var(--guide-col), 100% - var(--slab-gutter) * 2);
+  margin-inline: auto;
+  text-align: initial;
+  padding-block: clamp(2rem, 4vw, 3rem);
+}
+
+.closer--photo .closer__inner {
+  max-width: 72rem;
+}
+
+@media (min-width: 60em) {
+  /* `align-items: stretch`, not `center`: the photograph's height is then set by
+     the ask beside it rather than by its own aspect ratio, so the band is as
+     tall as it needs to be to hold four lines of type and no taller. Centred,
+     the picture was setting the height and the band ran to nearly 800px. */
+  .closer--photo {
+    display: grid;
+    /* Two columns and no padding of its own, so the picture starts on the left
+       guide and the copy ends on the right one. With the row stretched and no
+       vertical padding on the band, the photograph is also the band's full
+       height: the ask sets how tall it is and the picture is cropped to that.
+
+       Picture first, ask second. It is a gesture towards the reader and should
+       be the thing they arrive at, with the sentence and the button read off
+       it. Placed by column rather than by DOM order, so the copy still comes
+       first for anything reading the page rather than looking at it. */
+    grid-template-columns: 22rem minmax(0, 1fr);
+    align-items: stretch;
+    column-gap: clamp(2rem, 4vw, 3.5rem);
+    padding: 0;
+  }
+
+  /* Row 1 stated on both, not just the column. The picture is placed in an
+     earlier column than the copy but comes after it in the DOM, and sparse
+     auto-placement will not backtrack: without this the two land in separate
+     rows and the band is twice as tall with the photograph under the button. */
+  .closer--photo .closer__shot {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .closer--photo .closer__inner {
+    grid-column: 2;
+    grid-row: 1;
+    /* Ranged left and up against the photograph. The air belongs on the outside
+       of the pair, not in the channel between them: pushed to the far edge, or
+       centred in the space left over, the two halves read as two objects that
+       happen to share a band rather than as one composition. */
+    justify-self: start;
+    /* The band's height is set here, by the ask, and the picture is cropped to
+       whatever that comes to. */
+    padding-block: clamp(1.75rem, 3.5vw, 2.75rem);
+    margin: 0;
+    /* One measure for the whole block. The title balances its lines and the lead
+       used to run to its own 62ch cap, so the two sat on different measures and
+       the ranged-left column had two different right edges. Same width, both
+       balanced: the block reads as one column. */
+    max-width: 29rem;
+    padding-inline: 0;
+    align-self: center;
+  }
+
+  /* Same measure as the title, and left to fill it. Balanced, the two lines
+     came out at 296px against a headline running to 464px, which is two columns
+     of different widths stacked on each other; the 62ch cap it carried before
+     was wider than the headline instead. One measure, both filling it. */
+  .closer--photo .closer__lead {
+    max-width: 100%;
+  }
+
+  .closer--photo .closer__mark,
+  .closer--photo .closer__title,
+  .closer--photo .closer__lead {
+    margin-inline: 0;
+  }
+
+}
+
+/* Cut square. Every other picture on the site sits in a rounded well, and that
+   is right for a picture inside a card; this one is a plate on a coloured band,
+   and a rounded corner on it read as a sticker on the green rather than as a
+   piece of the composition. No radius, no ring, no drop shadow: the edge is the
+   edge. */
+.closer__shot {
+  position: relative;
+  z-index: 1;
+  margin: clamp(1.75rem, 3.5vw, 2.25rem) auto 0;
+  width: min(21rem, 76vw);
+  border-radius: 0;
+  overflow: hidden;
+}
+
+/* The source is 2:3 and taller than anything it sits beside, so it is always a
+   crop. Held on the face and the hand on the door, which is the whole gesture. */
+.closer__shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* Square stacked, where it is under the ask rather than beside it and its
+     height is pure addition to the band's. */
+  aspect-ratio: 1;
+  object-fit: cover;
+  object-position: 52% 24%;
+}
+
+@media (min-width: 60em) {
+  .closer__shot {
+    margin: 0;
+    width: 100%;
+  }
+
+  /* Filled to the row, so the crop follows the height the copy sets. */
+  .closer__shot img {
+    aspect-ratio: auto;
+    min-height: 100%;
+  }
 }
 
 .closer__inner {
@@ -1818,11 +1975,15 @@ p {
   }
 }
 
+/* Matte. The card the reader is meant to recognise as the way it works now sits
+   flat on the page in the page's own colour, with a hairline and no lift: it is
+   a description of a situation, not an object. The Hoshii card below is the
+   object. */
 .shift__card {
   display: flex;
   flex-direction: column;
   padding: clamp(0.75rem, 1.5vw, 1.125rem);
-  background: var(--white);
+  background: color-mix(in srgb, var(--sage) 7%, var(--bone));
   border-radius: clamp(1rem, 2vw, 1.5rem);
   box-shadow: inset 0 0 0 1px var(--rule);
 }
@@ -1840,9 +2001,13 @@ p {
    to flip with the ground, and the art panel inside keeps its gradient and
    hairline so it still reads as a panel on the card rather than merging into
    it. */
+/* And lit. A real shadow, so the two cards are not the same object in two
+   colours: one is printed on the page and the other is standing on it. */
 .shift__card:has(.shift__art--flow) {
   background: var(--green);
-  box-shadow: none;
+  box-shadow:
+    0 1.25rem 3rem rgba(12, 30, 20, 0.18),
+    0 0.25rem 0.75rem rgba(12, 30, 20, 0.08);
 }
 
 .shift__card:has(.shift__art--flow) .shift__label {
@@ -1910,36 +2075,141 @@ p {
   );
 }
 
-/* The pattern on the field, held to the corners. The wires converge on the mark
-   dead centre and that is the whole subject, so the mask clears a wide ellipse
-   through the middle and leaves the pattern only where nothing is drawn.
+/* Masked, not painted. The motif's polygons are the brand's dark green and this
+   panel's ground is the brand's dark green, so painted at low opacity the layer
+   was invisible: the one surface on the page that wears the product's own colour
+   was the one carrying no pattern at all. The tile becomes the mask and the fill
+   becomes light, which is the same device in the value this ground needs.
 
-   z-index -1: above the glows on ::before at -2, below the wires and the tiles,
-   which sit in normal flow. .shift__art--flow already isolates, so both negative
-   layers stay inside the panel. */
+   Cutting the pattern into six tunnel shapes was tried here and taken out. It
+   was legible as an idea and wrong as a picture: the moment the pattern has an
+   outline it stops being the surface the diagram sits on and becomes a second
+   diagram competing with the first. A pattern is a material. It should be the
+   thing you notice last, not a device drawing shapes of its own.
+
+   So: one corner, one falloff, and it stays behind everything. The corner
+   gradient lives in the fill rather than in a second mask layer, which keeps
+   this to one mask and no compositing operator. */
 .shift__art--flow .pat {
-  background-image: url('/assets/pattern.svg');
-  background-size: 300px auto;
-  background-position: center;
-  background-repeat: repeat;
   position: absolute;
-  inset: 0;
+  /* Past the panel and cut by it, the same as the art wells. A negative inset
+     is only a problem where the layer is *not* clipped, because then the
+     falloff ends on a live value and that is a seam; `.shift__art` has
+     `overflow: hidden`, so here it is the point. */
+  inset: -7%;
   z-index: -1;
-  opacity: 0.12;
   pointer-events: none;
-  -webkit-mask-image: linear-gradient(to top left, #000 0%, transparent 58%);
-  mask-image: linear-gradient(to top left, #000 0%, transparent 58%);
+  background: radial-gradient(
+    134% 146% at 100% 100%,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0.28) 32%,
+    rgba(255, 255, 255, 0.13) 58%,
+    rgba(255, 255, 255, 0.04) 78%,
+    rgba(255, 255, 255, 0) 96%
+  );
+  /* Alpha, not luminance: the tile's triangles already fade to transparent
+     along their own gradients, so masking on alpha reproduces the fade. */
+  -webkit-mask-image: url('/assets/pattern.svg');
+  mask-image: url('/assets/pattern.svg');
+  -webkit-mask-size: 430px auto;
+  mask-size: 430px auto;
+  -webkit-mask-position: right bottom;
+  mask-position: right bottom;
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
 }
 
 /* Above the picture now, not under it: it names what you are about to look at
    rather than captioning it afterwards, so it carries more weight. */
+/* "Without Hoshii" / "With Hoshii", which is the vocabulary the hero's own
+   photograph toggle already teaches at the top of the page. These used to read
+   "Your inbox today" and "Your inbox with Hoshii": same first two words, same
+   length, same weight, so which card was which only arrived at the fourth word.
+   Now they differ at the first character, and they differ the same way they do
+   two screens above. */
 .shift__label {
-  margin: 0 0 clamp(0.75rem, 1.6vw, 1.125rem);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
   padding-inline: 0.375rem;
   font-size: clamp(1.1875rem, 1rem + 0.6vw, 1.5rem);
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.02em;
+}
+
+/* The label carries the whole gap above the well now that the count has moved
+   inside it. */
+.shift__label {
+  margin-bottom: clamp(0.75rem, 1.6vw, 1.125rem);
+}
+
+/* The mark is the state. It sits on the label of the card that has Hoshii in it
+   and nowhere else, so the presence or absence of the object is itself the
+   difference between the two sides. */
+.shift__badge {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 1.5rem;
+  aspect-ratio: 1;
+  border-radius: 28%;
+  background: var(--white);
+  color: var(--ink);
+}
+
+.shift__badge svg {
+  width: 42%;
+}
+
+/* One number each, as a pill at the top of its own pane. Seven against one is
+   the fastest read on the page and it was buried: the 7+ was a caption inside
+   the left illustration and the right had no counterpart at all, so there was
+   nothing to compare, only two pictures to interpret.
+
+   Inside the wells rather than on the cards above them, because the wells are
+   the one pair of boxes on this page that are exactly the same size: put the
+   two pills at the same height in the same shape and the eye does the
+   comparison without being asked to. Identical treatment on both, white on
+   either ground, so the only difference between them is the number.
+
+   Centred at the top, which is free space in both compositions: the flow
+   diagram's tiles sit out at 14.5% and 85.5% and its mark does not start until
+   36% down, and the step rail below has been dropped to make room. */
+.shift__count {
+  position: absolute;
+  z-index: 2;
+  /* High enough to clear the flow diagram's channel tiles, whose tops sit at
+     10.2% of the well's height. Short text is the other half of that: a pill
+     wider than 58% of the well runs into them sideways instead. */
+  top: 3.2cqw;
+  left: 50%;
+  translate: -50% 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4em;
+  margin: 0;
+  padding: 0.5em 1em 0.55em;
+  border-radius: 999px;
+  background: var(--white);
+  box-shadow:
+    inset 0 0 0 1px rgba(42, 35, 32, 0.08),
+    0 0.6cqw 1.6cqw rgba(28, 40, 30, 0.14);
+  color: var(--caption);
+  font-size: max(0.625rem, 2.6cqw);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* Weight and colour carry the emphasis, not size. At 1.45em a single character
+   sitting next to eight-point type read as a typo rather than as a figure, and
+   one of the two is a word now, which at that scale would have been worse. */
+.shift__num {
+  flex: 0 0 auto;
+  color: var(--ink);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
 /* The one bolded clause, after Corgi's "we are full-stack": the sentence that
@@ -1970,14 +2240,26 @@ p {
 /* The seven steps run past instead of sitting still: the point of the row is
    that it never ends, so it loops. Two identical lists side by side and a
    -50% shift land the join exactly on a repeat. */
+/* The fade is symmetric now, and long enough to be a fade. At 7% in and 12%
+   out the two edges did not match, and neither ramp was wide enough to dissolve
+   a chip: they arrived and left half-cut, which on a loop that is meant to read
+   as endless is the one thing that gives away where it starts. */
 .today__rail {
-  margin-top: 6.5cqw;
+  /* Clear of the count pill at the top of the pane. */
+  margin-top: 14cqw;
   overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 14%,
+    #000 86%,
+    transparent 100%
+  );
   mask-image: linear-gradient(
     90deg,
     transparent 0,
-    #000 7%,
-    #000 88%,
+    #000 14%,
+    #000 86%,
     transparent 100%
   );
 }
@@ -2017,9 +2299,13 @@ p {
   position: relative;
   padding: 1.9cqw 3.4cqw;
   border-radius: 999px;
-  background: #fce4dd;
-  box-shadow: inset 0 0 0 1px rgba(177, 48, 26, 0.36);
-  color: #b1301a;
+  /* Grey, not rust. These pills were carrying a colour a shade off the brand
+     accent, which put brand colour on the side of the argument that is meant to
+     be the problem. On this page colour belongs to Hoshii: the card without it
+     is the card without it. */
+  background: #e7e4e0;
+  box-shadow: inset 0 0 0 1px rgba(42, 35, 32, 0.12);
+  color: #8b837c;
   font-size: max(0.6875rem, 3.4cqw);
   font-weight: 500;
   line-height: 1;
@@ -2034,20 +2320,7 @@ p {
   left: 100%;
   top: 50%;
   width: 3.4cqw;
-  border-top: 1px dashed rgba(177, 48, 26, 0.42);
-}
-
-.today__note {
-  margin: 3.6cqw 0 0;
-  padding-inline: 6cqw;
-  color: #a09a94;
-  font-size: max(0.6875rem, 3.2cqw);
-  line-height: 1;
-}
-
-.today__count {
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
+  border-top: 1px dashed rgba(42, 35, 32, 0.24);
 }
 
 /* The paper runs off the bottom of the well — there is always another one. */
@@ -2137,9 +2410,19 @@ p {
   stroke-width: 3.4;
 }
 
-/* A short dash running the length of each wire — inbound paths are drawn
-   towards the core and outbound ones away from it, so one direction of travel
-   reads as "in, decided, out". */
+/* The wires carry the whole diagram again, so they are drawn to be read. */
+.flow__lines {
+  opacity: 0.78;
+}
+
+/* A short dash running the length of each wire. Inbound paths are drawn towards
+   the core and outbound ones away from it, so one direction of travel reads as
+   "in, decided, out".
+
+   Tiles that made the journey were tried here and taken out again: at this size
+   a travelling object is a second subject on a panel that already has one, and
+   six of them turned a quiet diagram into a busy one. A dash is a signal, and a
+   signal is all this needs to say. */
 .flow__pulses path {
   fill: none;
   stroke-linecap: round;
@@ -2154,19 +2437,23 @@ p {
   animation-delay: var(--d, 0s);
 }
 
-/* The first three paths run inward (x 87 to 161) and the last three outward
-   (239 to 313). Inbound work arrives in the brand orange on the narrow band;
-   outbound leaves as white on the broad one. */
+/* Linear on both halves made the core a place things pass through. It is
+   supposed to be the place things are drawn into and sent out of, so the two
+   halves get opposite curves: inbound starts at the edge and accelerates all the
+   way in, outbound leaves the core at speed and eases off towards the edge. That
+   is the difference between a conveyor and a centre of gravity, and it costs two
+   declarations. */
 .flow__pulses path:nth-child(-n + 3) {
   stroke: var(--accent);
   stroke-width: 1.2;
+  animation-timing-function: var(--ease-in);
 }
 
 .flow__pulses path:nth-child(n + 4) {
   stroke: var(--white);
   stroke-width: 2;
+  animation-timing-function: var(--ease-out);
 }
-
 
 /* 7 puts the dash just before the start, -107 just past the end, so it crosses
    the whole wire exactly once. */
@@ -2883,24 +3170,59 @@ p {
   z-index: 1;
 }
 
+/* --- The pattern under the art wells -------------------------------------
+   One corner, at the module the rest of the site uses, under everything. Two
+   other treatments were built and removed: a halo ringing the interface, and
+   three chutes tracing the routes the mail takes. Both were *integrated* in the
+   sense of being derived from the scene, and both were worse, for the same
+   reason: a pattern with a shape of its own is a second picture. This layer's
+   job is to make the panel feel like a surface rather than a fill. It earns its
+   place by being the last thing anyone notices.
+
+   The module matters more than the placement. This well was on a 22px module,
+   below the size at which a triangle reads as a triangle, so the corner came out
+   as speckle and speckle over a pale gradient reads as sensor noise. 430px is a
+   72px module: a handful of whole shapes, catching the light. */
 .cap__art .pat {
   background-image: url('/assets/pattern.svg');
-  /* Fine enough to read as a texture on the surface rather than as tiling. At
-     220px the triangles were large against their own fade, so the motif and
-     the falloff fought and the corner looked patchy. */
-  background-size: 132px auto;
+  background-size: 430px auto;
   background-position: right bottom;
   background-repeat: repeat;
   position: absolute;
-  inset: -14%;
+  /* Bigger than the well, and cut by it. Anchored flush to the corner, the tile
+     lined up with the box and every shape came out whole and neatly stacked
+     inside it, which reads as wallpaper. Pushed out past all four edges, the
+     well crops shapes mid-form and the field reads as something continuing
+     behind the panel rather than something arranged in it. `.cap__art` already
+     has `overflow: hidden`, so nothing actually escapes. */
+  inset: -7%;
   z-index: 0;
-  opacity: 0.16;
+  /* Present, not hinted at. At 0.16 behind an 88% radial the layer had faded out
+     by halfway across the well, so all it left was three or four shapes in one
+     corner: too little to read as a field and too much to read as nothing.
+     The module and the corner are unchanged; there is simply more of it, and it
+     carries most of the way across before it goes. */
+  opacity: 0.28;
   /* Radial from the corner, not linear across the panel. A linear mask fades
      along one axis, which leaves a straight diagonal edge running through the
-     well — the seam is what made it look pasted on rather than part of the
+     well, and that seam is what made it look pasted on rather than part of the
      surface. A radial anchored in the corner has no edge anywhere. */
-  -webkit-mask-image: radial-gradient(115% 115% at 100% 100%, #000 0%, rgba(0, 0, 0, 0.55) 22%, transparent 58%);
-  mask-image: radial-gradient(115% 115% at 100% 100%, #000 0%, rgba(0, 0, 0, 0.55) 22%, transparent 58%);
+  -webkit-mask-image: radial-gradient(
+    134% 146% at 100% 100%,
+    #000 0%,
+    rgba(0, 0, 0, 0.76) 32%,
+    rgba(0, 0, 0, 0.4) 58%,
+    rgba(0, 0, 0, 0.12) 78%,
+    transparent 96%
+  );
+  mask-image: radial-gradient(
+    134% 146% at 100% 100%,
+    #000 0%,
+    rgba(0, 0, 0, 0.76) 32%,
+    rgba(0, 0, 0, 0.4) 58%,
+    rgba(0, 0, 0, 0.12) 78%,
+    transparent 96%
+  );
 }
 
 /* The bloom, reduced to one job: lifting the middle of the panel just enough that
@@ -2911,9 +3233,13 @@ p {
   position: absolute;
   inset: -14%;
   z-index: 0;
+  /* ::after paints after the .pat div at the same z-index, so this is laid
+     over the pattern and was rubbing out the half of the corner it reached.
+     Pulled up and left, off that corner, and taken down in strength: its one
+     job is lifting the middle so white tiles have something to sit on. */
   background: radial-gradient(
-    46% 52% at 44% 40%,
-    rgba(255, 255, 255, 0.5) 0%,
+    42% 48% at 41% 37%,
+    rgba(255, 255, 255, 0.42) 0%,
     transparent 70%
   );
 }
@@ -2927,14 +3253,36 @@ p {
    inbox sits from that lane, which is the only value that differs. */
 
 .sortart {
+  /* Every metric in this scene is a share of the well, with no clamp anywhere.
+     That is what makes the registration exact: a mail has to read as a flush row
+     of the panel at one end of its travel and as a card filling a lane at the
+     other, and the distance between those two positions has to be derivable.
+     While the lane gap and the lane padding were clamps and the travel was a
+     hardcoded 118.9%, the ratio between them held at one width and drifted at
+     every other -- the mails hung out past the side of the panel by up to 27px
+     on a wide screen, which is the single most visible fault in the scene.
+
+     `cqw` here is a share of .cap__art's content box, which is exactly the width
+     .sortart occupies, so `100cqw` is the stage and the rest follows from it. */
+  --gap: 1.8cqw;
+  --pad: 1.8cqw;
+  --lane-w: calc((100cqw - 2 * var(--gap)) / 3);
+  /* A lane's inner width. The panel is set to this, so a mail is the same width
+     in the list as it is in the column and nothing has to be re-fitted. */
+  --mail-w: calc(var(--lane-w) - 2 * var(--pad));
+  /* The horizontal travel: one lane plus one gutter. Lane 1 sits under the panel
+     already, so its own hop is zero; the outer two are this, mirrored. */
+  --hop: calc(var(--lane-w) + var(--gap));
   /* One row height, shared by the mails and by the Unibox body that holds
-     three of them. Derived once so the stack inside the panel is exact instead
-     of two clamps that happen to be close. */
-  --row: clamp(1.5rem, 5.4cqw, 2rem);
+     three of them. */
+  --row: 5.4cqw;
+  --vgap: 6cqw;
+  --name-h: 4cqw;
+  --lane-gap-y: 1.6cqw;
   position: relative;
   z-index: 1;
   display: grid;
-  gap: clamp(1.25rem, 6cqw, 2.5rem);
+  gap: var(--vgap);
   width: 100%;
 }
 
@@ -2942,12 +3290,11 @@ p {
    labelled as one: a titled panel with unread lines in it. */
 .inbox {
   justify-self: center;
-  /* Matched to a lane's inner width, so the mails fill the panel edge to edge
-     and read as its rows. Wider, they floated inside it with a margin on each
-     side, which is what made them look pasted in. */
-  width: 29%;
-  min-width: 8rem;
-  padding-bottom: clamp(0.3125rem, 1.4cqw, 0.5rem);
+  /* A lane's inner width, computed rather than guessed at 29%, so the mails fill
+     the panel edge to edge and read as its rows at every width instead of only
+     at the one the 29% was eyeballed on. */
+  width: var(--mail-w);
+  padding-bottom: var(--pad);
   border-radius: 0.4375rem;
   background: var(--white);
   box-shadow:
@@ -2995,7 +3342,7 @@ p {
 .lanes {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(0.375rem, 1.8cqw, 0.75rem);
+  gap: var(--gap);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -3004,16 +3351,29 @@ p {
 /* The lanes are the pattern. Three faint columns explain the layout, where a
    decorative field behind it explained nothing. */
 .lane {
+  /* Both rows stated, so the height of the label is a number this scene knows
+     rather than whatever the type happens to measure. That is the last term in
+     the mail's vertical travel, and while it was type-derived the travel could
+     only ever be approximated. */
   display: grid;
-  gap: clamp(0.375rem, 1.6cqw, 0.625rem);
-  padding: clamp(0.4375rem, 1.8cqw, 0.75rem);
+  /* The column is stated as well as the rows. Left implicit it is an `auto`
+     track, which sizes to the max-content of the card in it -- so a long
+     customer name and a long label together pushed the card out past the side
+     of its own lane, while the lane itself, being a 1fr track, stayed put. The
+     card is the lane's inside, and this is what says so. */
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: var(--name-h) var(--row);
+  gap: var(--lane-gap-y);
+  padding: var(--pad);
   border-radius: 0.4375rem;
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.62);
   box-shadow: inset 0 0 0 1px rgba(42, 35, 32, 0.08);
-  animation: lane-hit 7s calc(var(--i) * 1.1s) infinite;
+  animation: lane-hit 8s calc(var(--i) * 0.9s) infinite;
 }
 
 .lane__name {
+  display: flex;
+  align-items: center;
   margin: 0;
   color: var(--ink);
   font-size: clamp(0.5rem, 1.9cqw, 0.6875rem);
@@ -3025,9 +3385,10 @@ p {
 }
 
 /* Holds the lane open so the columns stay level whether or not their mail is
-   currently in frame. */
+   currently in frame. Sized by the lane's own grid now, at exactly one row, so
+   the slot and the panel row the mail leaves are the same height. */
 .lane__slot {
-  min-height: clamp(2.25rem, 9cqw, 3rem);
+  min-height: 0;
 }
 
 .lmail {
@@ -3036,20 +3397,31 @@ p {
   justify-content: space-between;
   gap: 0.375rem;
   height: var(--row);
-  padding-inline: clamp(0.375rem, 1.6cqw, 0.5625rem);
+  padding-inline: 1.6cqw;
   background: var(--white);
   opacity: 0;
+  /* Both ends of the travel, derived rather than measured off a screenshot.
+     Sideways: one lane plus one gutter, mirrored, and nothing for the middle
+     lane, which already sits under the panel. Downwards: the panel's rows are
+     above the lanes by its own remaining rows, the two facing paddings, the gap
+     between the two halves of the scene and the lane's label. Every term is a
+     share of the well, so the mail lands on its row at any width. */
+  --from: calc(var(--dir) * var(--hop));
+  --fy: calc(
+    (var(--r) - 3) * var(--row) - 2 * var(--pad) - var(--vgap) - var(--name-h) -
+      var(--lane-gap-y)
+  );
   /* Radius and shadow are animated, not fixed: in the Unibox these are flush
      rows of a list, and in the lane the same element is a card. Fixed, they
      read as three cards pasted over the panel. */
-  animation: lane-drop 7s calc(var(--i) * 1.1s) infinite;
+  animation: lane-drop 8s calc(var(--i) * 0.9s) infinite;
 }
 
 .lmail__tag {
   flex: 0 0 auto;
   scale: 0;
   transform-origin: right center;
-  animation: lmail-tag 7s calc(var(--i) * 1.1s) infinite;
+  animation: lmail-tag 8s calc(var(--i) * 0.9s) infinite;
   padding: 0.15em 0.4em;
   border-radius: 0.1875rem;
   font-size: clamp(0.4375rem, 1.6cqw, 0.625rem);
@@ -3073,7 +3445,12 @@ p {
   color: var(--ink);
 }
 
+/* min-width: 0, or the name is a flex item at its automatic minimum and cannot
+   shrink below its own text: the label next to it gets pushed straight out of
+   the card, which on a phone is most of the way across the next lane. The
+   ellipsis was declared and never reachable. */
 .lmail__who {
+  min-width: 0;
   color: var(--ink);
   font-size: clamp(0.5rem, 1.9cqw, 0.6875rem);
   font-weight: 500;
@@ -3083,6 +3460,14 @@ p {
   text-overflow: ellipsis;
 }
 
+/* Eight seconds, in four beats: it arrives in the list, it is labelled, it
+   travels, it is kept. The old cycle spent its first and last half-second on
+   nothing at all and ended by switching the cards off in place, so the loop read
+   as a restart rather than as a round of work finishing.
+
+   Every segment declares its own curve. One curve on the shorthand is spread
+   across the whole eight seconds, which means the travel -- the only part anyone
+   watches -- gets whatever fraction of the curve happens to fall under it. */
 @keyframes lane-drop {
   /* A flush row inside the Unibox: square, and separated from its neighbour by
      a hairline rather than by a gap. */
@@ -3091,27 +3476,48 @@ p {
     opacity: 0;
     border-radius: 0;
     box-shadow: inset 0 -1px 0 rgba(42, 35, 32, 0.09);
+    animation-timing-function: var(--ease-out);
   }
-  8%,
-  38% {
+
+  6%,
+  30% {
     translate: var(--from) var(--fy);
     opacity: 1;
     border-radius: 0;
     box-shadow: inset 0 -1px 0 rgba(42, 35, 32, 0.09);
+    animation-timing-function: var(--ease-move);
   }
-  /* A card, once it is in its lane. */
-  58%,
-  88% {
+
+  /* The travel, as one gesture: starts, moves, stops. It crosses as a row, not
+     as a card, because it is not one yet. */
+  46% {
+    translate: 0 0;
+    opacity: 1;
+    border-radius: 0;
+    box-shadow: inset 0 -1px 0 rgba(42, 35, 32, 0.09);
+    animation-timing-function: var(--ease-out);
+  }
+
+  /* And becomes a card on landing, with the lane taking the hit at the same
+     instant. Growing the radius and the shadow during the flight instead spread
+     the change over the one beat that should be pure movement, and there was no
+     moment of arrival at all. */
+  52%,
+  86% {
     translate: 0 0;
     opacity: 1;
     border-radius: 0.3125rem;
     box-shadow:
       inset 0 0 0 1px rgba(42, 35, 32, 0.08),
       0 6px 16px rgba(28, 34, 26, 0.12);
+    animation-timing-function: var(--ease-in);
   }
-  96%,
+
+  /* Cleared, not switched off: it lifts away, which reads as the work being
+     handled. Fading in place read as the picture resetting. */
+  94%,
   100% {
-    translate: 0 0;
+    translate: 0 -55%;
     opacity: 0;
     border-radius: 0.3125rem;
     box-shadow:
@@ -3124,31 +3530,73 @@ p {
    order the copy claims: classified before it is moved. */
 @keyframes lmail-tag {
   0%,
-  20% {
+  14% {
     scale: 0;
+    animation-timing-function: var(--ease-spring);
   }
-  30%,
-  92% {
-    scale: 1;
-  }
-  97%,
+
+  /* Overshoots and settles. A label being applied is a stamp, and a stamp that
+     arrives at exactly its final size reads as a fade with the opacity left
+     out. */
+  24%,
   100% {
-    scale: 0;
+    scale: 1;
   }
 }
 
+/* Timed to the landing, not to ten per cent before it. Fast attack, long
+   release: that shape is what makes a hit read as a hit rather than as a slow
+   colour change, and it is why the lane also lightens rather than only
+   outlining. */
 @keyframes lane-hit {
   0%,
-  52% {
+  44% {
+    background: rgba(255, 255, 255, 0.62);
     box-shadow: inset 0 0 0 1px rgba(42, 35, 32, 0.08);
+    animation-timing-function: var(--ease-out);
   }
-  62%,
-  80% {
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 55%, transparent);
+
+  50% {
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 62%, transparent);
+    animation-timing-function: var(--ease-settle);
   }
-  90%,
+
+  80%,
   100% {
+    background: rgba(255, 255, 255, 0.62);
     box-shadow: inset 0 0 0 1px rgba(42, 35, 32, 0.08);
+  }
+}
+
+/* A narrow well cannot carry a customer name and a label side by side. At 287px
+   of stage each lane is 82px wide, and "Complaint" alone is most of that, so the
+   name was ellipsed down to a letter and a full stop -- which is worse than not
+   showing it. Stacked, both read.
+
+   A container query, not a viewport one: this depends on how wide the well is,
+   and the well is full width on a phone but still 860px on a tablet in the same
+   single-column layout. And it works by raising `--row`, because every other
+   metric in the scene is derived from that one -- the panel's body height, the
+   lane's slot, and the mail's own vertical travel all follow it up without
+   anything else being touched. That is the whole reason for deriving them. */
+@container (max-width: 26rem) {
+  .sortart {
+    --row: 10cqw;
+  }
+
+  .lmail {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: center;
+    justify-items: start;
+    gap: 0.6cqw;
+  }
+
+  /* The label first: it is the claim the picture is making. */
+  .lmail__tag {
+    order: -1;
+    transform-origin: left center;
   }
 }
 
@@ -3184,37 +3632,59 @@ p {
 }
 
 /* The pull is a scale on the field, so every item converges on its centre,
-   which is exactly where the mark sits. One transition, so all seven go at
-   once however staggered their arrival was. */
+   which is exactly where the mark sits. One animation, so all seven go at once
+   however staggered their arrival was. */
 .suckart__field {
   position: absolute;
   inset: 0;
-  transition:
-    scale 0.75s var(--ease-out),
-    opacity 0.75s ease;
 }
 
+/* An animation rather than a transition, because a gather has two beats and a
+   transition only has one. It was a decelerating scale, which is the curve for
+   something arriving and settling: it read as the picture zooming out, not as
+   the mark taking the field in. Now it breathes out a fraction, then falls
+   inward on an accelerating curve and is gone -- which is what being pulled
+   into something looks like. */
 .suckart.is-suck .suckart__field {
-  scale: 0.05;
-  opacity: 0;
+  animation: suck-in 0.78s var(--ease-in) forwards;
 }
 
+@keyframes suck-in {
+  0% {
+    scale: 1;
+    opacity: 1;
+    animation-timing-function: var(--ease-out);
+  }
+
+  16% {
+    scale: 1.035;
+    opacity: 1;
+    animation-timing-function: var(--ease-in);
+  }
+
+  100% {
+    scale: 0.04;
+    opacity: 0;
+  }
+}
+
+/* They settle into place rather than sliding up into it. Every item drifting the
+   same 10px upwards put a direction on the arrival that the picture does not
+   mean -- these are sources being noticed, not a list loading -- and it left the
+   pull as the second travelling gesture in a scene that only wants one. */
 .item {
   position: absolute;
   opacity: 0;
-  translate: 0 0.625rem;
-  scale: 0.94;
+  scale: 0.88;
   transition:
-    opacity 0.5s ease,
-    translate 0.5s ease,
-    scale 0.5s ease;
-  transition-delay: calc(var(--i) * 0.15s);
+    opacity 0.42s var(--ease-out),
+    scale 0.52s var(--ease-spring);
+  transition-delay: calc(var(--i) * 0.12s);
 }
 
 /* In, one after another. */
 .suckart.is-in .item {
   opacity: 1;
-  translate: 0 0;
   scale: 1;
 }
 
@@ -3235,22 +3705,28 @@ p {
   border-radius: 0.3125rem;
 }
 
+/* Placed as a ring, not scattered. The three surfaces hold three corners and the
+   four logos fill the two sides those corners leave open, so the field balances
+   around the mark and the pull has somewhere to pull *from*. The previous
+   placement put all three surfaces down the left half and left the bottom right
+   quadrant carrying nothing but two logos, which is why the gather read as the
+   picture collapsing rather than as the field converging. */
 .shot--knowledge {
-  top: 1%;
-  left: 0%;
-  width: 39%;
+  top: 4%;
+  left: 2%;
+  width: 42%;
 }
 
 .shot--conn {
-  top: 2%;
-  right: 0%;
-  width: 25%;
+  top: 6%;
+  right: 3%;
+  width: 26%;
 }
 
 .shot--chat {
-  bottom: 4%;
-  left: 15%;
-  width: 41%;
+  bottom: 5%;
+  right: 8%;
+  width: 44%;
 }
 
 /* Source logos, deliberately interleaved with the screenshots rather than set
@@ -3275,24 +3751,27 @@ p {
   object-fit: contain;
 }
 
+/* Seven positions round a clock face, one item each, no two on the same
+   bearing. Three of the four logos had ended up in a column down the left edge,
+   which reads as a list of integrations rather than as a field being drawn in. */
 .logo--a {
-  top: 40%;
-  left: 1%;
+  top: 42%;
+  left: 4%;
 }
 
 .logo--b {
-  top: 22%;
-  right: 30%;
+  top: 3%;
+  left: 49%;
 }
 
 .logo--c {
-  bottom: 33%;
-  right: 3%;
+  bottom: 34%;
+  right: 4%;
 }
 
 .logo--d {
   bottom: 10%;
-  right: 31%;
+  left: 8%;
 }
 
 /* Above the field, and outside it, so the pull happens into the mark rather
@@ -3313,21 +3792,32 @@ p {
   transition: scale 0.4s var(--ease-spring);
 }
 
-/* Takes the hit as the field lands in it, then settles. */
+/* Takes the hit as the field lands in it, then settles. The delay is the whole
+   point: both were triggered by the same class, so the mark used to punch at the
+   instant the field set off and had finished recoiling before anything reached
+   it. It now peaks 620ms in, which is where the collapse ends. */
 .suckart.is-suck .mark {
-  animation: mark-pulse 0.9s var(--ease-spring) forwards;
+  animation: mark-pulse 1.1s 0.5s linear forwards;
 }
 
+/* Fast attack, long release. Peaking a third of the way through made the impact
+   read as a slow swell; a hit is nearly all recovery. */
 @keyframes mark-pulse {
   0% {
     scale: 1;
+    animation-timing-function: var(--ease-out);
   }
-  34% {
-    scale: 1.18;
+
+  13% {
+    scale: 1.2;
+    animation-timing-function: var(--ease-draw);
   }
-  62% {
-    scale: 0.97;
+
+  38% {
+    scale: 0.962;
+    animation-timing-function: var(--ease-settle);
   }
+
   100% {
     scale: 1;
   }
@@ -3372,7 +3862,10 @@ p {
 }
 
 .suckart.is-answer .answer__q {
-  transition: clip-path 1s steps(24, end) 0.2s;
+  /* One step per character. At 24 steps the 35-character question arrived a
+     letter and a half at a time, which is why it read as a wipe rather than as
+     typing. */
+  transition: clip-path 1.05s steps(35, end) 0.2s;
   clip-path: inset(0 0 0 0);
 }
 
@@ -3508,142 +4001,614 @@ p {
    No figures on the axis. The trend is the claim, and the numbers behind it are
    the customer's own once they are running. */
 
-/* --- The knowledge record -------------------------------------------------
-   This card used to draw an autonomy rate: a row of bars climbing toward the
-   accent. It was rebuilt twice and still said nothing a reader could check —
-   a rising number is the claim restated, not evidence for it.
+/* --- Order 1 is retyped. Order 2 is not. --------------------------------
+   Four versions came before this one. The last showed a value being corrected
+   with nothing around it, so the correction had no place and no cost: you could
+   see something change but not where, or why it mattered. Here it lands in a
+   field of a second system, which is the work the copy is talking about.
 
-   What the card has to answer is the fear under the heading. On an order desk
-   one person knows how each customer writes, and when they leave that goes
-   with them. So the picture is the knowledge itself: the customer's own
-   shorthand on the left, what Hoshii resolved it to on the right. The first
-   row is the example the order processing page works through in full, so the
-   two pages corroborate each other rather than each asserting separately.
+   Mail on top, system of record underneath, the mapping drawn between them.
+   Order 1 goes in wrong and is struck out and retyped by hand, character by
+   character, because retyping is the thing this capability removes and it has
+   to be felt. Then the same shorthand arrives as Order 2 and goes straight in.
 
-   The motion earns its place here — each line arrives as it is learned, so
-   what a reader watches is a record filling up. */
+   Everything that differs between the two orders is two elements stacked in one
+   grid cell and cross-faded, never a text swap inside one element, so the card
+   holds its size. One 15s clock drives all of it, and `.lrn` blanks for the last
+   4% so the reset happens with nothing on screen to see it happen. */
 .learnart {
   container-type: inline-size;
+  width: min(100%, 23rem);
+}
+
+.lrn {
+  position: relative;
   display: grid;
-  gap: clamp(0.5rem, 2cqw, 0.875rem);
-  width: min(100%, 30rem);
-  padding: clamp(0.75rem, 3cqw, 1.25rem);
-  border-radius: 0.5rem;
+  justify-items: stretch;
+  animation: lrn-card 17s linear infinite both;
+}
+
+/* The confirmation, taking the whole card. A chip in the corner of a bar is a
+   status; the product answering a correction is an event, and an event gets the
+   screen. It is on for a little over a second and then the card is back, in its
+   second order, with nothing left to correct. */
+.lrn__flash {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: clamp(0.375rem, 2cqw, 0.625rem);
+  border-radius: 0.4375rem;
+  background: var(--green);
+  color: var(--bone);
+  font-size: clamp(0.75rem, 4.2cqw, 1.0625rem);
+  font-weight: 700;
+  letter-spacing: -0.012em;
+  line-height: 1;
+  opacity: 0;
+  animation: lrn-flash 17s linear infinite both;
+}
+
+.lrn__flashtick {
+  width: clamp(1.5rem, 9cqw, 2.25rem);
+  height: clamp(1.5rem, 9cqw, 2.25rem);
+  fill: none;
+  stroke: var(--bone);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  /* Drawn, not stamped: the tick writing itself is the beat. */
+  stroke-dasharray: 26;
+  stroke-dashoffset: 26;
+  animation: lrn-flashtick 17s linear infinite both;
+}
+
+/* A beat after the retyping finishes, not on top of it. The correction ends at
+   48% and this begins at 53%, which is three quarters of a second of the value
+   simply sitting there corrected before the product says anything: the pause is
+   what makes the answer read as a response rather than as part of the same
+   gesture. On screen for about two seconds. */
+/* A beat after the retyping finishes, not on top of it: the value sits there
+   corrected for the better part of a second before the product says anything,
+   and that pause is what makes the answer read as a response. */
+@keyframes lrn-flash {
+  0%, 65% { opacity: 0; scale: 1.03; animation-timing-function: var(--ease-out); }
+  68%, 74% { opacity: 1; scale: 1; animation-timing-function: var(--ease-in); }
+  77%, 100% { opacity: 0; scale: 1; }
+}
+
+@keyframes lrn-flashtick {
+  0%, 66.5% { stroke-dashoffset: 26; animation-timing-function: var(--ease-out); }
+  71%, 100% { stroke-dashoffset: 0; }
+}
+
+@keyframes lrn-card {
+  0% { opacity: 0; }
+  3%, 96% { opacity: 1; }
+  99%, 100% { opacity: 0; }
+}
+
+/* One window chrome, two windows, the same device the order processing page
+   uses so the two pictures read as the same product. */
+.lrn__win {
+  border-radius: 0.4375rem;
+  overflow: hidden;
   background: var(--white);
   box-shadow:
     inset 0 0 0 1px rgba(42, 35, 32, 0.08),
     0 6px 18px rgba(28, 34, 26, 0.1);
 }
 
-.learn__cap {
+/* The Unibox, in the same dark bar and the same mark the sorting scene gives it
+   two capabilities earlier, so the reader meets one object twice rather than two
+   objects once each. It was briefly Outlook, which put a competitor's chrome on
+   the half of the picture that is supposed to be the product. */
+.lrn__win--mail .lrn__bar {
+  background: var(--ink);
+  border-bottom: 0;
+  color: rgba(252, 252, 251, 0.66);
+}
+
+.lrn__win--mail .lrn__app {
+  color: var(--bone);
+}
+
+.lrn__win--mail .lrn__from {
+  color: rgba(252, 252, 251, 0.8);
+  font-weight: 500;
+}
+
+/* Both windows are timed inside their own keyframes, not by `animation-delay`.
+   A delay on an *infinite* animation shifts the whole cycle, not just the first
+   run: the record window ran at 15s offset by 2.4s, so from the second loop on
+   it was still showing its previous cycle's end state for the first 2.4s of the
+   new one, and it appeared fully formed before the mail that produced it. Any
+   element on a shared master clock has to keep the same period and phase as the
+   clock, and stagger inside the keyframes. */
+.lrn__win--mail {
+  animation: lrn-in-mail 17s linear infinite both;
+}
+
+.lrn__win--erp {
+  animation: lrn-in-erp 17s linear infinite both;
+}
+
+@keyframes lrn-in-mail {
+  0% { opacity: 0; translate: 0 0.5rem; animation-timing-function: var(--ease-out); }
+  3%, 100% { opacity: 1; translate: 0 0; }
+}
+
+@keyframes lrn-in-erp {
+  0%, 34% { opacity: 0; translate: 0 0.5rem; animation-timing-function: var(--ease-out); }
+  39%, 100% { opacity: 1; translate: 0 0; }
+}
+
+.lrn__bar {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.25rem 0.75rem;
-  margin: 0;
-  padding-bottom: clamp(0.3125rem, 1.3cqw, 0.5rem);
-  border-bottom: 1px solid var(--rule);
-  color: var(--ink);
-  font-size: clamp(0.5rem, 2.1cqw, 0.75rem);
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-/* The account this record belongs to. Knowledge here is per customer, which
-   is half the claim, so the name is on the card rather than implied. */
-.learn__acct {
-  color: var(--caption);
-  font-weight: 400;
-}
-
-.learn__mem {
-  display: grid;
-  /* All three rows reserved from the start, so the card cannot resize as they
-     land. */
-  grid-template-rows: repeat(3, clamp(1.25rem, 5cqw, 1.625rem));
-  gap: clamp(0.125rem, 0.6cqw, 0.25rem);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.learn__row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: clamp(0.25rem, 1.4cqw, 0.5rem);
-  opacity: 0;
-  animation: learn-row 9s calc(0.7s + var(--i) * 1.5s) infinite;
-}
-
-/* The customer's words, set apart from ours: quoted, and in the caption tone
-   so the resolved value is the thing that reads as settled. */
-.learn__said {
-  overflow: hidden;
-  color: var(--caption);
-  font-size: clamp(0.4375rem, 1.8cqw, 0.625rem);
-  line-height: 1.2;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.learn__to {
-  color: var(--accent);
-  font-size: clamp(0.4375rem, 1.7cqw, 0.5625rem);
-  line-height: 1;
-}
-
-.learn__means {
-  overflow: hidden;
-  color: var(--ink);
-  font-size: clamp(0.4375rem, 1.8cqw, 0.625rem);
-  font-weight: 700;
-  line-height: 1.2;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.learn__ok {
-  padding: 0.15em 0.45em;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--accent) 14%, #ffffff);
-  color: var(--accent-deep, var(--accent));
-  font-size: clamp(0.3125rem, 1.3cqw, 0.4375rem);
-  font-weight: 700;
-  line-height: 1.35;
-  white-space: nowrap;
-}
-
-.learn__foot {
+  gap: clamp(0.25rem, 1.6cqw, 0.4375rem);
   margin: 0;
-  padding-top: clamp(0.3125rem, 1.3cqw, 0.5rem);
-  border-top: 1px solid var(--rule);
+  padding: clamp(0.3125rem, 2cqw, 0.5rem) clamp(0.5rem, 3.2cqw, 0.75rem);
+  border-bottom: 1px solid var(--rule);
   color: var(--caption);
-  font-size: clamp(0.4375rem, 1.75cqw, 0.625rem);
-  line-height: 1.35;
+  font-size: clamp(0.5rem, 2.7cqw, 0.6875rem);
+  font-weight: 700;
+  line-height: 1.2;
 }
 
-.learn__foot strong {
+.lrn__logo {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: clamp(0.4375rem, 2.4cqw, 0.625rem);
+  color: var(--bone);
+}
+
+.lrn__logo svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.lrn__app {
+  flex: 0 0 auto;
   color: var(--ink);
 }
 
-/* Lands, then stays for the rest of the cycle: the point is that it is kept. */
-@keyframes learn-row {
-  0%,
-  2% {
-    opacity: 0;
-    translate: -0.25rem 0;
-  }
-  9%,
-  92% {
-    opacity: 1;
-    translate: 0 0;
-  }
-  98%,
-  100% {
-    opacity: 0;
-  }
+.lrn__from {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Which order this is. Two labels in one cell: the same customer writes the
+   same shorthand twice, and which order you are looking at is the only thing
+   that separates the two halves of the card. */
+.lrn__ord {
+  display: grid;
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+.lrn__o {
+  grid-area: 1 / 1;
+  padding: 0.2em 0.55em;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--sage) 30%, #ffffff);
+  color: var(--ink);
+  font-size: clamp(0.4375rem, 2.4cqw, 0.5625rem);
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+  opacity: 0;
+  animation: 17s linear infinite both;
+}
+
+.lrn__o--1 {
+  animation-name: lrn-ord-1;
+}
+
+.lrn__o--2 {
+  animation-name: lrn-ord-2;
+}
+
+@keyframes lrn-ord-1 {
+  0%, 88% { opacity: 1; animation-timing-function: var(--ease-in); }
+  90%, 100% { opacity: 0; }
+}
+
+@keyframes lrn-ord-2 {
+  0%, 90% { opacity: 0; animation-timing-function: var(--ease-out); }
+  92%, 100% { opacity: 1; }
+}
+
+/* --- The two views of the window ---------------------------------------
+   An inbox, and the message once it is open. The card used to show a quotation
+   floating in a bar, which is a caption pretending to be a screen: nothing
+   arrived, nothing was opened, and the shorthand had no context to be shorthand
+   *in*.
+
+   Order one lands in the list and is opened. Order two only ever lands, because
+   by then nobody has to read it, and that difference is the whole capability. */
+.lrn__body {
+  display: grid;
+  min-height: clamp(3.25rem, 19cqw, 4.25rem);
+  padding: clamp(0.3125rem, 2cqw, 0.5rem) 0;
+}
+
+.lrn__view {
+  grid-area: 1 / 1;
+  align-self: center;
+  display: grid;
+  gap: clamp(0.125rem, 0.9cqw, 0.25rem);
+  min-width: 0;
+  padding-inline: clamp(0.5rem, 3.2cqw, 0.75rem);
+}
+
+.lrn__view--list {
+  animation: lrn-list 17s linear infinite both;
+}
+
+.lrn__view--open {
+  opacity: 0;
+  gap: clamp(0.1875rem, 1.4cqw, 0.375rem);
+  animation: lrn-open 17s linear infinite both;
+}
+
+/* The list is showing for order one's arrival, hands over to the open message,
+   and comes back for order two's. */
+@keyframes lrn-list {
+  0%, 13% { opacity: 1; animation-timing-function: var(--ease-in); }
+  16%, 70% { opacity: 0; animation-timing-function: var(--ease-out); }
+  73%, 100% { opacity: 1; }
+}
+
+@keyframes lrn-open {
+  0%, 14% { opacity: 0; animation-timing-function: var(--ease-out); }
+  18%, 69% { opacity: 1; animation-timing-function: var(--ease-in); }
+  72%, 100% { opacity: 0; }
+}
+
+/* --- The inbox --------------------------------------------------------- */
+.lrn__mrow {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(0.25rem, 1.6cqw, 0.4375rem);
+  min-width: 0;
+  font-size: clamp(0.5rem, 2.7cqw, 0.6875rem);
+  line-height: 1.3;
+}
+
+/* The one that arrives. Twice: once for each order. */
+.lrn__mrow--in {
+  opacity: 0;
+  animation: lrn-arrive-row 17s linear infinite both;
+}
+
+@keyframes lrn-arrive-row {
+  0%, 4% { opacity: 0; translate: 0 -0.3125rem; animation-timing-function: var(--ease-out); }
+  8%, 70% { opacity: 1; translate: 0 0; animation-timing-function: var(--ease-out); }
+  74% { opacity: 0; translate: 0 -0.3125rem; }
+  78% { opacity: 0; translate: 0 -0.3125rem; animation-timing-function: var(--ease-out); }
+  82%, 100% { opacity: 1; translate: 0 0; }
+}
+
+/* Unread until it is opened, and unread again when the second one lands. */
+.lrn__unread {
+  flex: 0 0 auto;
+  align-self: center;
+  width: clamp(0.25rem, 1.5cqw, 0.375rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--accent);
+  scale: 0;
+  animation: lrn-unread 17s linear infinite both;
+}
+
+@keyframes lrn-unread {
+  0%, 4% { scale: 0; animation-timing-function: var(--ease-spring); }
+  8%, 13% { scale: 1; animation-timing-function: var(--ease-in); }
+  16%, 78% { scale: 0; animation-timing-function: var(--ease-spring); }
+  82%, 100% { scale: 1; }
+}
+
+.lrn__mwho {
+  flex: 0 0 auto;
+  color: var(--ink);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.lrn__mprev {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--caption);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The rows that were already there, quieter, so the new one is the event. */
+.lrn__mrow:not(.lrn__mrow--in) {
+  opacity: 0.45;
+}
+
+/* --- The message, open -------------------------------------------------- */
+.lrn__ofrom {
+  color: var(--ink);
+  font-size: clamp(0.5rem, 2.7cqw, 0.6875rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.lrn__otext {
+  color: var(--caption);
+  font-size: clamp(0.5625rem, 3.1cqw, 0.75rem);
+  line-height: 1.35;
+}
+
+/* The phrase the desk has to interpret, marked where it sits. A highlighter
+   wiping across is what noticing looks like, and it happens before anything is
+   resolved anywhere else. */
+.lrn__hl {
+  background-image: linear-gradient(
+    color-mix(in srgb, var(--accent) 24%, transparent),
+    color-mix(in srgb, var(--accent) 24%, transparent)
+  );
+  background-repeat: no-repeat;
+  background-position: 0 0.06em;
+  background-size: 0% 1.05em;
+  padding-inline: 0.08em;
+  color: var(--ink);
+  font-weight: 700;
+  animation: lrn-hl 17s linear infinite both;
+}
+
+@keyframes lrn-hl {
+  0%, 22% { background-size: 0% 1.05em; animation-timing-function: var(--ease-move); }
+  28%, 100% { background-size: 100% 1.05em; }
+}
+
+/* --- The mapping between the two ---------------------------------------- */
+.lrn__map {
+  position: relative;
+  display: block;
+  height: clamp(1.25rem, 6cqw, 1.75rem);
+  justify-self: center;
+  width: 1px;
+}
+
+.lrn__wire {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(42, 35, 32, 0.22) 22%,
+    rgba(42, 35, 32, 0.22) 78%,
+    transparent
+  );
+}
+
+/* Runs once per order: the mail is read, and something lands in the record. */
+.lrn__dot {
+  position: absolute;
+  left: 50%;
+  width: clamp(0.25rem, 1.4cqw, 0.3125rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--accent);
+  translate: -50% 0;
+  opacity: 0;
+  animation: lrn-dot 17s linear infinite both;
+}
+
+/* It runs twice, once per order. The return to the top has to happen while it
+   is invisible: without the pair of frames at 59.5% and 60% it interpolated from
+   the foot of the wire back up to the head *while fading in*, so every cycle
+   showed a dot flying backwards up the wire before it set off down it. */
+/* Once per order. The return to the head of the wire happens while it is
+   invisible, or it flies backwards up the wire in full view before setting off
+   down it. */
+@keyframes lrn-dot {
+  0%, 29% { top: 0; opacity: 0; animation-timing-function: var(--ease-in); }
+  32% { top: 0; opacity: 1; }
+  38% { top: 100%; opacity: 1; }
+  41%, 82.5% { top: 100%; opacity: 0; }
+  82.6%, 83% { top: 0; opacity: 0; animation-timing-function: var(--ease-in); }
+  85% { top: 0; opacity: 1; }
+  90% { top: 100%; opacity: 1; }
+  92%, 100% { top: 100%; opacity: 0; }
+}
+
+/* --- The field, twice --------------------------------------------------- */
+.lrn__lines {
+  display: grid;
+  margin: 0;
+  padding: clamp(0.4375rem, 2.6cqw, 0.6875rem) clamp(0.5rem, 3.2cqw, 0.75rem);
+  min-height: clamp(1.5rem, 8cqw, 2rem);
+}
+
+.lrn__line {
+  grid-area: 1 / 1;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.3125rem, 2cqw, 0.5rem);
+  min-width: 0;
+}
+
+.lrn__line--fix {
+  animation: lrn-fix 17s linear infinite both;
+}
+
+.lrn__line--auto {
+  opacity: 0;
+  animation: lrn-auto 17s linear infinite both;
+}
+
+/* One leaves before the other arrives. Overlapping the two, the struck value and
+   the clean one were superimposed in the same cell for half a second and the
+   field read as a smear of two different strings. They share a slot, so the
+   handover has to be sequential, not a cross-fade. */
+/* The record keeps order one's corrected value until order two has actually
+   been read: the field changing before the second mail has travelled the wire
+   would be the answer arriving before the question. */
+/* The record keeps order one's corrected value until order two has actually
+   been read: the field changing before the second mail has travelled the wire
+   would be the answer arriving before the question. */
+@keyframes lrn-fix {
+  0%, 88% { opacity: 1; translate: 0 0; animation-timing-function: var(--ease-in); }
+  90%, 100% { opacity: 0; translate: 0 -0.3125rem; }
+}
+
+@keyframes lrn-auto {
+  0%, 90% { opacity: 0; translate: 0 0.3125rem; animation-timing-function: var(--ease-out); }
+  92%, 100% { opacity: 1; translate: 0 0; }
+}
+
+/* Who put the value there. Two names, one grey and one in the accent, because
+   the point of the beat is that the machine got it wrong and a person fixed it,
+   and a value quietly changing on its own says neither half of that. */
+.lrn__by {
+  flex: 0 0 auto;
+  padding: 0.1em 0.4em;
+  border-radius: 0.1875rem;
+  background: color-mix(in srgb, var(--sage) 26%, #ffffff);
+  color: var(--caption);
+  font-size: clamp(0.375rem, 2.1cqw, 0.5rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.lrn__by--you {
+  background: color-mix(in srgb, var(--accent) 15%, #ffffff);
+  color: var(--accent-deep, var(--accent));
+}
+
+/* The wrong value, and the rule drawn through it. A strike is a gesture, so it
+   is drawn rather than declared: text-decoration cannot be animated, and a bar
+   scaling from the left is what crossing a value out looks like. */
+.lrn__was {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.1875rem, 1.2cqw, 0.3125rem);
+  flex: 0 0 auto;
+  color: var(--caption);
+  font-size: clamp(0.5625rem, 3.1cqw, 0.75rem);
+  line-height: 1.2;
+  white-space: nowrap;
+  animation: lrn-was 17s linear infinite both;
+}
+
+/* The value itself, so the rule is drawn through the number and not through the
+   name in front of it. */
+.lrn__val {
+  position: relative;
+}
+
+.lrn__strike {
+  position: absolute;
+  left: -0.1em;
+  right: -0.1em;
+  top: 52%;
+  height: 1px;
+  background: var(--accent);
+  transform-origin: left center;
+  scale: 0 1;
+  animation: lrn-strike 17s linear infinite both;
+}
+
+@keyframes lrn-strike {
+  0%, 45% { scale: 0 1; animation-timing-function: var(--ease-move); }
+  49%, 100% { scale: 1 1; }
+}
+
+@keyframes lrn-was {
+  0%, 49% { opacity: 1; }
+  53%, 100% { opacity: 0.4; }
+}
+
+/* Typed, not faded in. The caret and the clip move on the same step function,
+   so the caret sits exactly at the edge of what has been typed: a value fading
+   into place is a value that arrived by itself, which is the opposite of what
+   this beat is about. */
+.lrn__typed {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.1875rem, 1.2cqw, 0.3125rem);
+  min-width: 0;
+}
+
+/* The caret is positioned against the value alone, not against the value plus
+   the name in front of it: on the group it swept across the badge first and the
+   typing appeared to start in the wrong place. */
+.lrn__type {
+  position: relative;
+  min-width: 0;
+}
+
+.lrn__line--fix .lrn__type .lrn__is {
+  display: block;
+  clip-path: inset(0 100% 0 0);
+  animation: lrn-type 17s linear infinite both;
+}
+
+.lrn__caret {
+  position: absolute;
+  top: 6%;
+  bottom: 6%;
+  left: 0;
+  width: 1px;
+  background: var(--ink);
+  opacity: 0;
+  animation:
+    lrn-caret-x 17s linear infinite both,
+    lrn-caret-on 17s linear infinite both;
+}
+
+@keyframes lrn-type {
+  0%, 51% { clip-path: inset(0 100% 0 0); animation-timing-function: steps(14, end); }
+  61%, 100% { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes lrn-caret-x {
+  0%, 51% { left: 0; animation-timing-function: steps(14, end); }
+  61%, 100% { left: 100%; }
+}
+
+@keyframes lrn-caret-on {
+  0%, 50% { opacity: 0; }
+  51%, 63% { opacity: 1; }
+  65%, 100% { opacity: 0; }
+}
+
+.lrn__is {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ink);
+  font-size: clamp(0.5625rem, 3.1cqw, 0.75rem);
+  font-weight: 700;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lrn__tag {
+  flex: 0 0 auto;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--sage) 34%, #ffffff);
+  color: var(--ink);
+  font-size: clamp(0.375rem, 2.2cqw, 0.5rem);
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
 }
 
 /* --- Setup: white, quiet, hairlines ------------------------------------
@@ -3814,12 +4779,25 @@ p {
     animation: none;
   }
 
-  /* The record is the point of the picture, so with no motion every line is
-     simply present rather than absent. */
-  .learn__row {
+  /* The card is the point of the picture, so with no motion it rests on its
+     last beat: the value already right, on somebody else's screen. */
+  .lrn,
+  .lrn__win,
+  .lrn__line--auto,
+  .lrn__o--2 {
     animation: none;
     opacity: 1;
+    scale: 1;
     translate: 0 0;
+  }
+
+  .lrn__line--fix,
+  .lrn__o--1,
+  .lrn__flash,
+  .lrn__dot,
+  .lrn__caret {
+    animation: none;
+    opacity: 0;
   }
 
   /* No cycle at all: everything simply present. */
@@ -4425,6 +5403,15 @@ p {
   .doc__body .doc__team {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+}
+
+/* Capped, because the portraits are 580px on the long edge and there is no more
+   than that. Three columns across an 88rem band put each one in a 410px box,
+   which on a 2x screen asks for 820 device pixels out of a 580 pixel file --
+   a 1.4x upscale, and that is the pixelation. At this cap a cell comes out near
+   290 CSS px, which is exactly the file at 2x. Raise it only with new sources. */
+.doc__body .doc__team {
+  max-width: 58rem;
 }
 
 .doc__body .doc__person {
@@ -5777,9 +6764,15 @@ a.story__card:focus-visible .story__go {
 /* A case study opens on a photograph of the desk it is about. Same slot the
    video occupied, cropped to the same shape so the two can sit side by side
    across stories without the column changing rhythm. */
+/* Capped, and no longer 16:9 across the whole column. On the order processing
+   page this is a mood shot next to an argument, and at full width in a wide band
+   it was the largest thing on the page by some distance -- bigger than the
+   product animation it is meant to sit behind. */
 .doc__shot {
   margin: clamp(1.25rem, 3vw, 1.75rem) 0 clamp(1.5rem, 3.5vw, 2.25rem);
-  aspect-ratio: 16 / 9;
+  max-width: 34rem;
+  aspect-ratio: 3 / 2;
+  border-radius: 0.4375rem;
   background: var(--wash);
   overflow: hidden;
 }
@@ -5817,91 +6810,431 @@ a.story__card:focus-visible .story__go {
    something worth handing over, and you pick. So the card is one proposal and
    the two answers to it, and the choice is the structure rather than a
    footnote under it. Static: there is nothing here that motion explains. */
+/* --- The repetition, the proposal, the decision --------------------------
+   Three versions of this card came before. It was static, on the argument that
+   nothing here needed motion, which took the event out of an event. Then it
+   composed itself and stopped, which was half the story. Then it named the
+   shipped skill in prose: "the same seven steps every time", "62 this week".
+
+   That last one is the interesting failure. Everything the card had to say, it
+   said in a sentence, and a sentence in a picture is a picture that has given
+   up. So the repetition is *shown*: the same job arrives three times in front of
+   you, identical but for the customer, and only then does the proposal appear.
+   The reader has already agreed with it before it is made.
+
+   The one rule this card must never break: it does not press its own button.
+   The copy beside it says the call is yours, so the choice sits there untaken
+   for the longest beat in the cycle, and what follows is narration -- "once you
+   do" -- rather than a click. */
 .handart {
   container-type: inline-size;
+  width: min(100%, 23rem);
+}
+
+.hnd {
   display: grid;
-  gap: clamp(0.375rem, 1.6cqw, 0.625rem);
-  width: min(100%, 30rem);
-  padding: clamp(0.875rem, 3.2cqw, 1.375rem);
+  gap: clamp(0.3125rem, 1.8cqw, 0.5rem);
+  padding: clamp(0.875rem, 4.4cqw, 1.375rem);
   border-radius: 0.5rem;
   background: var(--white);
   box-shadow:
     inset 0 0 0 1px rgba(42, 35, 32, 0.08),
     0 6px 18px rgba(28, 34, 26, 0.1);
+  animation: hnd-card 15s linear infinite both;
 }
 
-.ask__cap {
+/* Blank for the last of the cycle, so the reset to the first beat happens with
+   nothing on screen to see it happen. */
+@keyframes hnd-card {
+  0% {
+    opacity: 0;
+  }
+  3%,
+  93% {
+    opacity: 1;
+  }
+  98%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.hnd__head {
   margin: 0;
-  padding-bottom: clamp(0.3125rem, 1.3cqw, 0.5rem);
+  padding-bottom: clamp(0.3125rem, 1.8cqw, 0.5rem);
   border-bottom: 1px solid var(--rule);
   color: var(--caption);
-  font-size: clamp(0.4375rem, 1.75cqw, 0.625rem);
+  font-size: clamp(0.5625rem, 3.1cqw, 0.75rem);
   font-weight: 700;
+}
+
+/* Two captions in one cell: the header says what the card is doing at each
+   beat, and it is the only thing on it that renames itself. */
+.hnd__caps {
+  display: grid;
+  min-width: 0;
+}
+
+.hnd__cap {
+  grid-area: 1 / 1;
+  white-space: nowrap;
+  opacity: 0;
+  animation: 15s linear infinite both;
+}
+
+.hnd__cap--1 {
+  animation-name: hnd-cap-1;
+}
+
+.hnd__cap--2 {
+  animation-name: hnd-cap-2;
+  color: var(--accent-deep, var(--accent));
+}
+
+@keyframes hnd-cap-1 {
+  0% {
+    opacity: 0;
+    animation-timing-function: var(--ease-out);
+  }
+  4%,
+  30% {
+    opacity: 1;
+    animation-timing-function: var(--ease-in);
+  }
+  35%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes hnd-cap-2 {
+  0%,
+  35% {
+    opacity: 0;
+    animation-timing-function: var(--ease-out);
+  }
+  40%,
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Three states in one cell, so the card cannot change height under the reader.
+   The height is set to hold the tallest of them, which is the run of tasks. */
+.hnd__stage {
+  display: grid;
+  margin-top: clamp(0.25rem, 1.6cqw, 0.5rem);
+  min-height: clamp(4.25rem, 24cqw, 5.5rem);
+}
+
+.hnd__step {
+  grid-area: 1 / 1;
+  align-self: center;
+  display: grid;
+  gap: clamp(0.25rem, 1.6cqw, 0.4375rem);
+  min-width: 0;
+}
+
+/* --- Beat one: the same job, three times ------------------------------- */
+.hnd__step--seen {
+  animation: hnd-seen 15s linear infinite both;
+}
+
+@keyframes hnd-seen {
+  0%,
+  30% {
+    opacity: 1;
+    translate: 0 0;
+    animation-timing-function: var(--ease-in);
+  }
+  36%,
+  100% {
+    opacity: 0;
+    translate: 0 -0.375rem;
+  }
+}
+
+/* Identical rows but for the customer. Sameness is the argument, so nothing
+   here varies that does not have to. */
+.hnd__task {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(0.25rem, 1.6cqw, 0.5rem);
+  padding: clamp(0.1875rem, 1.2cqw, 0.3125rem) clamp(0.375rem, 2.2cqw, 0.625rem);
+  border-radius: 0.3125rem;
+  background: color-mix(in srgb, var(--sage) 16%, #ffffff);
+  font-size: clamp(0.5rem, 2.8cqw, 0.6875rem);
+  line-height: 1.3;
+  white-space: nowrap;
+  opacity: 0;
+  animation: hnd-task 15s calc(var(--i) * 1s) infinite both;
+}
+
+.hnd__tjob {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.hnd__twho {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--caption);
+  text-overflow: ellipsis;
+}
+
+/* Each arrives, and none of them leaves: the pile is the point. The delay is
+   what staggers them, so the exit is a shared frame on the step above. */
+@keyframes hnd-task {
+  0% {
+    opacity: 0;
+    translate: 0 0.375rem;
+    animation-timing-function: var(--ease-out);
+  }
+  4%,
+  100% {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* --- Beat two and three: the proposal, then the choice ------------------ */
+.hnd__step--ask {
+  justify-items: start;
+  gap: clamp(0.4375rem, 2.6cqw, 0.75rem);
+  opacity: 0;
+  animation: hnd-ask 15s linear infinite both;
+}
+
+@keyframes hnd-ask {
+  0%,
+  36% {
+    opacity: 0;
+    translate: 0 0.375rem;
+    animation-timing-function: var(--ease-out);
+  }
+  42%,
+  74% {
+    opacity: 1;
+    translate: 0 0;
+    animation-timing-function: var(--ease-in);
+  }
+  79%,
+  100% {
+    opacity: 0;
+    translate: 0 -0.375rem;
+  }
 }
 
 /* The proposal itself carries the weight: it is the one thing being asked. */
-.ask__what {
-  margin: clamp(0.25rem, 1cqw, 0.375rem) 0 0;
+.hnd__what {
+  display: block;
   color: var(--ink);
-  font-size: clamp(0.6875rem, 3cqw, 1.0625rem);
+  font-size: clamp(0.875rem, 4.6cqw, 1.125rem);
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.012em;
+  text-wrap: balance;
 }
 
-.ask__why {
-  margin: 0;
-  color: var(--caption);
-  font-size: clamp(0.4375rem, 1.9cqw, 0.6875rem);
-  line-height: 1.4;
+/* The choice arrives after the proposal, not with it. A question and its two
+   answers appearing on the same frame is a form; a beat between them is
+   somebody asking. */
+.hnd__acts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(0.3125rem, 1.8cqw, 0.5rem);
+  opacity: 0;
+  animation: hnd-acts 15s linear infinite both;
+}
+
+@keyframes hnd-acts {
+  0%,
+  46% {
+    opacity: 0;
+    translate: 0 0.3125rem;
+    animation-timing-function: var(--ease-spring);
+  }
+  52%,
+  100% {
+    opacity: 1;
+    translate: 0 0;
+  }
 }
 
 /* Two answers, weighted so neither is the default. The accent one is what the
    card is proposing; the quiet one has to look equally available or the choice
    is decorative. */
-.ask__acts {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: clamp(0.375rem, 1.6cqw, 0.625rem);
-  margin: clamp(0.25rem, 1.2cqw, 0.5rem) 0 0;
-}
-
-.ask__yes,
-.ask__no {
-  padding: 0.4em 0.85em;
+.hnd__yes,
+.hnd__no {
+  padding: 0.4em 0.9em;
   border-radius: 999px;
-  font-size: clamp(0.4375rem, 1.8cqw, 0.6875rem);
+  font-size: clamp(0.5625rem, 3.2cqw, 0.8125rem);
   font-weight: 700;
   line-height: 1.35;
   white-space: nowrap;
 }
 
-.ask__yes {
+.hnd__yes {
   background: var(--accent);
   color: #ffffff;
 }
 
-.ask__no {
+.hnd__no {
   background: var(--white);
   box-shadow: inset 0 0 0 1px var(--rule);
   color: var(--caption);
 }
 
-.ask__foot {
-  margin: clamp(0.25rem, 1.2cqw, 0.5rem) 0 0;
-  padding-top: clamp(0.3125rem, 1.3cqw, 0.5rem);
-  border-top: 1px solid var(--rule);
-  color: var(--caption);
-  font-size: clamp(0.4375rem, 1.75cqw, 0.625rem);
-  line-height: 1.35;
+/* --- Beat four: what handing it over actually changes ------------------- */
+.hnd__step--run {
+  justify-items: start;
+  opacity: 0;
+  animation: hnd-run 15s linear infinite both;
 }
 
-.ask__foot strong {
+@keyframes hnd-run {
+  0%,
+  74% {
+    opacity: 0;
+    translate: 0 0.375rem;
+    animation-timing-function: var(--ease-out);
+  }
+  80%,
+  100% {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* Read access becoming write access, which is the sentence in the copy beside
+   this card and was the one thing the picture never showed. */
+.hnd__perm {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.3em 0.75em;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--sage) 30%, #ffffff);
+  font-size: clamp(0.5rem, 2.8cqw, 0.6875rem);
+  font-weight: 700;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.hnd__was {
+  color: var(--caption);
+  text-decoration: line-through;
+}
+
+.hnd__to {
+  color: var(--accent);
+}
+
+.hnd__now {
   color: var(--ink);
 }
 
+/* And then the skill doing the thing it was handed. */
+.hnd__wrote {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  color: var(--accent-deep, var(--accent));
+  font-size: clamp(0.5rem, 2.8cqw, 0.6875rem);
+  font-weight: 700;
+  line-height: 1.3;
+  white-space: nowrap;
+}
 
+.hnd__tick {
+  width: 1em;
+  height: 1em;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.hnd__foot {
+  display: grid;
+  margin: clamp(0.25rem, 1.6cqw, 0.5rem) 0 0;
+  padding-top: clamp(0.3125rem, 1.8cqw, 0.5rem);
+  border-top: 1px solid var(--rule);
+  color: var(--caption);
+  font-size: clamp(0.5625rem, 3.1cqw, 0.75rem);
+  line-height: 1.35;
+}
+
+.hnd__f {
+  grid-area: 1 / 1;
+  opacity: 0;
+  animation: 15s linear infinite both;
+}
+
+.hnd__f strong {
+  color: var(--ink);
+}
+
+.hnd__f--1 {
+  animation-name: hnd-foot-1;
+}
+
+.hnd__f--2 {
+  animation-name: hnd-foot-2;
+}
+
+.hnd__f--3 {
+  animation-name: hnd-foot-3;
+}
+
+@keyframes hnd-foot-1 {
+  0%,
+  10% {
+    opacity: 0;
+    animation-timing-function: var(--ease-out);
+  }
+  16%,
+  30% {
+    opacity: 1;
+    animation-timing-function: var(--ease-in);
+  }
+  35%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes hnd-foot-2 {
+  0%,
+  46% {
+    opacity: 0;
+    animation-timing-function: var(--ease-out);
+  }
+  52%,
+  74% {
+    opacity: 1;
+    animation-timing-function: var(--ease-in);
+  }
+  79%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes hnd-foot-3 {
+  0%,
+  74% {
+    opacity: 0;
+    animation-timing-function: var(--ease-out);
+  }
+  80%,
+  100% {
+    opacity: 1;
+  }
+}
 
 /* --- Pricing --------------------------------------------------------------
    Plan cards carry their own bullets and call to action, so a reader can decide
@@ -5940,106 +7273,129 @@ a.story__card:focus-visible .story__go {
   outline-offset: 2px;
 }
 
+/* --- The plan cards -------------------------------------------------------
+   Three separated cards rather than three cells sharing hairlines. The shared
+   seam is this site's usual way of setting a row of things, and it is the wrong
+   one here: a plan is a thing you pick, so each card has to close around itself
+   and one of them has to be able to stand forward of the other two. A seam
+   cannot do either.
+
+   No amounts anywhere, which is why there is no billing toggle and no saving
+   pill: the number is quoted per desk on the call. The card carries the shape
+   instead -- what the plan counts, what it cannot do, and what the step up from
+   the plan below buys. */
 .doc__body .plans {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-  gap: 1px;
-  margin: clamp(1.25rem, 3vw, 1.75rem) 0 clamp(1.5rem, 3.5vw, 2.25rem);
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: clamp(0.875rem, 2vw, 1.25rem);
+  margin: 0 0 clamp(2rem, 4vw, 3rem);
   padding: 0;
+  max-width: none;
   list-style: none;
-  background: var(--rule);
-  box-shadow: 0 0 0 1px var(--rule);
 }
 
 .doc__body .plan {
+  position: relative;
   display: flex;
   flex-direction: column;
   max-width: none;
   margin: 0;
-  padding: clamp(1.25rem, 2.8vw, 1.625rem);
-  background: var(--bone);
+  padding: clamp(1.375rem, 2.8vw, 1.875rem);
+  border: 1px solid var(--rule);
+  border-radius: 0.5rem;
+  background: var(--white);
 }
 
-/* The recommended plan is marked by ground, not by a coloured outline: the
-   cards share hairlines, and a border on one would thicken the seam. */
+/* The one a desk usually lands on, marked by its own outline. Elsewhere on the
+   site a recommended thing is marked by ground rather than by a border, because
+   elsewhere the cards share a seam that a border would thicken. These do not
+   share anything, so the outline is available and it is what actually reads as
+   "this one" at a glance. */
 .doc__body .plan--rec {
-  background: var(--wash);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
 }
 
 .plan__tag {
-  align-self: flex-start;
-  margin: 0 0 0.625rem;
-  padding: 0.1875rem 0.5rem;
+  position: absolute;
+  top: clamp(1.375rem, 2.8vw, 1.875rem);
+  right: clamp(1.375rem, 2.8vw, 1.875rem);
+  margin: 0;
+  padding: 0.25rem 0.5rem;
   border-radius: 999px;
   background: var(--accent-deep);
+  /* 12px bold white on the deeper accent, which is the pair the site already
+     uses for a small badge on this ground. */
   color: var(--on-accent-sm);
   font-size: 0.75rem;
   font-weight: 700;
+  letter-spacing: 0.01em;
 }
 
-/* The unbadged cards carry the same box with nothing in it, so all three plan
-   names sit on one line. Reserving the row this way rather than with a padding
-   value means it cannot drift when the badge's type or padding changes. */
-.plan__tag--none {
-  visibility: hidden;
-}
-
-.plan__name {
+.pband .doc__body .plan__name {
   margin: 0;
-  font-size: 1.0625rem;
-  font-weight: 700;
+  max-width: none;
+  padding: 0;
+  border: 0;
+  font-size: clamp(1.375rem, 1.1rem + 0.8vw, 1.625rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.024em;
 }
 
+/* Two lines' worth of box whether the line wraps or not, so the button and the
+   two group heads sit on the same rulers across all three cards. Left to the
+   text, one card's second line pushed everything under it half a step down and
+   the row stopped reading as three of the same object. */
 .doc__body .plan__pitch {
-  margin: 0.1875rem 0 0;
-  max-width: none;
+  margin: 0.375rem 0 0;
+  min-height: calc(2 * 1.45em);
+  max-width: 28ch;
   color: var(--caption);
   font-size: 0.9375rem;
   line-height: 1.45;
 }
 
-.doc__body .plan__price {
+/* Full width, on every card, and above the lists rather than under them: a
+   reader who has recognised their desk in the first three lines should not have
+   to read the whole card to find the way out of it. */
+.doc__body .plan__cta {
+  margin: clamp(1.25rem, 2.6vw, 1.625rem) 0 0;
+  padding: 0;
+  max-width: none;
+}
+
+.plan__cta .btn-os {
   display: flex;
-  align-items: baseline;
-  gap: 0.375rem;
-  margin: clamp(0.875rem, 2vw, 1.125rem) 0 0;
-  padding-top: clamp(0.875rem, 2vw, 1.125rem);
+  width: 100%;
+  justify-content: center;
+}
+
+/* The rule under the button, which is the card's own division: everything above
+   it is what the plan is, everything below is what it holds. */
+.pband .doc__body .plan__groupHead {
+  margin: clamp(1.25rem, 2.6vw, 1.625rem) 0 0.75rem;
+  padding-top: clamp(1.25rem, 2.6vw, 1.625rem);
   border-top: 1px solid var(--rule);
   max-width: none;
-}
-
-.plan__amt {
   color: var(--ink);
-  font-size: clamp(1.75rem, 1.2rem + 1.6vw, 2.375rem);
-  font-weight: 500;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  font-variant-numeric: tabular-nums;
+  font-size: 0.9375rem;
+  font-weight: 700;
 }
 
-.plan__cur {
-  margin-right: 0.0625em;
-  font-size: 0.55em;
-  vertical-align: 0.5em;
-}
-
-.plan__per {
-  color: var(--caption);
-  font-size: 0.875rem;
-}
-
-.doc__body .plan__terms {
-  margin: 0.375rem 0 0;
-  max-width: none;
-  color: var(--caption);
-  font-size: 0.8125rem;
+/* The second head opens a section inside the list rather than a new half of the
+   card, so it gets the air and not the rule. */
+.doc__body .plan__list + .plan__groupHead {
+  padding-top: 0;
+  border-top: 0;
 }
 
 .doc__body .plan__list {
   display: grid;
-  gap: 0.4375rem;
-  margin: clamp(0.875rem, 2vw, 1.125rem) 0 0;
+  gap: 0.5rem;
+  margin: 0;
   padding: 0;
+  max-width: none;
   list-style: none;
   font-size: 0.9375rem;
 }
@@ -6048,7 +7404,7 @@ a.story__card:focus-visible .story__go {
   position: relative;
   max-width: none;
   margin: 0;
-  padding-left: 1.375rem;
+  padding-left: 1.5rem;
   line-height: 1.45;
 }
 
@@ -6056,7 +7412,7 @@ a.story__card:focus-visible .story__go {
 .doc__body .plan__list li::before {
   content: '';
   position: absolute;
-  left: 0;
+  left: 0.125rem;
   top: 0.45em;
   width: 0.6875rem;
   height: 0.3125rem;
@@ -6065,16 +7421,69 @@ a.story__card:focus-visible .story__go {
   rotate: -45deg;
 }
 
-.doc__body .plan__cta {
-  margin: clamp(1.125rem, 2.5vw, 1.5rem) 0 0;
-  /* Pushed to the foot so the buttons line up across cards of unequal height. */
-  padding-top: 0;
-  margin-top: auto;
-  max-width: none;
+/* The one thing each plan cannot do, drawn as a cross and set in the caption
+   grey. A plan reads as a choice only if what it gives up is on the card; a
+   list of nothing but ticks is a brochure. */
+.doc__body .plan__without {
+  color: var(--caption);
 }
 
-.doc__body .plan__cta {
-  padding-top: clamp(1.125rem, 2.5vw, 1.5rem);
+/* Two strokes rather than a glyph, so the cross is drawn on the same rhythm as
+   the tick above it instead of arriving at whatever weight the face gives a
+   times sign.
+
+   `li.plan__without` rather than `.plan__without`, because the tick rule above
+   is `.doc__body .plan__list li::before` and carries one element more: written
+   without the `li` these lost the tie on every property they share, and the
+   negative row came out as a tick with a stroke through it. */
+.doc__body .plan__list li.plan__without::before,
+.doc__body .plan__list li.plan__without::after {
+  content: '';
+  position: absolute;
+  left: 0.0625rem;
+  top: 0.72em;
+  width: 0.6875rem;
+  height: 0;
+  border: 0;
+  border-top: 1.75px solid currentColor;
+  background: none;
+  rotate: 45deg;
+}
+
+.doc__body .plan__list li.plan__without::after {
+  rotate: -45deg;
+}
+
+/* "Everything in Launch", with the plan named as a chip rather than in running
+   text: it is a reference to the card on the left, and it should be findable
+   without reading the sentence. */
+.doc__body .plan__from {
+  padding-left: 1.5rem;
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.doc__body .plan__list li.plan__from::before {
+  content: '←';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: auto;
+  height: auto;
+  border: 0;
+  rotate: none;
+  color: var(--accent);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.plan__ref {
+  display: inline-block;
+  margin-left: 0.125rem;
+  padding: 0.0625rem 0.375rem;
+  border-radius: 0.25rem;
+  background: var(--wash);
+  font-weight: 700;
 }
 
 /* --- Comparison tables --- */
@@ -6094,12 +7503,64 @@ a.story__card:focus-visible .story__go {
 
 .ptable th,
 .ptable td {
-  padding: 0.5rem 0.75rem;
+  padding: 0.6875rem 1rem;
   text-align: left;
   vertical-align: baseline;
-  /* One hairline under each row and nothing else: the data makes its own grid,
-     and vertical rules would only add clutter. */
+  /* One hairline under each row, and one vertical hairline at the pivot. Ruling
+     every column would only add clutter; ruling the one division the table is
+     about is the table saying what the heading says. */
   border-bottom: 1px solid var(--rule);
+}
+
+/* The outer columns sit on the band's own edges, so the table's first word
+   lines up with the heading above it rather than a cell padding to the right
+   of it. */
+.ptable tr > :first-child {
+  padding-left: 0;
+}
+
+.ptable tr > :last-child {
+  padding-right: 0;
+}
+
+/* What the demonstration is: the whole table, not its first column, which is
+   where the line used to sit as a column head -- labelling the one column the
+   sameness is not in. */
+.ptable__cap {
+  padding: 0 0 0.625rem;
+  text-align: left;
+  color: var(--caption);
+  font-size: 0.8125rem;
+}
+
+/* The pivot. Everything left of the line is what the customer sent, and it is
+   the same in both rows; everything right of it is what Hoshii resolved that
+   to, and the two rows differ. */
+.ptable .ptable__turn {
+  border-left: 1px solid var(--rule);
+  padding-left: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+/* The answer, in ink against the grey of what arrived. Without it the resolved
+   product and the SKU -- the only part of the row a reader is here for -- were
+   set in the same caption grey as the noise they came out of. */
+.ptable td.ptable__out {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* Four columns do not fit a phone, which is what .ptable__wrap's scroller is
+   for. Tightened here so less of the last column starts off the edge: the SKU
+   is the payoff of the row, and every pixel of padding pushes it further out. */
+@media (max-width: 40em) {
+  .ptable th,
+  .ptable td {
+    padding: 0.5625rem 0.625rem;
+  }
+
+  .ptable .ptable__turn {
+    padding-left: 0.75rem;
+  }
 }
 
 .ptable thead th {
@@ -6245,14 +7706,163 @@ a.story__card:focus-visible .story__go {
 @media (prefers-reduced-motion: reduce) {
   .proof__belt,
   .today__belt,
-  .flow__pulses path,
   .lane,
   .lmail,
   .lmail__tag,
   .answer__dots i,
-  .learn__row,
+  .lrn,
+  .lrn__win,
+  .lrn__flash,
+  .lrn__flashtick,
+  .lrn__was,
+  .lrn__strike,
+  .lrn__dot,
+  .lrn__caret,
+  .lrn__line--fix,
+  .lrn__line--fix .lrn__is,
+  .lrn__line--auto,
+  .lrn__o,
+  .seq__s,
+  .seq__scene,
+  .seq__tick::after,
+  .mail__row,
+  .mail__mark,
+  .resolve li,
+  .win--erp,
+  .erp__lines li,
+  .erp__foot,
+  .erp__btn,
+  .hnd,
+  .hnd__cap,
+  .hnd__task,
+  .hnd__step--seen,
+  .hnd__step--ask,
+  .hnd__acts,
+  .hnd__step--run,
+  .hnd__f,
   .chatband__q::after {
     animation: none !important;
+  }
+
+  /* And then a resting state for every one of them that was starting from
+     nothing. Four of these scenes declare their first frame in the rule -- a
+     mail at `opacity: 0`, a label at `scale: 0`, a row of the record at
+     `opacity: 0` -- and let the loop bring them in. Switching the loop off left
+     that first frame showing, so a reader who has asked the OS to stop
+     animating was getting an empty inbox over three empty lanes, a knowledge
+     card with no knowledge in it, and a context panel holding one logo on a
+     blank field. Reduced motion means no movement, not no picture.
+
+     Each of these is the state the loop resolves to: the mail in its lane as a
+     card, the label applied, the record full. */
+  .lmail {
+    translate: 0 0;
+    opacity: 1;
+    border-radius: 0.3125rem;
+    box-shadow:
+      inset 0 0 0 1px rgba(42, 35, 32, 0.08),
+      0 6px 16px rgba(28, 34, 26, 0.12);
+  }
+
+  .lmail__tag {
+    scale: 1;
+  }
+
+  /* The card rests on its last beat: the value already right, and a colleague
+     at the desk. The correction half of the story is simply not shown, which is
+     the honest still frame of a three-beat sequence. */
+  /* The card rests on the second order: the value already right, and nothing
+     retyped. The correction half is simply not shown, which is the honest still
+     frame of a sequence. */
+  .lrn,
+  .lrn__win,
+  .lrn__line--auto,
+  .lrn__o--2 {
+    opacity: 1;
+    scale: 1;
+    translate: 0 0;
+  }
+
+  .lrn__line--fix,
+  .lrn__o--1,
+  .lrn__flash,
+  .lrn__dot,
+  .lrn__caret {
+    opacity: 0;
+  }
+
+  /* The desk scene rests on its last frame, which is now the fifth: posted,
+     under the caption that says a person approved it. The frames are
+     alternatives, so a still of the sequence can only be one of them, and the
+     honest still of a sequence is where it ends. */
+  .seq__scene--d,
+  .seq__s--5,
+  .done__ring,
+  .done__head,
+  .done__meta,
+  .mail__row,
+  .resolve li,
+  .win--erp,
+  .erp__lines li,
+  .erp__foot,
+  /* The proposal card rests on the ask, with both answers showing and neither
+     taken. Resting it on what follows would be the card answering its own
+     question. */
+  .hnd,
+  .hnd__cap--2,
+  .hnd__step--ask,
+  .hnd__acts,
+  .hnd__f--2 {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+
+  .hnd__cap--1,
+  .hnd__step--seen,
+  .hnd__step--run,
+  .hnd__f--1,
+  .hnd__f--3 {
+    opacity: 0;
+  }
+
+  .erp__btn {
+    opacity: 1;
+    scale: 1;
+  }
+
+  .mail__mark {
+    background-size: 100% 1.05em;
+  }
+
+  .seq__scene--a,
+  .seq__scene--b,
+  .seq__scene--c,
+  .seq__s--1,
+  .seq__s--2,
+  .seq__s--3,
+  .seq__s--4 {
+    opacity: 0;
+  }
+
+  /* Drawn, not faded, so it needs its own resting state: without this the tick
+     sits at a full dash offset and the seal is an empty ring. */
+  .done__tick {
+    stroke-dashoffset: 0;
+  }
+
+  /* All five filled: the still frame is the end of the sequence. */
+  .seq__tick::after {
+    scale: 1 1;
+  }
+
+  /* The context sequence never starts at all under reduced motion -- the script
+     returns before it adds the class the field's entrance hangs off -- so the
+     field is placed directly. */
+  .item {
+    opacity: 1;
+    scale: 1;
+    transition: none;
   }
 }
 
@@ -7069,6 +8679,909 @@ a.story__card:focus-visible .story__go {
 .book__pitch .pat { --pat-mod: 38px; }
 
 
+
+/* --- Partner marks -------------------------------------------------------
+   No tiles. These run the same normalisation the customer belt runs, chosen per
+   file rather than per taste: `.proof__logo--alpha` flattens a transparent logo
+   to a black silhouette, `.proof__logo--paper` multiplies one that ships on a
+   white rectangle so the rectangle drops out. Both rules live with the belt and
+   are reused here rather than copied, so the two logo walls on the site stay one
+   treatment.
+
+   That is also what solves querformat, which arrives as white type and cannot be
+   seen on a pale ground: flattened, it is a black wordmark like the rest. The
+   earlier version gave it a dark tile of its own, which made one mark in three
+   look like a deliberate exception.
+
+   Heights are tuned per mark, matched on lettering size rather than bounding
+   box, the same way the belt does it. */
+.plogos {
+  margin: clamp(1.5rem, 3.5vw, 2.5rem) 0 clamp(2rem, 4.5vw, 3rem);
+  max-width: none;
+}
+
+.plogos__label {
+  margin: 0 0 clamp(1rem, 2.5vw, 1.5rem);
+  max-width: none;
+  color: var(--caption);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+ul.plogos__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(2rem, 6vw, 4rem);
+  margin: 0;
+  padding: 0;
+  max-width: none;
+  list-style: none;
+}
+
+ul.plogos__row > li.plogos__cell {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.doc__body .plogos__mark {
+  display: block;
+  width: auto;
+  height: var(--h, 2.5rem);
+  max-width: 100%;
+  object-fit: contain;
+  opacity: 0.78;
+}
+
+
+
+/* --- The product hero ----------------------------------------------------
+   The one page on the site arguing for a product rather than describing itself,
+   so it does not carry the shared document masthead: that opens every page on
+   its own name, which here meant the product page's first words were "Order
+   processing". The h1 is the claim instead, and the tab title, the nav and the
+   trail all still call it what the rest of the site calls it.
+
+   Names, claim, who it is for, the work itself on the right, and one line of
+   plain explanation under all of it on a dark band. */
+/* The claim needs air under the masthead -- it is the first thing on the page
+   and it was reading as though it had been pushed up against the bar. */
+.phero {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(2.75rem, 6vw, 5rem) var(--gutter) clamp(2.5rem, 5.5vw, 4rem);
+  background: var(--bone);
+}
+
+/* The corner, at the module and the falloff every other surface takes. */
+.phero .pat {
+  background-image: url('/assets/pattern.svg');
+  background-size: 430px auto;
+  background-position: right bottom;
+  background-repeat: repeat;
+  position: absolute;
+  inset: -7%;
+  z-index: 0;
+  /* Quieter than an art well's. Those are small panels where the field is the
+     only thing on the ground; this one runs the full width of the page behind a
+     headline, and at the well's strength it was reading through the type. */
+  opacity: 0.13;
+  -webkit-mask-image: radial-gradient(
+    110% 128% at 100% 100%,
+    #000 0%,
+    rgba(0, 0, 0, 0.6) 30%,
+    rgba(0, 0, 0, 0.22) 56%,
+    transparent 82%
+  );
+  mask-image: radial-gradient(
+    110% 128% at 100% 100%,
+    #000 0%,
+    rgba(0, 0, 0, 0.6) 30%,
+    rgba(0, 0, 0, 0.22) 56%,
+    transparent 82%
+  );
+}
+
+.phero__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: clamp(2rem, 4.5vw, 3.5rem);
+  margin-inline: auto;
+  max-width: 88rem;
+  align-items: center;
+}
+
+/* The claim, and the desks running it beside rather than beneath.
+
+   The copy track is sized to its own content rather than to `1fr`. On `1fr` it
+   swallowed every pixel the hero had spare and pushed the marks to the far edge
+   of an 88rem band -- a third of a screen of white between the sentence and the
+   proof of it, which reads as two unrelated things rather than as a claim and
+   its evidence. The slack sits after the marks now. */
+@media (min-width: 60em) {
+  .phero__inner {
+    grid-template-columns: minmax(0, max-content) minmax(0, 15rem);
+    justify-content: start;
+  }
+}
+
+.phero__clients {
+  align-self: center;
+}
+
+/* One hairline in the whole strip, and it sits under the label. There were
+   five -- one over the label, one under it and one under each of the three
+   marks -- which drew a small table around three logos and made the ruling the
+   loudest thing in the column. */
+.phero__byline {
+  margin: 0 0 clamp(1.125rem, 2.4vw, 1.625rem);
+  padding-bottom: clamp(0.75rem, 1.6vw, 1rem);
+  border-bottom: 1px solid var(--rule);
+  color: var(--caption);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-wrap: balance;
+}
+
+/* Stacked in their own column. Three wide wordmarks in a row do not fit 15rem
+   without shrinking past reading size. Below 60em the column becomes a row. */
+ul.phero__by {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 2.75rem);
+  margin: 0;
+  padding: 0;
+  max-width: none;
+  list-style: none;
+}
+
+@media (min-width: 60em) {
+  /* Stacked on one rhythm, each mark centred in its row. Ranged left they came
+     out ragged -- every one of these files carries its own margin of whitespace,
+     so three marks aligned on their boxes are not aligned on their ink -- and
+     centring is what hides that. The rows used to be ruled as well; the rules
+     are gone and the spacing does the work. */
+  ul.phero__by {
+    display: grid;
+    grid-auto-rows: minmax(3.25rem, auto);
+    gap: clamp(1rem, 2.4vw, 1.75rem);
+  }
+
+  ul.phero__by > li {
+    justify-content: center;
+  }
+}
+
+/* Levelled for this column, not for the belt. The per-logo heights further up
+   are tuned against each other in a wide rolling strip; three of them stacked
+   in a 15rem column read at different weights, and Schuetzengarten worst of all
+   -- it is a knockout mark, so its box is almost solid ink where the two
+   wordmarks beside it are mostly air. Its box comes down until the ink matches
+   theirs. */
+.phero__by .proof__logo {
+  max-height: 3.25rem;
+}
+
+.phero__by .proof__logo--schuetzengarten {
+  height: 2.625rem;
+}
+
+.phero__by .proof__logo--chiefs {
+  height: 3.25rem;
+}
+
+.phero__by .proof__logo--stutzer {
+  height: 2.75rem;
+}
+
+ul.phero__by > li {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.phero__title {
+  margin: 0;
+  max-width: 18ch;
+  font-size: clamp(2rem, 1.15rem + 3.1vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.phero__title em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.phero__lead {
+  margin: clamp(1rem, 2.2vw, 1.5rem) 0 0;
+  max-width: 46ch;
+  color: var(--caption);
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.phero__act {
+  margin: clamp(1.5rem, 3vw, 2.25rem) 0 0;
+}
+
+/* --- The one-line explainer ---------------------------------------------
+   The whole page in one breath, before any of the argument for it, on the home
+   page's pitch slab rather than on an object of its own: the same green, the
+   same 98rem measure, the same corner radius and the same pattern corner in the
+   same place. Two dark slabs on one site that nearly match is worse than one
+   that repeats. */
+/* The band the slab sits in, built exactly like the home page's pitch band: the
+   page's vertical rules run through it, a hairline crosses the top, and the slab
+   sits inside the guides rather than floating between two bands with the rules
+   passing underneath it. */
+.pexplainband {
+  --band-pad: clamp(2rem, 5vw, 4rem);
+  padding: var(--band-pad) var(--slab-gutter) var(--band-pad);
+  background-color: var(--bone);
+  background-image: linear-gradient(var(--rule), var(--rule));
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  background-position: 0 var(--band-pad);
+}
+
+.pexplainband.guides {
+  border-top: 0;
+  /* The slab closes the band. Its own bottom edge is the separator, so the band
+     under it does not need to open on a second hairline three rems lower, and
+     the white between the two was reading as a missing section. */
+  padding-bottom: 0;
+}
+
+.pexplainband + .pband.guides {
+  border-top: 0;
+  padding-top: clamp(2.75rem, 5.5vw, 4.5rem);
+}
+
+.pexplain {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: 98rem;
+  margin: 0 auto;
+  padding: clamp(2.25rem, 5vw, 3.75rem) clamp(2rem, 4vw, 3.75rem);
+  border-radius: 0.4375rem;
+  background: var(--green);
+}
+
+/* The same corner the pitch slab carries, at the same module and the same
+   diagonal falloff. */
+.pexplain .pat {
+  background-image: url('/assets/pattern.svg');
+  background-size: 380px auto;
+  background-position: left bottom;
+  background-repeat: repeat;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.24;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to top right, #000 0%, transparent 48%);
+  mask-image: linear-gradient(to top right, #000 0%, transparent 48%);
+}
+
+/* Two columns, the same way the home page's pitch slab runs: the claim on the
+   left and the thing it is a claim about on the right. */
+.pexplain__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 3rem);
+  align-items: center;
+}
+
+@media (min-width: 56em) {
+  .pexplain__inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    /* Every child here is placed by hand. There are three of them in a two-track
+       grid, and auto-placement read that as note-goes-top-right, picture-wraps-
+       to-row-two -- which put the animation underneath the claim at half width
+       and left the whole right-hand half of the slab as a 629x349 hole. The
+       claim and its note are one column of copy; the picture is the other, and
+       it spans both rows. */
+    grid-template-rows: max-content max-content;
+    column-gap: clamp(1.75rem, 4vw, 3rem);
+    /* Tighter than the column gap: the note belongs to the sentence above it,
+       and at the full gap it read as a third, unrelated item. */
+    row-gap: clamp(0.875rem, 1.6vw, 1.25rem);
+    align-content: center;
+  }
+
+  .pexplain__text {
+    grid-area: 1 / 1;
+    align-self: end;
+  }
+
+  .pexplain__note {
+    grid-area: 2 / 1;
+    align-self: start;
+  }
+
+  .pexplain__art {
+    grid-area: 1 / 2 / 3 / 3;
+    align-self: center;
+  }
+}
+
+/* The animation keeps its own pale well: it is a picture of two windows on a
+   desk, and windows need a surface to be on. */
+.pexplain__art {
+  display: grid;
+  place-items: center;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border-radius: 0.5rem;
+  background-image: linear-gradient(
+    158deg,
+    color-mix(in srgb, var(--sage) 10%, #ffffff) 0%,
+    color-mix(in srgb, var(--sage) 26%, #ffffff) 100%
+  );
+  box-shadow: inset 0 0 0 1px rgba(42, 35, 32, 0.09);
+}
+
+.pexplain__text {
+  margin: 0;
+  max-width: 24ch;
+  color: var(--on-dark);
+  font-size: clamp(1.25rem, 0.9rem + 1.5vw, 2rem);
+  font-weight: 500;
+  line-height: 1.24;
+  letter-spacing: -0.022em;
+  text-wrap: pretty;
+}
+
+.pexplain__text em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+/* One line, quieter than the claim above it and set apart by a rule: it is not
+   part of the sentence, it is the answer to the question the sentence provokes. */
+.pexplain__note {
+  margin: clamp(1.25rem, 2.5vw, 1.75rem) 0 0;
+  padding-top: clamp(1rem, 2vw, 1.375rem);
+  border-top: 1px solid rgba(252, 252, 251, 0.16);
+  max-width: 24ch;
+  color: var(--on-dark-dim);
+  font-size: clamp(0.9375rem, 0.9rem + 0.2vw, 1.0625rem);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+
+/* --- The formats an order arrives in ------------------------------------
+   The checklist's shape -- ruled rows, one line each -- carrying the format's
+   own mark where the tick would be. Chips were tried here and taken back out: a
+   chip holds a word, and the word on its own is not the claim. "Excel" is easy;
+   "Excel, whatever the column order" is the sentence worth making, and it does
+   not fit on a pill.
+
+   A tick would be the wrong mark for these rows in any case. Every one of them
+   is a fact about what turns up, not something Hoshii has confirmed, and five
+   identical ticks say yes five times instead of naming five formats. */
+ul.fmtlist {
+  display: grid;
+  gap: 0;
+  margin: clamp(1.75rem, 4vw, 2.5rem) 0 0;
+  padding: 0;
+  max-width: none;
+  list-style: none;
+  border-top: 1px solid var(--rule);
+}
+
+ul.fmtlist > li {
+  display: grid;
+  grid-template-columns: 1.125rem minmax(0, 1fr);
+  align-items: start;
+  column-gap: 0.875rem;
+  max-width: 52ch;
+  margin: 0;
+  padding: 0.875rem 0;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink);
+  font-size: 1.0625rem;
+  line-height: 1.45;
+}
+
+/* Nudged down to sit on the line's cap height rather than its box, so the mark
+   reads as set with the type instead of floating above it. */
+.fmtlist__ico {
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-top: 0.1875rem;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* --- What a Skill is: a definition, built as one -------------------------
+   The page's preamble, and it had been built as a fifth capability band: an h2,
+   a lede and five ruled rows, which is the exact shape of the four claims under
+   it. Two identical objects in a row read as one object repeated, so the first
+   thing this page did was show the reader the same thing twice.
+
+   A panel instead, and deliberately subordinate: the heading a step under the
+   band headings, the terms a step under body. What goes *up* is the definition
+   itself -- it was set in the body grey at body size, so the one sentence the
+   section exists to deliver read as throat-clearing before the list. */
+.skilldef {
+  position: relative;
+  display: grid;
+  gap: clamp(1.25rem, 3vw, 1.75rem);
+  /* Centred in the band. At 72rem inside an 88rem one it was ranged left, so
+     every band on the page ran to the same two edges except this one, which
+     stopped a hand's width short on the right and nowhere on the left. */
+  margin-inline: auto;
+  padding: clamp(1.5rem, 3.5vw, 2.25rem);
+  max-width: 72rem;
+  border: 1px solid var(--rule);
+  border-radius: 0.5rem;
+  background: var(--white);
+}
+
+/* Restated in full: the wrapper takes this out of `.doc__body > h2`'s reach,
+   and it wants to be smaller than that anyway. This heading names a definition;
+   the four below it name claims, and they should not arrive at one size. */
+.skilldef h2 {
+  margin: 0;
+  max-width: 20ch;
+  color: var(--ink);
+  font-size: clamp(1.375rem, 1rem + 1.1vw, 1.875rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.024em;
+}
+
+.skilldef__def {
+  margin: clamp(0.5rem, 1.2vw, 0.75rem) 0 0;
+  max-width: 34ch;
+  color: var(--ink);
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  font-weight: 500;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+/* The one line the definition does not carry: who runs a Skill, and that a
+   person approves. Quieter than the definition above it -- it is the caveat,
+   not the claim -- but it is the sentence that answers the objection this
+   audience actually arrives with. */
+.skilldef__note {
+  margin: clamp(0.75rem, 1.6vw, 1rem) 0 0;
+  max-width: 32ch;
+  color: var(--caption);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+/* The right half. It sets up the problem in one sentence and lets the list
+   answer it -- the formats used to be named in the prose and again in the rows
+   underneath, which is the section saying the same thing twice. */
+.skilldef__lede {
+  margin: clamp(0.5rem, 1.2vw, 0.75rem) 0 0;
+  max-width: 44ch;
+  color: var(--caption);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Inside the panel the list opens straight under its lede: the band-sized gap
+   it carries on its own would put a hole in a column that is already short. */
+.skilldef .fmtlist {
+  margin-top: clamp(1rem, 2.2vw, 1.5rem);
+}
+
+/* --- The definition, running ---------------------------------------------
+   The left column is short by design and the panel's height is set by the
+   formats beside it, so under the two paragraphs sat a column of nothing. The
+   definition goes there as a loop: three beats the Agent runs, and then the one
+   that is a person's, which arrives *over* the three rather than under them.
+   Approving is not a fourth thing the Skill does -- it is the run stopping to
+   wait -- and as a fourth bullet it read as one more step in the machine.
+
+   Built out of the site's own rules and dots rather than a screenshot, so it is
+   the definition demonstrated and not a picture of a product.
+
+   Pushed to the foot of the column, so it settles on the formats list's last
+   row rather than floating halfway down a gap. */
+.skillrun {
+  margin-top: clamp(1.75rem, 4vw, 2.5rem);
+  padding-top: clamp(1rem, 2.2vw, 1.375rem);
+  border-top: 1px solid var(--rule);
+}
+
+.skillrun__name {
+  margin: 0 0 0.75rem;
+  color: var(--caption);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* The stage the seal lays over. */
+.skillrun__body {
+  position: relative;
+}
+
+ul.skillrun__steps {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  max-width: none;
+  list-style: none;
+  animation: skillrun-recede 7s var(--ease) infinite;
+}
+
+.skillrun__step {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.9375rem;
+  line-height: 1.3;
+  /* The waiting state, which is also what a reader with reduced motion and a
+     reader whose script never ran both see -- legible either way. */
+  opacity: 0.38;
+  animation: skillrun-lit 7s var(--ease) infinite;
+  animation-delay: calc(var(--i) * 0.65s);
+}
+
+.skillrun__dot {
+  flex: 0 0 auto;
+  width: 0.5rem;
+  height: 0.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  animation: skillrun-fill 7s var(--ease) infinite;
+  animation-delay: calc(var(--i) * 0.65s);
+}
+
+/* The person's beat, over the machine's. Green rather than the accent the dots
+   take: the site's green is the human side of every one of these scenes. */
+.skillrun__seal {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0;
+  max-width: none;
+  /* A scrim of the panel's own ground, so the words land on something rather
+     than across the middle of the row behind them. Not opaque: the three beats
+     stay faintly there, which is what says the run finished and is waiting
+     rather than that it was replaced. */
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--green);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.012em;
+  opacity: 0;
+  animation: skillrun-seal 7s var(--ease) infinite;
+}
+
+.skillrun__tick {
+  flex: 0 0 auto;
+  width: 1.125rem;
+  height: 1.125rem;
+  fill: none;
+  stroke: var(--green);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@keyframes skillrun-lit {
+  0%,
+  3% {
+    opacity: 0.38;
+  }
+  9%,
+  78% {
+    opacity: 1;
+  }
+  86%,
+  100% {
+    opacity: 0.38;
+  }
+}
+
+@keyframes skillrun-fill {
+  0%,
+  3% {
+    background: transparent;
+    border-color: var(--rule);
+  }
+  9%,
+  78% {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  86%,
+  100% {
+    background: transparent;
+    border-color: var(--rule);
+  }
+}
+
+/* The three steps drop back while the seal is over them, so the seal is read
+   rather than the list behind it. */
+@keyframes skillrun-recede {
+  0%,
+  42% {
+    opacity: 1;
+  }
+  50%,
+  80% {
+    opacity: 0.16;
+  }
+  88%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes skillrun-seal {
+  0%,
+  42% {
+    opacity: 0;
+    translate: 0 0.375rem;
+  }
+  50%,
+  80% {
+    opacity: 1;
+    translate: 0 0;
+  }
+  88%,
+  100% {
+    opacity: 0;
+    translate: 0 0.375rem;
+  }
+}
+
+/* Still, the loop becomes the list it is: three beats, all on, and the person's
+   step under them rather than over them -- an overlay nothing animates into is
+   just something covering the text. */
+@media (prefers-reduced-motion: reduce) {
+  .skillrun__step,
+  .skillrun__dot,
+  ul.skillrun__steps,
+  .skillrun__seal {
+    animation: none;
+  }
+
+  .skillrun__step,
+  ul.skillrun__steps {
+    opacity: 1;
+  }
+
+  .skillrun__dot {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .skillrun__seal {
+    position: static;
+    justify-content: flex-start;
+    margin-top: 0.75rem;
+    background: none;
+    opacity: 1;
+    translate: none;
+  }
+}
+
+@media (min-width: 60em) {
+  .skilldef {
+    /* Definition left, formats right, split by a rule rather than by a gap. The
+       left track is deliberately the narrower of the two: it is the primer, and
+       the reader came for the half on the right.
+
+       The divider is a border on the right-hand child, not a third grid track:
+       a track would need its own gap either side and the two halves would stop
+       being one object. Negative margin plus matching padding puts the line in
+       the middle of the gap. */
+    grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+    column-gap: clamp(2.5rem, 5vw, 4.5rem);
+    align-items: stretch;
+  }
+
+  .skilldef__reads {
+    margin-left: calc(clamp(2.5rem, 5vw, 4.5rem) / -2);
+    padding-left: calc(clamp(2.5rem, 5vw, 4.5rem) / 2);
+    border-left: 1px solid var(--rule);
+  }
+
+  /* The column is stretched to the panel's height by the formats beside it, so
+     the loop can sit on its foot instead of hanging under the paragraphs. */
+  .skilldef__head {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .skilldef__head .skillrun {
+    margin-top: auto;
+  }
+}
+
+/* --- What it learns, and the card index ---------------------------------
+   The picture goes beside the paragraph rather than under it. Stacked, a
+   photograph adds its entire height to the band; in the column a four-line
+   paragraph was leaving empty it costs nothing, and the band stays the height
+   of one idea.
+
+   Square, from a 4:5 source, held on the upper third: the subject is the hand
+   finding the right card, and the bottom of the frame is depth of field. */
+.learnrow {
+  display: grid;
+  gap: clamp(1.5rem, 3.5vw, 2.25rem);
+  margin: 0;
+  align-items: start;
+}
+
+/* Heading, qualifier and paragraph as one block, so the column has the height
+   to stand against the picture instead of four lines and a hole. */
+.learnrow__block {
+  display: grid;
+  gap: clamp(0.875rem, 1.8vw, 1.25rem);
+}
+
+@media (min-width: 60em) {
+  /* Copy left, picture hard against the band's right edge. Two fixed tracks
+     ranged left was worse: on an 88rem band it left the whole right third empty
+     and the picture floated in the middle of nothing. The copy track is `1fr`
+     and the paragraph caps itself at its own measure inside it, so the gap
+     between the two grows with the band instead of the void doing it. */
+  /* Both columns start at the top of the row. Centred against a picture half a
+     metre tall, the paragraph floated down to the picture's middle and left a
+     void between the heading and the words that answer it -- the heading read
+     as having nothing under it. */
+  .learnrow {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+    column-gap: clamp(2.5rem, 5vw, 4rem);
+    align-items: start;
+  }
+
+  .learnrow__shot {
+    justify-self: end;
+  }
+}
+
+.learnrow__copy {
+  margin: 0;
+  max-width: 44ch;
+}
+
+.learnrow__shot {
+  margin: 0;
+  width: min(26rem, 80vw);
+  border-radius: 0.4375rem;
+  overflow: hidden;
+  background: var(--wash);
+}
+
+/* Landscape out of a 4:5 source, held high on the frame. Square, it was both
+   smaller than the band could carry and taller than the paragraph beside it;
+   4:3 is wider without being taller, which is the whole point of putting it
+   here rather than under the copy. */
+.learnrow__shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: 50% 30%;
+}
+
+/* --- Copy on the left, the thing it is about on the right ----------------
+   The band is 88rem. A paragraph caps itself at a reading measure long before
+   that, so anything set under it sits in the left third with two thirds of
+   white beside it. This puts the evidence at the far edge instead. */
+.bandrow {
+  display: grid;
+  gap: clamp(1.75rem, 3.5vw, 2.5rem);
+  margin: clamp(1.25rem, 2.5vw, 1.75rem) 0 0;
+  align-items: center;
+}
+
+@media (min-width: 60em) {
+  .bandrow {
+    grid-template-columns: minmax(0, 1fr) max-content;
+    column-gap: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .bandrow > .mailapps {
+    justify-self: end;
+  }
+}
+
+.bandrow__copy {
+  margin: 0;
+  max-width: 44ch;
+}
+
+/* The table is a wider object than two mail marks, so this row waits for a
+   wider band than .bandrow's own 60em: split at 60em the copy column came out
+   at about 300px and the lede ran six lines against a four-line table. */
+.bandrow--match {
+  margin-top: clamp(0.875rem, 1.8vw, 1.25rem);
+  grid-template-columns: none;
+}
+
+/* The row's own gap sets the distance to the copy, and the band's padding sets
+   the distance to its foot. The wrap's margins are what it needs standing on
+   its own and here they only double both. */
+.bandrow--match > .ptable__wrap {
+  margin-block: 0;
+}
+
+@media (min-width: 75em) {
+  .bandrow--match {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 36rem);
+    align-items: start;
+  }
+
+  .bandrow--match > .ptable__wrap {
+    justify-self: end;
+  }
+}
+
+/* --- The two inboxes it runs inside --------------------------------------
+   Named products, so their own marks. The band used to carry two frosted
+   photographs of a desk, which showed neither Outlook nor Gmail. */
+ul.mailapps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.75rem, 2vw, 1.25rem);
+  margin: 0;
+  padding: 0;
+  max-width: none;
+  list-style: none;
+}
+
+ul.mailapps > li.mailapp {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+  padding: 1.0625rem 1.75rem 1.0625rem 1.375rem;
+  border-radius: 0.5rem;
+  background: var(--white);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+/* Heights differ per mark rather than widths: the Gmail M is square and the
+   Outlook envelope is wide, and one width would read as two sizes. */
+.mailapp__mark {
+  display: block;
+  width: auto;
+  height: var(--h, 1.5rem);
+  object-fit: contain;
+}
+
+.mailapp__name {
+  color: var(--ink);
+  font-size: 1.1875rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
 /* --- The founders --------------------------------------------------------
    A photograph, then the three of them named under it. The page used to open
    this section on three green tiles carrying initials, which is a placeholder
@@ -7146,14 +9659,16 @@ a.story__card:focus-visible .story__go {
    The ERP is its own window rather than a panel in the same card, so the
    picture says what actually happens: a second system is written into, not a
    section of the mail client. */
-.deskart {
-  container-type: inline-size;
-  display: grid;
-  gap: clamp(0.4375rem, 1.8cqw, 0.75rem);
-  width: min(100%, 30rem);
-}
+/* A stage with a caption over it, not a stack. Every beat lives in the same cell
+   and hands the stage to the next one, so at any moment the picture is showing
+   one thing. Stacked, all three arrived and none of them left, and the last
+   frame of the sequence was everything the scene had to say at once. */
+/* --- The two windows -----------------------------------------------------
+   The chrome the sequence runs inside: a mail client and an order entry screen,
+   drawn once and shared by every beat. This is geometry only. The timing lives
+   with the beats below, so a change to one cannot silently take the other with
+   it -- which is exactly what happened when they were interleaved. */
 
-/* One window chrome, two windows. */
 .win {
   border-radius: 0.4375rem;
   background: var(--white);
@@ -7174,7 +9689,6 @@ a.story__card:focus-visible .story__go {
   font-weight: 700;
 }
 
-/* Three dots, the way every window on a desk has them. */
 .win__dots {
   flex: 0 0 auto;
   width: clamp(0.9375rem, 4cqw, 1.375rem);
@@ -7241,7 +9755,6 @@ a.story__card:focus-visible .story__go {
   line-height: 1.2;
 }
 
-/* The whole difficulty, in one line of somebody else's shorthand. */
 .mail__text {
   margin: 0;
   color: var(--ink);
@@ -7259,64 +9772,6 @@ a.story__card:focus-visible .story__go {
   font-size: clamp(0.3125rem, 1.4cqw, 0.5rem);
 }
 
-/* What a person would have had to know, resolving one at a time. */
-.resolve {
-  display: grid;
-  gap: 0.1875rem;
-  margin: 0;
-  padding: 0 clamp(0.25rem, 1.2cqw, 0.5rem);
-  list-style: none;
-}
-
-.resolve li {
-  display: flex;
-  align-items: baseline;
-  gap: clamp(0.25rem, 1.2cqw, 0.4375rem);
-  opacity: 0;
-  animation: desk-resolve 9s calc(1.4s + var(--i) * 0.7s) infinite;
-}
-
-.resolve__said {
-  color: var(--caption);
-  font-size: clamp(0.375rem, 1.6cqw, 0.5625rem);
-  font-style: italic;
-  white-space: nowrap;
-}
-
-.resolve__to {
-  color: var(--accent);
-  font-size: clamp(0.375rem, 1.5cqw, 0.5rem);
-}
-
-.resolve__means {
-  color: var(--ink);
-  font-size: clamp(0.375rem, 1.6cqw, 0.5625rem);
-  font-weight: 700;
-}
-
-/* The second window arrives once the two are resolved. */
-.win--erp {
-  opacity: 0;
-  animation: desk-open 9s 3s infinite;
-}
-
-.erp__lines {
-  display: grid;
-  gap: 0.1875rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.erp__lines li {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding-bottom: 0.1875rem;
-  border-bottom: 1px solid var(--rule);
-}
-
 .erp__item {
   color: var(--ink);
   font-size: clamp(0.4375rem, 1.85cqw, 0.6875rem);
@@ -7331,66 +9786,590 @@ a.story__card:focus-visible .story__go {
   white-space: nowrap;
 }
 
-.erp__foot {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  margin: 0.125rem 0 0;
-}
-
 .erp__when {
   color: var(--caption);
   font-size: clamp(0.375rem, 1.55cqw, 0.5625rem);
 }
 
-/* Still a person's to press: nothing posts on its own. */
+/* --- The record's own furniture -----------------------------------------
+   REBUILT 2026-08-29, deleted by the same block replacement that took the
+   animation declarations. `.erp__item`, `.erp__qty` and `.erp__when` survived
+   and their three containers did not, which is why the entry came out as a
+   bulleted list with a full-size "Confirm" under it: with no reset the list
+   drew its markers, and with no rule the button inherited body size and became
+   the largest thing in a window whose type is seven pixels. */
+.erp__lines {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.erp__lines li {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(0.25rem, 1.2cqw, 0.5rem);
+  margin: 0;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+/* The quantity is the column a person actually checks, so it holds the right
+   edge rather than sitting wherever the item name happens to stop. */
+.erp__lines .erp__qty {
+  margin-left: auto;
+}
+
+.erp__foot {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.25rem, 1.2cqw, 0.5rem);
+  margin: 0.1875rem 0 0;
+}
+
+/* Green, not accent. In this scene the accent belongs to the highlighter --
+   orange is what Hoshii noticed -- and this is the customer's own ERP control.
+   Painting it Hoshii's colour would say Hoshii pressed it, and the caption on
+   this beat is "you approve". */
 .erp__btn {
   margin-left: auto;
-  padding: 0.3em 0.7em;
+  padding: 0.34em 0.85em;
   border-radius: 999px;
-  background: var(--accent);
-  color: #ffffff;
-  font-size: clamp(0.3125rem, 1.5cqw, 0.5rem);
+  background: var(--green);
+  color: var(--bone);
+  font-size: clamp(0.375rem, 1.6cqw, 0.5625rem);
   font-weight: 700;
+  line-height: 1.2;
   white-space: nowrap;
 }
 
-@keyframes desk-resolve {
-  0%,
-  2% {
-    opacity: 0;
-    translate: -0.3125rem 0;
-  }
-  9%,
-  92% {
-    opacity: 1;
-    translate: 0 0;
-  }
-  98%,
-  100% {
-    opacity: 0;
-  }
+/* --- 5 -- confirmed ------------------------------------------------------
+   The one frame that fills the stage. Every other beat is a window sitting on a
+   desk; this is the state the desk is in once a person has approved, so it is
+   not a sixth window -- the whole frame goes green. That is also what makes it
+   land: four pale frames in a row and then the ground changes.
+
+   Nothing in here is a control. The approving has happened, and it happened
+   because somebody did it -- the same rule the hand-off card on the home page
+   runs on. No button, nothing to press, nothing pressing itself. */
+.deskart .seq__scene--d {
+  align-self: stretch;
 }
 
-/* Opens, the way a window does. */
+.done {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: clamp(0.25rem, 1.3cqw, 0.5rem);
+  height: 100%;
+  min-height: clamp(6rem, 26cqw, 8.5rem);
+  padding: clamp(0.875rem, 4cqw, 1.5rem);
+  border-radius: 0.5rem;
+  background: var(--green);
+  text-align: center;
+}
+
+.done__seal {
+  display: block;
+  width: clamp(1.375rem, 6.5cqw, 2.125rem);
+  margin-bottom: clamp(0.125rem, 0.8cqw, 0.3125rem);
+}
+
+.done__seal svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.done__ring {
+  stroke: rgba(252, 252, 251, 0.34);
+  stroke-width: 2;
+  transform-origin: center;
+}
+
+/* Dash length is the path's own length, near enough: too short and the tick is
+   already half drawn at rest, too long and it starts late. */
+.done__tick {
+  stroke: var(--bone);
+  stroke-width: 3.4;
+  stroke-dasharray: 26;
+  stroke-dashoffset: 26;
+}
+
+.done__head {
+  display: block;
+  color: var(--bone);
+  font-size: clamp(0.625rem, 3cqw, 0.9375rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.done__meta {
+  display: block;
+  color: rgba(252, 252, 251, 0.62);
+  font-size: clamp(0.375rem, 1.75cqw, 0.625rem);
+  line-height: 1.3;
+}
+
+/* A flex item sits at its automatic minimum and will not shrink, so without
+   this a long customer name pushes the timestamp out of the bar instead of
+   ellipsing -- the same trap `.lmail__who` hit on the home page. */
+.mail__who {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.deskart {
+  --seq-dur: 20s;
+  container-type: inline-size;
+  display: grid;
+  gap: clamp(0.625rem, 2.6cqw, 1rem);
+  width: min(100%, 30rem);
+}
+
+/* Beats one and two are the same window with a highlight added, so one scene
+   owns both; three and four are their own pictures. */
+.deskart .seq__scene--a { animation-name: seq-scene-a; }
+.deskart .seq__scene--b { animation-name: seq-scene-b; }
+.deskart .seq__scene--c { animation-name: seq-scene-c; }
+.deskart .seq__scene--d { animation-name: seq-scene-d; }
+
+/* Top-aligned, not centred. The three scenes are 116, 103 and 108 tall, and
+   centring them in one cell moved the picture up and down on every beat --
+   which is what read as the alignment being off. Anchored to the top edge the
+   windows all open from the same line, and the stage reads as one surface whose
+   contents change rather than three pictures taking turns.
+
+   No `min-height`: all three scenes sit in `grid-area: 1 / 1`, so the row is
+   already the height of the tallest and nothing below it can move. The clamp
+   that used to be here was set to 172px against a tallest scene of 116, which
+   is where the 56px of dead air under every beat came from. */
+.deskart .seq__stage {
+  align-items: start;
+}
+
+/* `.seq__scene` sets `align-self: center` on itself, which beats the container's
+   `align-items` -- the stage was top-aligned and every scene ignored it. */
+.deskart .seq__scene {
+  align-self: start;
+}
+
+/* --- A sequence: ticks, a caption, and a stage --------------------------
+   Chrome for a scene that runs as numbered frames rather than as one
+   accumulating picture. It was written to be shared with the home page's
+   knowledge card, and it is not: that card was rebuilt on its own `.lrn__*` set
+   and `.seq__*` now has exactly one host, `.deskart`. Kept as its own layer
+   anyway -- ticks, captions and stage are the same problem wherever a scene has
+   beats -- but the timings below are free to move, because nothing else reads
+   them.
+
+   The spine is FIVE beats on one 20s clock, windows 0-18 / 19-36 / 37-54 /
+   55-75 / 76-96, and everything clears by 100 so the reset happens with nothing
+   on screen. Every percentage in the scene is written against those windows and
+   there are no `animation-delay`s: a delay shifts a whole cycle, and thirty-odd
+   elements would not survive their first loop together. Move a window and every
+   block that references it has to move with it. */
+.seq__prog {
+  display: grid;
+  /* One track per beat. Five since the confirmed frame was added: left at four
+     the fifth tick wrapped onto a second row and the bar silently grew a line. */
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(0.1875rem, 1.2cqw, 0.3125rem);
+  margin: 0 0 clamp(0.4375rem, 2cqw, 0.6875rem);
+  padding: 0;
+}
+
+.seq__tick {
+  position: relative;
+  height: 2px;
+  border-radius: 999px;
+  background: rgba(42, 35, 32, 0.12);
+  overflow: hidden;
+}
+
+/* Four beats is one more than a reader will hold without help, and a caption
+   that swaps has no past or future in it: it says what is happening and nothing
+   about how much of this there is. Each tick fills across its own beat and stays
+   filled, so the row reads as one bar broken into four steps. */
+.seq__tick::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--accent);
+  transform-origin: left center;
+  scale: 0 1;
+  animation: var(--seq-dur, 20s) linear infinite both;
+}
+
+.seq__tick--1::after { animation-name: seq-tick-1; }
+.seq__tick--2::after { animation-name: seq-tick-2; }
+.seq__tick--3::after { animation-name: seq-tick-3; }
+.seq__tick--4::after { animation-name: seq-tick-4; }
+.seq__tick--5::after { animation-name: seq-tick-5; }
+
+/* FIVE beats on the 20s clock, not four (2026-08-29). Windows are
+   0-18 / 19-36 / 37-54 / 55-75 / 76-96, and every percentage in this scene --
+   ticks, captions, scenes and each element inside them -- is written against
+   them. There are no `animation-delay`s anywhere: a delay shifts a whole cycle,
+   and thirty-odd independently animated elements would not survive their first
+   loop together. Change one window and every block below has to move with it. */
+@keyframes seq-tick-1 {
+  0% { scale: 0 1; }
+  18%, 96% { scale: 1 1; }
+  98%, 100% { scale: 0 1; }
+}
+
+@keyframes seq-tick-2 {
+  0%, 19% { scale: 0 1; }
+  36%, 96% { scale: 1 1; }
+  98%, 100% { scale: 0 1; }
+}
+
+@keyframes seq-tick-3 {
+  0%, 37% { scale: 0 1; }
+  54%, 96% { scale: 1 1; }
+  98%, 100% { scale: 0 1; }
+}
+
+@keyframes seq-tick-4 {
+  0%, 55% { scale: 0 1; }
+  75%, 96% { scale: 1 1; }
+  98%, 100% { scale: 0 1; }
+}
+
+@keyframes seq-tick-5 {
+  0%, 76% { scale: 0 1; }
+  94%, 96% { scale: 1 1; }
+  98%, 100% { scale: 0 1; }
+}
+
+/* Names the beat. Four labels in one cell, one per frame. */
+.seq__step {
+  display: grid;
+  justify-items: start;
+  margin: 0;
+  /* Two lines' worth: the captions are sentences, and a row that grew with them
+     would move the stage under the reader. */
+  min-height: 2.8em;
+  color: var(--caption);
+  font-size: clamp(0.5625rem, 2.6cqw, 0.75rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+}
+
+.seq__s {
+  grid-area: 1 / 1;
+  align-self: start;
+  max-width: 34ch;
+  text-wrap: pretty;
+  opacity: 0;
+  animation: var(--seq-dur, 20s) linear infinite both;
+}
+
+.seq__s--1 { animation-name: seq-step-1; }
+.seq__s--2 { animation-name: seq-step-2; }
+.seq__s--3 { animation-name: seq-step-3; }
+.seq__s--4 { animation-name: seq-step-4; }
+.seq__s--5 { animation-name: seq-step-5; }
+
+@keyframes seq-step-1 {
+  0% { opacity: 0; animation-timing-function: var(--ease-out); }
+  3%, 16% { opacity: 1; animation-timing-function: var(--ease-in); }
+  19%, 100% { opacity: 0; }
+}
+
+@keyframes seq-step-2 {
+  0%, 19% { opacity: 0; animation-timing-function: var(--ease-out); }
+  22%, 34% { opacity: 1; animation-timing-function: var(--ease-in); }
+  37%, 100% { opacity: 0; }
+}
+
+@keyframes seq-step-3 {
+  0%, 37% { opacity: 0; animation-timing-function: var(--ease-out); }
+  40%, 52% { opacity: 1; animation-timing-function: var(--ease-in); }
+  55%, 100% { opacity: 0; }
+}
+
+@keyframes seq-step-4 {
+  0%, 55% { opacity: 0; animation-timing-function: var(--ease-out); }
+  58%, 73% { opacity: 1; animation-timing-function: var(--ease-in); }
+  76%, 100% { opacity: 0; }
+}
+
+@keyframes seq-step-5 {
+  0%, 76% { opacity: 0; animation-timing-function: var(--ease-out); }
+  79%, 94% { opacity: 1; animation-timing-function: var(--ease-in); }
+  98%, 100% { opacity: 0; }
+}
+
+/* One cell, held open to the tallest frame so nothing under it moves as the
+   scenes change. */
+.seq__stage {
+  display: grid;
+  align-items: center;
+}
+
+.seq__scene {
+  grid-area: 1 / 1;
+  align-self: center;
+  opacity: 0;
+  animation: var(--seq-dur, 20s) linear infinite both;
+}
+
+/* Two shapes of scene: one that owns a pair of beats, and one that owns a
+   single beat. Which a host uses depends on whether the picture changes between
+   the two beats or only its contents do. */
+@keyframes seq-scene-a {
+  0% { opacity: 0; translate: 0 0.5rem; animation-timing-function: var(--ease-out); }
+  3%, 34% { opacity: 1; translate: 0 0; animation-timing-function: var(--ease-in); }
+  37%, 100% { opacity: 0; translate: 0 -0.375rem; }
+}
+
+@keyframes seq-scene-b {
+  0%, 36% { opacity: 0; translate: 0 0.5rem; animation-timing-function: var(--ease-out); }
+  40%, 52% { opacity: 1; translate: 0 0; animation-timing-function: var(--ease-in); }
+  55%, 100% { opacity: 0; translate: 0 -0.375rem; }
+}
+
+@keyframes seq-scene-c {
+  0%, 54% { opacity: 0; translate: 0 0.5rem; animation-timing-function: var(--ease-out); }
+  58%, 73% { opacity: 1; translate: 0 0; animation-timing-function: var(--ease-in); }
+  76%, 100% { opacity: 0; translate: 0 -0.375rem; }
+}
+
+@keyframes seq-scene-d {
+  0%, 75% { opacity: 0; translate: 0 0.5rem; animation-timing-function: var(--ease-out); }
+  79%, 94% { opacity: 1; translate: 0 0; animation-timing-function: var(--ease-in); }
+  97%, 100% { opacity: 0; translate: 0 -0.375rem; }
+}
+
+/* A scene that owns beats three and four together, for a host whose last two
+   beats are the same picture with different contents. */
+@keyframes seq-scene-bc {
+  0%, 43% { opacity: 0; translate: 0 0.5rem; animation-timing-function: var(--ease-out); }
+  47%, 94% { opacity: 1; translate: 0 0; animation-timing-function: var(--ease-in); }
+  98%, 100% { opacity: 0; translate: 0 -0.375rem; }
+}
+
+/* The mapping is a frame of its own now rather than a caption under the mail,
+   so it is set at the size of a thing you are meant to read. */
+.deskart .seq__scene--b .resolve {
+  display: grid;
+  gap: clamp(0.5rem, 2.4cqw, 0.875rem);
+  margin: 0;
+  padding: clamp(1rem, 4cqw, 1.75rem) clamp(1rem, 4.5cqw, 2rem);
+  border-radius: 0.4375rem;
+  background: var(--white);
+  box-shadow:
+    inset 0 0 0 1px rgba(42, 35, 32, 0.08),
+    0 6px 18px rgba(28, 34, 26, 0.1);
+  list-style: none;
+}
+
+.deskart .seq__scene--b .resolve__said {
+  font-size: clamp(0.5625rem, 2.9cqw, 0.8125rem);
+}
+
+.deskart .seq__scene--b .resolve__means {
+  font-size: clamp(0.5625rem, 2.9cqw, 0.8125rem);
+}
+
+.deskart .seq__scene--b .resolve__to {
+  font-size: clamp(0.5rem, 2.6cqw, 0.75rem);
+}
+
+/* --- What runs the four beats -------------------------------------------
+   REBUILT 2026-08-29. Every one of these declarations had been deleted while
+   the keyframes below survived, so the scene ran with three of its four beats
+   empty: the highlighter never drew (beat two showed a plain mail and the
+   caption claimed Hoshii had noticed something), and the ERP window arrived
+   with the order already in it instead of being written into (beat four, the
+   one moment the whole page is an argument for). Thirteen keyframes were
+   defined and never referenced. Nothing errored; CSS simply drops what it
+   cannot match, the build stayed green and `npm run verify` stayed green.
+
+   If a `desk-*` keyframe is ever added, its declaration belongs here, next to
+   the others, so the pair is visible in one place. */
+.mail__row,
+.resolve li,
+.win--erp,
+.erp__lines li,
+.erp__foot,
+.erp__btn,
+.done__ring,
+.done__head,
+.done__meta {
+  opacity: 0;
+  animation: var(--seq-dur, 20s) linear infinite both;
+}
+
+/* The tick is drawn, so it animates its dash offset rather than its opacity --
+   it must not start from `opacity: 0` with the others. */
+.done__tick {
+  animation: var(--seq-dur, 20s) linear infinite both;
+}
+
+/* 1 -- the mail, a line at a time */
+.mail__meta { animation-name: desk-mail-1; }
+.mail__subj { animation-name: desk-mail-2; }
+.mail__text { animation-name: desk-mail-3; }
+.mail__actions { animation-name: desk-mail-4; }
+
+/* 2 -- the noticing. A highlighter laid behind the phrase and wiped left to
+   right by animating `background-size`, which is what a pen does and what a
+   colour fade does not. It stays on the mail's own frame: recognising the two
+   phrases and resolving them are different beats, and the picture used to skip
+   straight to the answer. `box-decoration-break: clone` so a phrase that wraps
+   is highlighted on both lines rather than getting one long band. */
+.mail__mark {
+  background-image: linear-gradient(
+    color-mix(in srgb, var(--accent) 24%, transparent),
+    color-mix(in srgb, var(--accent) 24%, transparent)
+  );
+  background-repeat: no-repeat;
+  background-position: 0 50%;
+  background-size: 0% 1.05em;
+  border-radius: 0.09375rem;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  animation: var(--seq-dur, 20s) linear infinite both;
+}
+
+.mail__mark--a { animation-name: desk-mark-a; }
+.mail__mark--b { animation-name: desk-mark-b; }
+
+/* 3 -- what each phrase meant, in the order they were marked */
+.resolve li:nth-child(1) { animation-name: desk-resolve-1; }
+.resolve li:nth-child(2) { animation-name: desk-resolve-2; }
+
+/* 4 -- the record opens, is written into, and then waits for a person */
+.win--erp { animation-name: desk-open; }
+.erp__lines li:nth-child(1) { animation-name: desk-write-1; }
+.erp__lines li:nth-child(2) { animation-name: desk-write-2; }
+.erp__foot { animation-name: desk-write-3; }
+.erp__btn { animation-name: desk-stamp; }
+
+/* 5 -- confirmed */
+.done__ring { animation-name: desk-seal-ring; }
+.done__tick { animation-name: desk-seal-tick; }
+.done__head { animation-name: desk-done-1; }
+.done__meta { animation-name: desk-done-2; }
+
+/* --- The four beats, all on one 20s clock ------------------------------
+   1  the mail lands, line by line
+   2  the two phrases that need reading are marked where they sit
+   3  each one resolves underneath
+   4  the order is written into the record, and the button waits for a person
+
+   No `animation-delay` anywhere: every stagger is a percentage of the shared
+   clock, which is the only way a scene of eight independently animated elements
+   can stay in step past its first loop. */
+
+/* 1 -- the mail lands, line by line, inside its own frame */
+@keyframes desk-mail-1 {
+  0% { opacity: 0; translate: 0 -0.375rem; animation-timing-function: var(--ease-out); }
+  4%, 100% { opacity: 1; translate: 0 0; }
+}
+
+@keyframes desk-mail-2 {
+  0%, 4% { opacity: 0; translate: 0 -0.375rem; animation-timing-function: var(--ease-out); }
+  8%, 100% { opacity: 1; translate: 0 0; }
+}
+
+@keyframes desk-mail-3 {
+  0%, 8% { opacity: 0; translate: 0 -0.375rem; animation-timing-function: var(--ease-out); }
+  12%, 100% { opacity: 1; translate: 0 0; }
+}
+
+@keyframes desk-mail-4 {
+  0%, 12% { opacity: 0; translate: 0 -0.375rem; animation-timing-function: var(--ease-out); }
+  16%, 100% { opacity: 1; translate: 0 0; }
+}
+
+/* 2 -- noticing. The highlighter wipes left to right, the way a pen would, and
+   it happens on the frame the mail already owns rather than in a new one. */
+@keyframes desk-mark-a {
+  0%, 21% { background-size: 0% 1.05em; animation-timing-function: var(--ease-move); }
+  25%, 100% { background-size: 100% 1.05em; }
+}
+
+@keyframes desk-mark-b {
+  0%, 26% { background-size: 0% 1.05em; animation-timing-function: var(--ease-move); }
+  30%, 100% { background-size: 100% 1.05em; }
+}
+
+/* 3 -- what each one meant, in the order they were marked */
+@keyframes desk-resolve-1 {
+  0%, 40% { opacity: 0; translate: -0.375rem 0; animation-timing-function: var(--ease-out); }
+  43%, 100% { opacity: 1; translate: 0 0; }
+}
+
+@keyframes desk-resolve-2 {
+  0%, 44% { opacity: 0; translate: -0.375rem 0; animation-timing-function: var(--ease-out); }
+  47%, 100% { opacity: 1; translate: 0 0; }
+}
+
+/* 4 -- the record. Opens from its own top edge, so it unfolds downward rather
+   than inflating from its middle. */
 @keyframes desk-open {
-  0%,
-  2% {
-    opacity: 0;
-    translate: 0 0.5rem;
-    scale: 0.97;
-  }
-  10%,
-  88% {
-    opacity: 1;
-    translate: 0 0;
-    scale: 1;
-  }
-  96%,
-  100% {
-    opacity: 0;
-    scale: 0.97;
-  }
+  0%, 56% { opacity: 0; translate: 0 0.375rem; scale: 0.98; animation-timing-function: var(--ease-out); }
+  59%, 100% { opacity: 1; translate: 0 0; scale: 1; }
+}
+
+/* Written in, a line at a time. This is the claim of the page and the window
+   used to arrive with the order already in it. */
+@keyframes desk-write-1 {
+  0%, 61% { opacity: 0; translate: 0 0.25rem; animation-timing-function: var(--ease-out); }
+  64%, 100% { opacity: 1; translate: 0 0; }
+}
+
+@keyframes desk-write-2 {
+  0%, 65% { opacity: 0; translate: 0 0.25rem; animation-timing-function: var(--ease-out); }
+  68%, 100% { opacity: 1; translate: 0 0; }
+}
+
+@keyframes desk-write-3 {
+  0%, 69% { opacity: 0; translate: 0 0.25rem; animation-timing-function: var(--ease-out); }
+  72%, 100% { opacity: 1; translate: 0 0; }
+}
+
+/* Stamped rather than faded: it is the thing a person reaches for, and nothing
+   posts until they do. */
+@keyframes desk-stamp {
+  0%, 72% { opacity: 0; scale: 0.7; animation-timing-function: var(--ease-spring); }
+  75%, 100% { opacity: 1; scale: 1; }
+}
+
+/* 5 -- the state the desk is in afterwards. The ring lands, the tick is drawn
+   through it, then the two lines arrive under it. Drawn rather than faded: a
+   tick that appears has been printed, a tick that is drawn has been made. */
+@keyframes desk-seal-ring {
+  0%, 78% { opacity: 0; scale: 0.72; animation-timing-function: var(--ease-spring); }
+  82%, 100% { opacity: 1; scale: 1; }
+}
+
+@keyframes desk-seal-tick {
+  0%, 81% { stroke-dashoffset: 26; animation-timing-function: var(--ease-draw); }
+  86%, 100% { stroke-dashoffset: 0; }
+}
+
+@keyframes desk-done-1 {
+  0%, 84% { opacity: 0; translate: 0 0.25rem; animation-timing-function: var(--ease-out); }
+  87%, 100% { opacity: 1; translate: 0 0; }
+}
+
+@keyframes desk-done-2 {
+  0%, 87% { opacity: 0; translate: 0 0.25rem; animation-timing-function: var(--ease-out); }
+  90%, 100% { opacity: 1; translate: 0 0; }
 }
 
 /* --- The Skill hero ------------------------------------------------------
@@ -7475,7 +10454,8 @@ a.story__card:focus-visible .story__go {
    rather than dumped down one side, which is what made the earlier layout read
    as unfinished: the emptiness was lopsided, not large. */
 
-.case {
+.case,
+.art {
   max-width: 48rem;
   margin-inline: auto;
   padding-block: clamp(1.5rem, 4vw, 2.5rem) clamp(2rem, 5vw, 3.5rem);
@@ -7495,7 +10475,13 @@ a.story__card:focus-visible .story__go {
 .art__body > ul:not([class]),
 .art__body > ol:not([class]),
 .art__body > h2,
-.art__body > h3 {
+.art__body > h3,
+/* The article's lede and contents list sit a level above the body, so the
+   measure above never reached them and they ran the full 48rem while the prose
+   under them ran 39rem -- two different left-to-right journeys down one
+   column. Same measure, so every line of reading starts and stops together. */
+.art > .art__lede,
+.art > .toc {
   max-width: 39rem;
 }
 
@@ -7576,9 +10562,15 @@ a.story__card:focus-visible .story__go {
 }
 
 /* The pull quotes break out of the reading rhythm: full span, set large, with
-   the accent rule marking them as lifted rather than as running text. */
+   the accent rule marking them as lifted rather than as running text.
+
+   An article gets the same device from an ordinary Markdoc blockquote, so a
+   writer lifts a line with `> ` and never with markup. The pieces used to carry
+   hand-written <blockquote class="lift"> in the body, which Markdoc escapes:
+   the tags printed on the page as text. */
 .case .lift,
-.case .pull {
+.case .pull,
+.art__body > blockquote {
   margin: clamp(2rem, 4.5vw, 3rem) 0;
   padding: 0 0 0 clamp(1rem, 2.5vw, 1.75rem);
   border: 0;
@@ -7586,7 +10578,8 @@ a.story__card:focus-visible .story__go {
 }
 
 .case .lift__text,
-.case .pull__text {
+.case .pull__text,
+.art__body > blockquote > p {
   margin: 0;
   max-width: 34ch;
   font-size: clamp(1.375rem, 2.2vw, 2rem);
@@ -7613,7 +10606,9 @@ a.story__card:focus-visible .story__go {
    accordion, the component the home page and the FAQ page already share. */
 
 .page--pricing .doc__body > h2,
-.page--order-processing .doc__body > h2 {
+.page--order-processing .doc__body > h2,
+.page--careers .doc__body > h2,
+.page--order-processing .doc__body .learnrow__block > h2 {
   margin: 0;
   max-width: 30ch;
   /* .setup__title's scale, a step down: these open a band inside a page rather
@@ -7663,31 +10658,33 @@ a.story__card:focus-visible .story__go {
   letter-spacing: 0.02em;
 }
 
-/* Photographs and the wide evidence blocks run the band's full width, clear of
-   the prose measure. */
-.page--order-processing .doc__body > .doc__shot,
+/* The wide evidence blocks run the band's full width, clear of the prose
+   measure. The photograph is not one of them: it is a mood shot beside an
+   argument, and at full width in a wide band it was the largest thing on the
+   page, larger than the product animation it is meant to sit behind. */
 .page--order-processing .doc__body > .doc__panels,
-.page--order-processing .doc__body > .ptable__wrap,
+.page--order-processing .doc__body > .fmtlist,
+.page--order-processing .doc__body > .mailapps,
 .page--order-processing .doc__body > .doc__checks {
   margin-inline: 0;
   max-width: none;
 }
 
-/* The format list is five short lines. In one column it was a narrow ladder down
-   the left of an empty band; in two it reads as the set it is, and the section
-   is half as tall. */
-@media (min-width: 62em) {
-  .page--order-processing .doc__body > .doc__checks {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: clamp(2rem, 4vw, 4rem);
-  }
+/* The match table is not one of them either. Four short columns stretched over
+   an 88rem band put three holes in every row and stranded the SKU at the far
+   edge, a full screen-width from the customer it belongs to. Capped, the row is
+   one sweep and the four columns read as one object. The cap is close to what
+   the four columns actually need (about 33rem), so the row ends where the data
+   ends rather than trailing a hand's width of rule past the last SKU. It lands
+   near the lede's own 56ch, which is why the three read as one block. */
+.page--order-processing .doc__body .ptable__wrap {
+  margin-inline: 0;
+  max-width: 36rem;
+}
 
-  /* The rule under a check runs to the end of its own column, so the last item
-     in a column of three would otherwise close the list twice. */
-  .page--order-processing .doc__body > .doc__checks li:last-child {
-    border-bottom: 0;
-  }
+.page--order-processing .doc__body > .doc__shot {
+  margin-inline: 0;
+  max-width: 34rem;
 }
 
 /* The section rule runs the band, not the heading. It was drawn as the h2's own
@@ -7718,10 +10715,14 @@ a.story__card:focus-visible .story__go {
 
 /* The masthead. Full-bleed green, left-set: the claim never crosses into the
    right third, which is the half the pattern corner takes. */
+/* The foot used to come from the facts rail that ran across the bottom of this
+   band, and with the rail gone the button sat flush on the band's edge. The
+   padding is the band's own now, so the masthead has a floor whatever is last
+   in it. */
 .pricehead {
   position: relative;
   overflow: hidden;
-  padding: clamp(2.75rem, 6vw, 5rem) 0 0;
+  padding: clamp(2.75rem, 6vw, 5rem) 0 clamp(2.75rem, 6vw, 5rem);
   background: var(--green);
   color: var(--on-dark);
 }
@@ -7796,65 +10797,10 @@ a.story__card:focus-visible .story__go {
   color: var(--bone);
 }
 
-/* The three things that are true whatever the number turns out to be. A ruled
-   rail across the foot of the band, which is also what gives the masthead a
-   floor instead of stopping wherever the copy ends. */
-.pricehead__facts {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0;
-  margin: clamp(2.5rem, 5vw, 4rem) 0 0;
-  padding: 0;
-  border-top: 1px solid rgba(252, 252, 251, 0.18);
-  list-style: none;
-}
-
-.pricehead__facts li {
-  position: relative;
-  margin: 0;
-  padding: clamp(1.125rem, 2.2vw, 1.5rem) clamp(1rem, 2vw, 1.75rem)
-    clamp(1.75rem, 3.5vw, 2.75rem) 0;
-  color: var(--on-dark);
-  font-size: 0.9375rem;
-  line-height: 1.4;
-}
-
-/* The rules between the cells, not around them: the outer two edges are the
-   band's own margin and do not want a line. */
-.pricehead__facts li + li {
-  padding-left: clamp(1rem, 2vw, 1.75rem);
-  border-left: 1px solid rgba(252, 252, 251, 0.18);
-}
-
-/* A square, not a tick. The wordmark is three rectangles; a checkmark would be
-   the first rounded shape on the page. */
-.pricehead__facts li::before {
-  content: '';
-  display: block;
-  width: 0.5rem;
-  height: 0.5rem;
-  margin: 0 0 0.75rem;
-  background: var(--accent);
-}
-
 @media (max-width: 47.999em) {
   .pricehead .pat {
     width: 64%;
     opacity: 0.22;
-  }
-
-  .pricehead__facts {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .pricehead__facts li + li {
-    padding-left: 0;
-    border-left: 0;
-    border-top: 1px solid rgba(252, 252, 251, 0.18);
-  }
-
-  .pricehead__facts li {
-    padding-bottom: 1.25rem;
   }
 }
 
@@ -7882,15 +10828,19 @@ a.story__card:focus-visible .story__go {
    the air above it, because on a single-column page the heading *is* the band
    boundary. Here the band is a real element with its own rule, so the heading
    only has to be a heading. */
-.pband .doc__body > h2 {
+.pband .doc__body > h2,
+.pband .doc__body .learnrow__block > h2 {
   margin-top: 0;
   padding-top: 0;
   border-top: 0;
   max-width: 24ch;
 }
 
-/* And the lead paragraph is a lead in every band, not only the first one. */
-.pband .doc__body > p:first-of-type {
+/* And the lead paragraph is a lead in every band, not only the first one. The
+   class carries the same voice into the bands where the lead is one column of a
+   row rather than a direct child of the band. */
+.pband .doc__body > p:first-of-type,
+.pband .doc__body .bandrow__lede {
   margin: clamp(0.875rem, 1.8vw, 1.25rem) 0 0;
   max-width: 56ch;
   color: var(--caption);
@@ -7900,84 +10850,78 @@ a.story__card:focus-visible .story__go {
   letter-spacing: 0;
 }
 
-/* --- What sets the number ------------------------------------------------ */
+/* The careers page opens on one button, and the document band's foot padding is
+   sized for a column of prose under it. Under a single control it came out as a
+   band of nothing between the masthead and the first section. */
+.page--careers .doc__band {
+  padding-bottom: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+/* --- The three plans ----------------------------------------------------- */
 
 /* The four drivers against the flat list beside them. Two columns, because the
    page's whole argument is that one side moves and the other does not, and
    stacking them makes that a claim you have to remember rather than see. */
-.pband--drivers .pband__inner {
+.pband--plans .pband__inner {
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.85fr);
   column-gap: clamp(2rem, 4vw, 4rem);
   align-items: start;
 }
 
-.pband--drivers .pband__inner > h2,
-.pband--drivers .pband__inner > p:first-of-type {
+/* The cards run the band; the credits and the slab share the row under them. */
+.pband--plans .pband__inner > .plans {
   grid-column: 1 / -1;
 }
 
-/* A quadrant, ruled rather than boxed. Cards would have made four objects; the
-   rules make one table of four readings, which is what a price driver is. */
-.dials {
+/* How the work on top of the base rate is metered: three ruled lines where a
+   six-line paragraph used to sit. Each is a claim and its consequence in one
+   sentence, which is what the paragraph was hiding by running them together. */
+.creds {
   grid-column: 1;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0;
-  margin: clamp(2rem, 4vw, 3rem) 0 0;
+  margin: 0;
+}
+
+.pband .doc__body .creds__head {
+  margin: 0;
+  max-width: none;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.doc__body .creds__list {
+  margin: clamp(0.875rem, 2vw, 1.25rem) 0 0;
   padding: 0;
   max-width: none;
   list-style: none;
 }
 
-.doc__body .dial {
+.doc__body .creds__list li {
   margin: 0;
-  max-width: none;
-  padding: clamp(1.125rem, 2.2vw, 1.625rem) clamp(1.25rem, 2.5vw, 2rem)
-    clamp(1.5rem, 3vw, 2.25rem) 0;
+  max-width: 52ch;
+  padding: 0.75rem 0;
   border-top: 1px solid var(--rule);
-}
-
-.doc__body .dial:nth-child(even) {
-  padding-right: 0;
-  padding-left: clamp(1.25rem, 2.5vw, 2rem);
-  border-left: 1px solid var(--rule);
-}
-
-/* 22px, so the brand orange clears AA as large text. There is no small orange
-   anywhere on bone for the same reason. */
-.dial__n {
-  display: block;
-  color: var(--accent);
-  font-size: 1.375rem;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
-}
-
-.pband .doc__body .dial__head {
-  margin: 0.75rem 0 0;
-  max-width: none;
-  font-size: clamp(1.0625rem, 1.4vw, 1.25rem);
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.014em;
-}
-
-.pband .doc__body .dial__body {
-  margin: 0.5rem 0 0;
-  max-width: 44ch;
   color: var(--caption);
   font-size: 0.9375rem;
   line-height: 1.55;
+}
+
+.doc__body .creds__list li:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.creds__list strong {
+  color: var(--ink);
+  font-weight: 700;
 }
 
 /* The counterweight: the same green slab the closing band uses, so "included"
    reads as the product rather than as a second list of features. */
 .kit {
   grid-column: 2;
-  margin: clamp(2rem, 4vw, 3rem) 0 0;
+  margin: 0;
   padding: clamp(1.5rem, 2.8vw, 2rem);
   background: var(--green);
   color: var(--on-dark);
@@ -8028,51 +10972,18 @@ a.story__card:focus-visible .story__go {
   top: 0.375rem;
 }
 
-/* The credit mechanism, as a footnote to the band rather than a section of its
-   own: it explains how the number is metered, which nobody reads before they
-   care what the number is. */
-.pband .doc__body .kit__note {
-  /* Under the slab, not under the band. It is the footnote to what is included
-     rather than to the whole section, and set full-width it needed a rule to
-     separate it -- which came out as a hairline stopping halfway across the
-     band, because the text was capped to a measure and the border followed the
-     box. */
-  grid-column: 2;
-  margin: clamp(1rem, 2vw, 1.25rem) 0 0;
-  max-width: none;
-  color: var(--caption);
-  font-size: 0.875rem;
-  line-height: 1.6;
-}
-
 @media (max-width: 61.999em) {
-  .pband--drivers .pband__inner {
+  .pband--plans .pband__inner {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .dials,
-  .kit,
-  .pband .doc__body .kit__note {
+  .creds,
+  .kit {
     grid-column: 1;
-  }
-
-  .pband .doc__body .kit__note {
-    max-width: 74ch;
   }
 
   .kit {
     margin-top: clamp(1.75rem, 3.5vw, 2.5rem);
-  }
-}
-
-@media (max-width: 37.499em) {
-  .dials {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .doc__body .dial:nth-child(even) {
-    padding-left: 0;
-    border-left: 0;
   }
 }
 
@@ -8093,6 +11004,12 @@ a.story__card:focus-visible .story__go {
 /* Named references, not just marks: a logo proves someone signed, a system and a
    sentence prove what they signed for. Same hairline-as-shadow the customer
    cards use, so neighbours share one rule. */
+/* `.doc__body > ul` sets a 1.375rem bullet indent and a circle marker on every
+   list in a document body, and it is one specificity point above a bare class,
+   so `.refs { padding: 0 }` never applied: the card grid sat indented from the
+   heading and the paragraph above it by exactly that indent. Matched on the
+   element as well as the class to beat it. */
+.doc__body > ul.refs,
 .refs {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
@@ -8259,11 +11176,12 @@ a.ref__card:hover .ref__go {
 /* The three faces run at the size a face has to be to be a face. The 2.75rem
    avatars were sized for the booking page's narrow column, which this band is
    not. */
+/* No rule above the faces. The band already has its own hairline at the top and
+   the heading sits in the column beside them, so a second line here separated
+   the row from nothing. */
 .pband--talk .doc__body .doc__team {
   gap: clamp(1.25rem, 3vw, 2.5rem);
-  margin-top: clamp(1.75rem, 3.5vw, 2.5rem);
-  padding-top: clamp(1.5rem, 3vw, 2rem);
-  border-top: 1px solid var(--rule);
+  margin-top: clamp(1.5rem, 3vw, 2rem);
 }
 
 .pband--talk .doc__body .doc__person {
@@ -8280,12 +11198,20 @@ a.ref__card:hover .ref__go {
   font-size: 1rem;
 }
 
-/* Specific enough to beat `.pband .doc__body > p:first-of-type`, which this
-   note is — it follows the team row, so the lead-paragraph rule was collapsing
-   it flat against the portraits. */
+/* Specific enough to beat `.pband .doc__body > p:first-of-type`, which both of
+   these are — they follow the team row, so the lead-paragraph rule was
+   collapsing them flat against the portraits. The button hit exactly the same
+   trap the note hit before it: it is the first `<p>` in the body, so a rule
+   written for an opening paragraph zeroed its top margin and it came out
+   sitting on the faces. */
 .pband--talk .doc__body .doc__team + .doc__note,
 .pband--talk .doc__body .doc__note {
   margin: clamp(1.25rem, 2.5vw, 1.75rem) 0 0;
+}
+
+.pband--talk .doc__body .doc__team + .pband__act,
+.pband--talk .doc__body .pband__act {
+  margin: clamp(1.75rem, 3.5vw, 2.5rem) 0 0;
 }
 
 /* The subpage belts run the home page's logo component through the document
@@ -8701,15 +11627,18 @@ a.ref__card:hover .ref__go {
   margin-top: 0;
 }
 
+/* Between the lede and the contents, on the customer stories' spacing. It
+   breaks past the reading measure to the full 48rem, which is what makes the
+   column under it read as the narrower thing. */
 .art__hero {
-  margin: 0 0 2rem;
+  margin: 0 0 clamp(1.75rem, 4vw, 2.5rem);
 }
 
 /* Cropped to a ratio rather than trusting the file, for the same reason
    .res__shot is: the post art is a mixed set, and two of the originals are
-   540x960 portraits. Left to their own proportions they rendered over 1100px
-   tall in a 640px column — a full screen of gradient before a word of the
-   piece. The card already cropped; the hero did not. */
+   540x960 portraits. Left to their own proportions they rendered over a full
+   screen of gradient before a word of the piece. The card already cropped; the
+   hero did not. */
 .art__hero img {
   display: block;
   width: 100%;

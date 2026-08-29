@@ -19,7 +19,11 @@
  *    document body or the booking page's pitch column.
  *
  * Both are CSS animations: this component ships no JavaScript. Both pause on
- * hover and honour reduced motion.
+ * hover and honour reduced motion, and both carry `data-anim` so the shared
+ * scroll gate stops them while they are off screen — the moving element is a
+ * descendant of the tagged one in each case, which is what that gate's rule
+ * matches. The strip appears on most pages of the site; ungated, every one of
+ * them ran a marquee for as long as the tab was open.
  *
  * Either way the track is rendered twice, because a marquee loops without a
  * seam only if what scrolls away has already been replaced by a copy. The
@@ -43,7 +47,7 @@ const trackClass = isProof ? 'proof__track' : 'belt__track';
 
 {
   isProof ? (
-    <div class="proof__viewport">
+    <div class="proof__viewport" data-anim>
       <div class="proof__belt">
         {[false, true].map((isCopy) => (
           <ul class={trackClass} aria-hidden={isCopy ? 'true' : undefined} aria-label={isCopy ? undefined : label}>
@@ -64,7 +68,7 @@ const trackClass = isProof ? 'proof__track' : 'belt__track';
       </div>
     </div>
   ) : (
-    <div class="belt" role="group" aria-label={label}>
+    <div class="belt" role="group" aria-label={label} data-anim>
       {[false, true].map((isCopy) => (
         <ul class={trackClass} aria-hidden={isCopy ? 'true' : undefined}>
           {CLIENTS.map((client) => (

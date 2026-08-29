@@ -22,12 +22,13 @@
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import DocMasthead from '~/components/DocMasthead.astro';
 import FaqGroups from '~/components/FaqGroups.astro';
 import LogoBelt from '~/components/LogoBelt.astro';
 import CaseRefs from '~/components/CaseRefs.astro';
+import IconSprite from '~/components/IconSprite.astro';
 import Pattern from '~/components/Pattern.astro';
 import { CLIENTS } from '~/data/clients';
+import gmail from '~/assets/integrations/gmail.png';
 import outlook from '~/assets/integrations/outlook.png';
 import Arrow from '~/components/Arrow.astro';
 import {
@@ -38,7 +39,7 @@ import {
   breadcrumbs,
   type QA,
 } from '~/lib/schema';
-import dock from '~/assets/skill/dock.jpg';
+import cardIndex from '~/assets/img/skill-card-index.png';
 
 const path = '/order-processing/';
 const trail = [
@@ -61,24 +62,29 @@ const stories = (await getCollection('customers', ({ data }) => !data.draft)).so
   (a, b) => a.data.order - b.data.order
 );
 
+/* What an order arrives as. Chips were tried here and taken back out: a chip
+   holds a word, and the word is not the claim -- "Excel" is easy, "Excel with
+   the columns in a different order every week" is the one worth making. So each
+   row names the format and the awkward thing it habitually carries, and takes
+   the format's own mark from the sprite. */
 const FORMATS = [
-  { lead: 'PDF and scans', rest: ', including layouts that change every time' },
-  { lead: 'Email text', rest: ', forwarded threads, the order buried three replies down' },
-  { lead: 'Excel and CSV', rest: ', whatever the column order' },
-  { lead: 'Voicemail and audio', rest: ', transcribed before anyone has to listen' },
-  { lead: 'Photographs', rest: ', including handwriting' },
+  { icon: 'ico-doc', lead: 'PDF and scans', rest: ', including layouts that change every time' },
+  { icon: 'ico-mail', lead: 'Email text', rest: ', forwarded threads, the order buried three replies down' },
+  { icon: 'ico-sheet', lead: 'Excel and CSV', rest: ', whatever the column order' },
+  { icon: 'ico-mic', lead: 'Voicemail and audio', rest: ', transcribed before anyone has to listen' },
+  { icon: 'ico-photo', lead: 'Photographs', rest: ', including handwriting' },
 ];
 
 const MATCHES = [
   {
     customer: 'A. & B. Rinderknecht',
-    arrived: '20× Schrauben, kurz',
+    arrived: '20× short bolts',
     means: 'Hex bolt M8×18',
     sku: '4471',
   },
   {
     customer: 'Berger Industrietechnik',
-    arrived: '20× Schrauben, kurz',
+    arrived: '20× short bolts',
     means: 'Wood screw 4×30',
     sku: '7720',
   },
@@ -92,7 +98,7 @@ const NEXT = [
   {
     title: 'What it costs',
     blurb:
-      'What sets the number: how much mail lands, in how many inboxes, and which systems Hoshii writes into.',
+      'Three plans, and what the step from one to the next buys. The number itself is settled on the call.',
     label: 'Pricing',
     href: '/pricing/',
   },
@@ -112,19 +118,13 @@ const NEXT = [
   },
 ];
 
-const SURFACES = [
-  {
-    head: 'Tagged the moment it lands',
-    body: 'Order, request for quote, complaint or noise, sorted as it arrives, in any format or language. Tags, Open or Done status and folders, all inside Outlook.',
-    shot: '/assets/img/prof-orderdesk.jpg',
-    bloom: 'rgba(196, 78, 44, 0.28)',
-  },
-  {
-    head: 'Processed in a pop‑up',
-    body: 'The order opens beside the mail, structured and ready to check. One confirmation posts it to the ERP and marks the thread done.',
-    shot: '/assets/img/prof-service.jpg',
-    bloom: 'rgba(148, 164, 140, 0.24)',
-  },
+/* The two inboxes Hoshii runs inside, as their own marks. This band used to
+   carry two frosted photographs of a desk: they showed neither Outlook nor
+   Gmail, and a claim about running inside a named product is answered by that
+   product's mark, not by a stock picture of somebody at a computer. */
+const MAILAPPS = [
+  { name: 'Outlook', logo: outlook, h: '2.375rem' },
+  { name: 'Gmail', logo: gmail, h: '2.5rem' },
 ];
 ---
 
@@ -141,62 +141,137 @@ const SURFACES = [
     faqPage(pairs),
   ]}
 >
-  <DocMasthead
-    title="Order processing"
-    sub="Every inbound order, read and prepared, "
-    accent="before anyone opens it."
-  />
+  {/* The formats list draws from the sprite, and without this on the page every
+      <use href="#ico-*"> resolves to nothing and the marks render blank. */}
+  <IconSprite />
 
-  {/* Copy left, the work itself on the right — the shape the homepage uses for
-      every capability, so the product page opens the way the site argues
-      everywhere else. */}
-  <section class="pband guides" aria-labelledby="what-it-does">
-    <div class="doc__inner doc__body pband__inner">
-      <article class="cap">
-        <div class="cap__copy">
-          <p class="skill__badge">Shipped Skill · live on 500+ order desks</p>
+  {/* A product hero, not the document masthead every other page carries: the
+      names of three desks running it, the claim, who it is for, the work itself
+      on the right, and one line of plain explanation under all of it on a dark
+      band. This is the one page on the site arguing for a product rather than
+      describing itself, and the shared masthead had it opening on its own name.
 
-          {/* The band had no dominant element: a small note, a paragraph of
-              caption-grey body copy, and some logos. The claim is split into a
-              statement and its support now, on the same two type sizes the
-              home page gives every capability, so the column has a top. */}
-          <h2 class="cap__head" id="what-it-does">
-            An inbound order becomes a <em>ready‑to‑post ERP entry.</em>
-          </h2>
-          <p class="cap__lead">
-            It reads the order out of whatever arrived, matches every line to
-            your products, and hands your team one thing to confirm.
-          </p>
+      The h1 is therefore a claim rather than the page's name. The tab title
+      stays "Order processing", so the nav, the trail and the browser still call
+      it what the rest of the site calls it. */}
+  <section class="phero" aria-labelledby="order-processing-title">
+    <Pattern />
+    <div class="phero__inner">
+      <div class="phero__copy">
+        <h1 class="phero__title" id="order-processing-title">
+          An inbound order becomes a <em>ready&#8209;to&#8209;post ERP entry.</em>
+        </h1>
 
-          <p class="skillby__cap">Running this Skill</p>
-          <ul class="skillby">
-            {
-              USERS.map((client) => (
-                <li>
-                  <Image
-                    class={`proof__logo proof__logo--${client.key} proof__logo--${client.ink}`}
-                    src={client.src}
-                    alt={client.name}
-                    widths={[300, 480]}
-                    sizes="150px"
-                    loading="lazy"
-                  />
-                </li>
-              ))
-            }
-          </ul>
-        </div>
+        <p class="phero__lead">
+          For order desks that take their orders by mail. Hoshii reads what
+          arrived, in whatever form it arrived, matches every line to your
+          products and hands your team one thing to confirm.
+        </p>
 
-        <div class="cap__art">
-          <Pattern />
+        <p class="phero__act">
+          <a class="btn-os btn-os--accent btn-os--lg" href="/demo/">
+            Book a demo
+            <Arrow />
+          </a>
+        </p>
 
+      </div>
+
+      {/* The named desks, in their own column rather than stacked under the
+          button. They were the last thing in a single tall column, which put
+          the page's only proof below the fold on a laptop; beside the claim
+          they are read with it. Stacked, not in a row: three wide wordmarks
+          side by side do not fit a column this narrow without shrinking to
+          the point of being unreadable.
+
+          One hairline, under the label. There were five -- one over the label,
+          one under it and one under each mark -- which drew a little table
+          around three logos and made the ruling the loudest thing in the
+          column. */}
+      <aside class="phero__clients">
+        <p class="phero__byline">Order desks running this Skill</p>
+        <ul class="phero__by">
+          {
+            USERS.map((client) => (
+              <li>
+                <Image
+                  class={`proof__logo proof__logo--${client.key} proof__logo--${client.ink}`}
+                  src={client.src}
+                  alt={client.name}
+                  widths={[300, 480]}
+                  sizes="150px"
+                  loading="lazy"
+                />
+              </li>
+            ))
+          }
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  {/* One line, set large on a dark slab: what the whole page comes down to,
+      before any of the argument for it. Built on the home page's pitch panel
+      rather than as its own object -- same green, same width, same pattern
+      corner -- so the site has one dark slab and not two that nearly match. */}
+  <section class="pexplainband guides" aria-label="What Hoshii does with an inbound order">
+  <aside class="pexplain">
+    <Pattern />
+    <div class="pexplain__inner">
+      <p class="pexplain__text">
+        Your customers keep writing the way they always have. Hoshii is the part
+        that proactively reads it, matches it to your products and puts the entry
+        in front of you, <em>already prepared when you arrive.</em>
+      </p>
+
+      {/* The objection every order desk raises before the second sentence is
+          out. It belongs on the slab rather than in the FAQ, because a reader
+          who is carrying it does not read the rest of the page. */}
+      <p class="pexplain__note">No ERP migration needed.</p>
+
+      {/* The work itself, beside the sentence describing it. Same shape as the
+          home page's pitch slab: the claim on the left, the thing it is a claim
+          about on the right. */}
+      <div class="pexplain__art">
           {/* The hard case, not the easy one. A mail that spells out every
               line is not the problem an order desk has — "the usual, next
               Wednesday" is, because answering it means knowing what this
               customer always orders and which Wednesday they mean. So the
               mail is vague, the resolution is shown, and the ERP is its own
               window opening beside it rather than a panel in the same card. */}
+          {/* Four frames, one stage. They used to be three things stacked down
+              the well, all of them arriving and none of them leaving, so by the
+              end everything the scene had to say was on screen at once and none
+              of it was a moment. Each beat takes the stage now and hands it on:
+              the order arrives, the parts that need reading are marked, what
+              they mean is shown on its own, and the entry is written. */}
           <div class="deskart" data-anim>
+            {/* Where the sequence has got to. Four beats is one more than a
+                reader will hold without help, and a caption that swaps has no
+                past or future in it: the ticks say how much of this there is and
+                how far in you are. */}
+            <p class="seq__prog" aria-hidden="true">
+              <span class="seq__tick seq__tick--1"></span>
+              <span class="seq__tick seq__tick--2"></span>
+              <span class="seq__tick seq__tick--3"></span>
+              <span class="seq__tick seq__tick--4"></span>
+              <span class="seq__tick seq__tick--5"></span>
+            </p>
+
+            {/* Beat four used to carry "you approve" as a clause and then end on
+                a button nobody pressed. Approving is its own beat now, which is
+                what the fifth frame is: the sequence had been stopping one step
+                short of the only outcome the reader cares about. */}
+            <p class="seq__step" aria-hidden="true">
+              <span class="seq__s seq__s--1">An order arrives</span>
+              <span class="seq__s seq__s--2">Hoshii recognises two things need context</span>
+              <span class="seq__s seq__s--3">Hoshii interprets the meaning</span>
+              <span class="seq__s seq__s--4">Hoshii prepares the entry</span>
+              <span class="seq__s seq__s--5">You approve, and it posts</span>
+            </p>
+
+            <div class="seq__stage">
+            <div class="seq__scene seq__scene--a">
             <div class="win win--mail">
               <p class="win__bar">
                 <span class="win__dots" aria-hidden="true"></span>
@@ -205,22 +280,32 @@ const SURFACES = [
               </p>
 
               <div class="win__body">
-                <p class="mail__meta">
+                <p class="mail__meta mail__row" style="--i:0">
                   <span class="mail__dot" aria-hidden="true">B</span>
                   <span class="mail__who">Berger Industrietechnik</span>
                   <span class="mail__when">09:12</span>
                 </p>
-                <p class="mail__subj">Order</p>
-                <p class="mail__text">
-                  Hi, next Wednesday the usual again please. Many thanks!
+                <p class="mail__subj mail__row" style="--i:1">Order</p>
+                {/* The two phrases the desk actually has to interpret, marked
+                    in place before they are resolved underneath. Recognising
+                    them and resolving them are two different beats and the
+                    picture used to skip the first. */}
+                <p class="mail__text mail__row" style="--i:2">
+                  Hi, <span class="mail__mark mail__mark--a">next Wednesday</span>
+                  <span class="mail__mark mail__mark--b">the usual</span> again
+                  please. Many thanks!
                 </p>
-                <p class="mail__actions" aria-hidden="true">
+                <p class="mail__actions mail__row" style="--i:3" aria-hidden="true">
                   <span>Reply</span><span>Reply all</span><span>Forward</span>
                 </p>
               </div>
             </div>
+            </div>
 
-            {/* The two things a person would have had to know. */}
+            {/* The two things a person would have had to know, on their own so
+                they are the whole picture for a beat rather than a footnote
+                under the mail. */}
+            <div class="seq__scene seq__scene--b">
             <ul class="resolve">
               <li style="--i:0">
                 <span class="resolve__said">“the usual”</span>
@@ -233,7 +318,9 @@ const SURFACES = [
                 <span class="resolve__means">delivery week 22</span>
               </li>
             </ul>
+            </div>
 
+            <div class="seq__scene seq__scene--c">
             <div class="win win--erp">
               <p class="win__bar">
                 <span class="win__dots" aria-hidden="true"></span>
@@ -258,112 +345,249 @@ const SURFACES = [
                 </p>
               </div>
             </div>
+            </div>
+
+            {/* The payoff, and the only frame that fills the stage. Every other
+                beat is a window on a desk; this one is the state the desk is in
+                afterwards, so it is not another window -- it is the whole
+                frame going green. Nothing in it is a control: the approving
+                already happened, and it happened because a person did it. */}
+            <div class="seq__scene seq__scene--d">
+              <div class="done">
+                <span class="done__seal" aria-hidden="true">
+                  <svg viewBox="0 0 44 44">
+                    <circle class="done__ring" cx="22" cy="22" r="19" />
+                    <path class="done__tick" d="m13.5 22.5 5.6 5.6 11.4-11.8" />
+                  </svg>
+                </span>
+                <span class="done__head">Posted to your ERP</span>
+                <span class="done__meta">Berger Industrietechnik &middot; 2 lines &middot; delivery week 22</span>
+              </div>
+            </div>
+            </div>
           </div>
-        </div>
-      </article>
+      </div>
     </div>
+  </aside>
   </section>
 
-  <section class="pband guides" aria-labelledby="it-reads-whatever-arrived">
+  {/* The page uses the word "Skill" from its first line and never says what one
+      is. It is Hoshii's unit of work, and a reader who has not met the term
+      reads the whole page as a description of one feature. Placed before the
+      four claims rather than after them, because every one of those claims is a
+      claim about a Skill. */}
+  {/* The preamble, not a fifth claim. This was built as a full band -- an h2, a
+      lede and five ruled rows -- which is the exact shape of the four capability
+      bands below it, so the page opened its argument by handing the reader the
+      same object twice in a row. It is a definition, so it is built as one: a
+      panel, subordinate in type to everything it introduces. */}
+  {/* The definition and the first claim, in one panel and two columns. They
+      had been two stacked bands built to the identical shape -- heading, grey
+      lede, five ruled rows -- which is one object shown twice. Paired instead:
+      what a Skill is on the left, and on the right the first thing this one
+      does. The left column is short on purpose; the panel's height is set by
+      the formats, which is the half a reader came for. */}
+  <section class="pband guides" aria-labelledby="what-a-skill-is">
     <div class="doc__inner doc__body pband__inner">
-      <h2 id="it-reads-whatever-arrived">It reads whatever arrived</h2>
-      <p>
-        Your customers do not send clean data. The Skill reads the order out of
-        <strong>PDFs, forwarded email threads, Excel sheets, voicemails and
-        photographs of handwriting</strong>, in any of the languages your desk
-        works in.
-      </p>
-      <ul class="doc__checks">
-        {FORMATS.map((format) => <li><strong>{format.lead}</strong>{format.rest}</li>)}
-      </ul>
-      <p class="doc__note">
-        A PDF reading “bitte liefern Sie zur KW 22: 12× Palette Mehl Type 405, 8×
-        Karton Rapsöl 10 L” comes out as two lines with quantities attached. So
-        does the voicemail that says the same thing out loud.
-      </p>
+      <aside class="skilldef">
+        <div class="skilldef__head">
+          <h2 id="what-a-skill-is">What a Skill is in Hoshii</h2>
+          {/* Written for somebody who has never met either word. The definition
+              was "recurring, rule-based capabilities you give your Agents",
+              which defines a Skill in terms of an Agent and an Agent nowhere at
+              all -- so a reader who did not already know what these are learned
+              nothing from the paragraph the section exists to deliver. Named by
+              the job it does instead, with an example in the sentence. */}
+          <p class="skilldef__def">
+            A Skill is one job your order desk repeats &mdash; turning an
+            inbound order into an ERP entry &mdash; set up once so it happens
+            the same way every time.
+          </p>
+          <p class="skilldef__note">
+            An Agent is what runs it: it does the work up to the decision and
+            stops there, and somebody on your desk approves. Your own team sets
+            a Skill up, no engineering needed.
+          </p>
+
+          {/* The definition, running. Three beats the Agent does, and then the
+              one that is a person's -- which arrives over the three rather than
+              under them, because approving is not a fourth thing the Skill does.
+              It is the moment the run stops and waits, and a fourth bullet said
+              the opposite. Decorative: every word in it is already in the two
+              paragraphs above, so it is hidden rather than read out twice. */}
+          <div class="skillrun" data-anim aria-hidden="true">
+            <p class="skillrun__name">Order processing Skill</p>
+            <div class="skillrun__body">
+              <ul class="skillrun__steps">
+                <li class="skillrun__step" style="--i:0">
+                  <span class="skillrun__dot"></span>Reads what arrived
+                </li>
+                <li class="skillrun__step" style="--i:1">
+                  <span class="skillrun__dot"></span>Matches every line
+                </li>
+                <li class="skillrun__step" style="--i:2">
+                  <span class="skillrun__dot"></span>Prepares the entry
+                </li>
+              </ul>
+              <p class="skillrun__seal">
+                <svg class="skillrun__tick" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m6 12.4 4 4 8.2-8.6" />
+                </svg>
+                You approve
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="skilldef__reads">
+          <h2 id="it-reads-whatever-arrived">Your Hoshii Agent reads whatever arrived</h2>
+          {/* The formats used to be named here in prose and then again in the
+              list underneath. One or the other: the sentence sets up the
+              problem, the list answers it. */}
+          <p class="skilldef__lede">
+            Your customers do not send clean data. Hoshii reads the order out of
+            whatever turned up, in any of the languages your desk works in.
+          </p>
+          <ul class="fmtlist">
+            {
+              FORMATS.map((format) => (
+                <li>
+                  <svg class="fmtlist__ico" viewBox="0 0 24 24" aria-hidden="true">
+                    <use href={`#${format.icon}`} />
+                  </svg>
+                  <span><strong>{format.lead}</strong>{format.rest}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </aside>
     </div>
   </section>
 
   <section class="pband guides" aria-labelledby="it-matches-lines-to-your-products">
     <div class="doc__inner doc__body pband__inner">
       <h2 id="it-matches-lines-to-your-products">It matches lines to your products</h2>
-      <p>
-        Reading it is the easy half. Every extracted line is matched to the right
-        product in your ERP and prepared as a clean entry. Your team confirms.
-        <strong>No rekeying, no second screen.</strong>
-      </p>
-      <div class="ptable__wrap">
-        <table class="ptable">
-          <thead>
-            <tr>
-              <th scope="col">The same words, two customers</th>
-              <th scope="col">What arrived</th>
-              <th scope="col">What it means</th>
-              <th scope="col">SKU</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              MATCHES.map((row) => (
-                <tr>
-                  <th scope="row">{row.customer}</th>
-                  <td>{row.arrived}</td>
-                  <td>{row.means}</td>
-                  <td>{row.sku}</td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
-      </div>
-      <blockquote class="lift">
-        <p class="lift__text">
-          The same three words meant two different products. Nobody wrote a rule
-          for that.
+      {/* The claim left, the demonstration of it against the band's right edge:
+          the same arrangement the two bands below use. Ranged left under the
+          lede, four short columns left the right half of an 88rem band empty,
+          which is what made the band read as unfinished rather than compact. */}
+      <div class="bandrow bandrow--match">
+        <p class="bandrow__copy bandrow__lede">
+          Every line is matched to the right product in your ERP and
+          prepared as a clean entry. Your team confirms.
+          <strong>No rekeying, no second screen.</strong>
         </p>
-      </blockquote>
+        {/* "The same words, two customers" is the table's caption, not the
+            name of its first column: it describes the whole demonstration, and
+            as a column head it labelled the one column the sameness is not in.
+            The turn class marks the pivot -- left of it is what the customer
+            sent, right of it is what Hoshii resolved it to. */}
+        <div class="ptable__wrap">
+          <table class="ptable">
+            <caption class="ptable__cap">The same words, two customers</caption>
+            <thead>
+              <tr>
+                <th scope="col">Customer</th>
+                <th scope="col">What arrived</th>
+                <th scope="col" class="ptable__turn">What it means</th>
+                <th scope="col">SKU</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                MATCHES.map((row) => (
+                  <tr>
+                    <th scope="row">{row.customer}</th>
+                    <td>{row.arrived}</td>
+                    <td class="ptable__turn ptable__out">{row.means}</td>
+                    <td class="ptable__out">{row.sku}</td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </section>
 
   <section class="pband guides" aria-labelledby="it-learns-what-each-customer-means">
     <div class="doc__inner doc__body pband__inner">
-      <h2 id="it-learns-what-each-customer-means">It learns what each customer means</h2>
-      <p>
-        Every confirmation teaches the Skill how a given customer orders, and it
-        applies that from the next order on. This is procedural knowledge: not a
-        model that guesses better in general, but one that knows
-        <strong>how your customers actually write</strong>.
-      </p>
-      <figure class="doc__shot">
-        <Image
-          src={dock}
-          alt="Pallets moving on a loading dock at first light"
-          widths={[700, 1400]}
-          sizes="(min-width: 60em) 44rem, 100vw"
-          loading="lazy"
-        />
-      </figure>
+      {/* Beside the copy, not under it. A picture stacked below a four-line
+          paragraph adds its whole height to the band; in the column the
+          paragraph was leaving empty it costs nothing.
+
+          The heading is inside the row rather than spanning above it, which is
+          the one band on this page where that is true. Above it, the left of
+          the row held four lines against a picture three times their height and
+          emptied out under them; with the heading in the column the two sides
+          are the same object seen twice, which is what the pairing was for.
+
+          "No matter the format, no matter the wording" used to hang under the
+          heading in a grey second voice -- a two-part heading device that
+          existed nowhere else on the site, so it read as a stray caption rather
+          than as part of the claim. It opens the paragraph now, in the same
+          voice as the rest of it. */}
+      <div class="learnrow">
+        <div class="learnrow__block">
+          <h2 id="it-learns-what-each-customer-means">
+            It learns what each customer actually means
+          </h2>
+          <p class="learnrow__copy">
+            Whatever format it arrives in, whatever words they use for it. Every
+            confirmation and correction teaches your Agent how this customer
+            orders, and it applies that from the next order on. It is not a
+            model that has got better at guessing. It has learned
+            <strong>how your customers actually write</strong>.
+          </p>
+        </div>
+        <figure class="learnrow__shot">
+          <Image
+            src={cardIndex}
+            alt="A hand searching through a long tray of paper index cards"
+            widths={[380, 620]}
+            sizes="(min-width: 60em) 19rem, 70vw"
+            loading="lazy"
+          />
+        </figure>
+      </div>
     </div>
   </section>
 
   <section class="pband guides" aria-labelledby="it-runs-inside-outlook-and-gmail">
     <div class="doc__inner doc__body pband__inner">
       <h2 id="it-runs-inside-outlook-and-gmail">It runs inside Outlook and Gmail</h2>
-      <p>
-        Nobody has to move. The Skill runs as a
-        <strong>native add‑in for Outlook and Gmail</strong>, so the work appears
-        where the mail already lands. No new tool, no migration, no second login.
-      </p>
-      <ul class="doc__panels">
-        {
-          SURFACES.map((surface) => (
-            <li class="doc__panel" style={`--shot: url('${surface.shot}'); --bloom: ${surface.bloom}`}>
-              <h3 class="doc__panelHead">{surface.head}</h3>
-              <p class="doc__panelBody">{surface.body}</p>
-            </li>
-          ))
-        }
-      </ul>
+      {/* Copy left, the two marks at the band's right edge. Ranged left under
+          the paragraph they left the right two-thirds of a very wide band
+          empty, and two small cards adrift in that much white read as an
+          afterthought rather than as the answer to the heading. */}
+      <div class="bandrow">
+        <p class="bandrow__copy">
+          Nobody has to move. Hoshii runs as a
+          <strong>native add&#8209;in for Outlook and Gmail</strong>, so the work
+          appears where the mail already lands. No new tool, no migration, no
+          second login.
+        </p>
+        <ul class="mailapps">
+          {
+            MAILAPPS.map((app) => (
+              <li class="mailapp">
+                <Image
+                  class="mailapp__mark"
+                  src={app.logo}
+                  alt=""
+                  style={`--h: ${app.h}`}
+                  widths={[128, 256]}
+                  sizes="64px"
+                  loading="lazy"
+                />
+                <span class="mailapp__name">{app.name}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -375,7 +599,7 @@ const SURFACES = [
       <h2 id="desks-running-it">Desks running it today</h2>
       <p>
         Three of them, at three very different volumes, writing into three
-        different systems. Each one arrived as mail first.
+        different systems. Every order started as an email.
       </p>
       <LogoBelt />
       <CaseRefs stories={stories} />
@@ -433,4 +657,5 @@ const SURFACES = [
       </aside>
     </div>
   </section>
+
 </BaseLayout>

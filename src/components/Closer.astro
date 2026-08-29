@@ -5,6 +5,7 @@
  * Every page ends on this so a visitor who has read to the bottom always has
  * the same next step in the same place.
  */
+import { Image } from 'astro:assets';
 import Arrow from '~/components/Arrow.astro';
 import Pattern from '~/components/Pattern.astro';
 
@@ -15,6 +16,13 @@ export type Props = {
   lead: string;
   href?: string;
   label?: string;
+  /**
+   * An optional photograph beside the ask. With one, the band goes to two
+   * columns and the type stops being centred. Without one it is unchanged, so
+   * the twenty-odd pages that end on the plain version are untouched.
+   */
+  photo?: ImageMetadata;
+  photoAlt?: string;
 };
 
 const {
@@ -23,10 +31,12 @@ const {
   lead,
   href = '/demo/',
   label = 'Book a demo',
+  photo,
+  photoAlt = '',
 } = Astro.props;
 ---
 
-<section class="closer" aria-labelledby="closer-title">
+<section class:list={['closer', photo && 'closer--photo']} aria-labelledby="closer-title">
   <Pattern />
   <div class="closer__inner">
     <span class="closer__mark" aria-hidden="true">
@@ -46,4 +56,17 @@ const {
       <Arrow />
     </a>
   </div>
+  {
+    photo && (
+      <div class="closer__shot">
+        <Image
+          src={photo}
+          alt={photoAlt}
+          widths={[420, 640, 860]}
+          sizes="(min-width: 60em) 27rem, 72vw"
+          loading="lazy"
+        />
+      </div>
+    )
+  }
 </section>

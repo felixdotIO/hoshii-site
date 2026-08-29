@@ -3,10 +3,12 @@
  * The pricing page.
  *
  * There is no price figure anywhere on it, deliberately: the number is quoted
- * per workspace and the page explains what sets it instead of pretending to a
- * table. That is also why the Offer in the structured data carries a
- * `priceSpecification` with a description and no `price` — inventing a figure
- * to earn a rich result would contradict the page.
+ * per workspace on the call. What the page can give a reader before that call
+ * is the shape — which of the three plans their desk is, and what the step to
+ * the next one buys — so it names the plans and prints no amounts. That is also
+ * why the Offer in the structured data carries a `priceSpecification` with a
+ * description and no `price`: inventing a figure to earn a rich result would
+ * contradict the page.
  *
  * Its own banded layout rather than the document shape: this is a landing
  * page, and each band is a separate argument.
@@ -21,7 +23,6 @@ import LogoBelt from '~/components/LogoBelt.astro';
 import CaseRefs from '~/components/CaseRefs.astro';
 import Arrow from '~/components/Arrow.astro';
 import { GTM_TEAM } from '~/data/team';
-import { SITE } from '~/data/site';
 import {
   organization,
   website,
@@ -45,28 +46,99 @@ const stories = (await getCollection('customers', ({ data }) => !data.draft)).so
   (a, b) => a.data.order - b.data.order
 );
 
-const FACTS = [
-  'One inbox and one system is enough to start',
-  'Credits roll over, they never expire',
-  'No implementation fee on the ERPs we already run',
+/* The three plans, without the figures.
+ *
+ * The page still carries no price: the number is settled on the call, and a
+ * list price would be a number for a desk we have not seen. What a reader can
+ * have before that call is the shape -- which plan their desk is, and what the
+ * step to the next one buys.
+ *
+ * Two lists per card, and deliberately not a comparison matrix. `included` is
+ * what the plan counts -- inboxes, allowance, seats -- and `features` is what
+ * the desk can do with it. From Team upward the features open with the plan
+ * below rather than repeating it, so three cards stay three short lists instead
+ * of one long list printed three times.
+ *
+ * Four rows in each list on every card, which is not tidiness: the fourth
+ * `included` row is the same fact in all three -- whether Hoshii writes back
+ * into your systems -- so the two crosses and the tick that answers them land
+ * on one line across the row. A plan reads as a choice only when what it gives
+ * up is on the card.
+ *
+ * Nothing here restates the slab under the cards: that carries what every plan
+ * has, and a card only carries what tells it apart from the one before. */
+type Plan = {
+  name: string;
+  /** Only the plan most desks land on carries one. */
+  tag?: string;
+  pitch: string;
+  /** `no` marks the one thing the plan does not do. */
+  included: { text: string; no?: boolean }[];
+  /** The plan below, which this one opens its feature list with. */
+  from?: string;
+  features: string[];
+};
+
+const PLANS: Plan[] = [
+  {
+    name: 'Launch',
+    pitch: 'For one address, and one system behind it.',
+    included: [
+      { text: 'One shared inbox, three in total' },
+      { text: 'A monthly credit allowance' },
+      { text: 'Unlimited users and Agents' },
+      { text: 'No writing back into your systems', no: true },
+    ],
+    features: [
+      'Drafts and confirmations',
+      'Context search across your own material',
+      'Knowledge base and self-learning',
+      'Inbox analytics',
+    ],
+  },
+  {
+    name: 'Team',
+    tag: 'Most desks',
+    pitch: 'For a desk several people work on at once.',
+    included: [
+      { text: 'Shared and personal inboxes, uncapped' },
+      { text: 'A larger monthly allowance' },
+      { text: 'Unlimited users and Agents' },
+      { text: 'No writing back into your systems', no: true },
+    ],
+    from: 'Launch',
+    features: ['Single sign\u2011on', 'Team analytics', 'Priority support'],
+  },
+  {
+    name: 'Automate',
+    pitch: 'For a desk that wants the entry posted, not only prepared.',
+    included: [
+      { text: 'Shared and personal inboxes, uncapped' },
+      { text: 'The largest monthly allowance' },
+      { text: 'Unlimited users and Agents' },
+      { text: 'Writes back into your systems' },
+    ],
+    from: 'Team',
+    features: [
+      'Order processing',
+      'Your own security review and paperwork',
+      'Named support',
+    ],
+  },
 ];
 
-const DIALS = [
+const CREDITS = [
   {
-    head: 'Volume',
-    body: 'How much lands each month, and in what form. A hundred clean PDFs is not the same job as a hundred voicemails, so the format counts as much as the count.',
+    head: 'An allowance every month',
+    body: 'Every plan carries one, sized with you against an average month rather than a peak.',
   },
   {
-    head: 'Inboxes',
-    body: 'How many the desk runs, shared and personal. One shared address behind a whole team is a different job from eight people each forwarding their own.',
+    head: 'It rolls over',
+    body: 'Unused credits never expire, so a quiet month builds the balance a busy one draws on.',
   },
   {
-    head: 'Systems',
-    body: 'Reading your ERP is included on every plan. Writing back into it is scoped per system, which is where a partner integration costs less than a bespoke one.',
-  },
-  {
-    head: 'Security review',
-    body: 'The standard paperwork is included. Your own DPA, a vendor questionnaire or a custom review is scoped, because it is real work on our side.',
+    head: 'It moves with the desk',
+    body: 'Add to the allowance in any month, and take it off again in the next.',
   },
 ];
 
@@ -75,16 +147,15 @@ const INCLUDED = [
   'Every shipped Skill',
   'The Outlook and Gmail add‑in',
   'EU hosting and email encryption',
-  'Inbox and team analytics',
+  'Inbox analytics',
   '25+ languages, typed, scanned or spoken',
 ];
 
-const pricingMail = `mailto:${SITE.email.sales}?subject=Pricing`;
 ---
 
 <BaseLayout
   title="Pricing"
-  description="What Hoshii costs is set by four things: your mail volume, your inboxes, the systems it writes into, and your security review. Here is how each one moves the number."
+  description="Three Hoshii plans — Launch, Team and Automate — and what the step from one to the next buys. The number itself is quoted per desk on a thirty-minute call."
   path="/pricing/"
   mainClass="doc page--pricing doc--wide"
   schema={[
@@ -106,54 +177,88 @@ const pricingMail = `mailto:${SITE.email.sales}?subject=Pricing`;
         <Arrow />
       </a>
     </p>
-    <ul class="pricehead__facts">
-      {FACTS.map((fact) => <li>{fact}</li>)}
-    </ul>
   </DocMasthead>
 
-  <section class="pband pband--drivers guides" aria-labelledby="what-sets-the-number">
+  <section class="pband pband--plans guides" aria-label="The three plans">
     <div class="doc__inner doc__body pband__inner">
-      <h2 id="what-sets-the-number">What sets the number</h2>
-      <p>
-        Four things you already know: how much mail lands, how many inboxes it
-        lands in, which systems Hoshii writes into, and what your security
-        review needs. Bring rough figures for the first two and we can price
-        your desk on the call.
-      </p>
-      <ol class="dials">
+      <ul class="plans">
         {
-          DIALS.map((dial, i) => (
-            <li class="dial">
-              <span class="dial__n" aria-hidden="true">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <h3 class="dial__head">{dial.head}</h3>
-              <p class="dial__body">{dial.body}</p>
+          PLANS.map((plan) => (
+            <li class={`plan${plan.tag ? ' plan--rec' : ''}`}>
+              {plan.tag && <p class="plan__tag">{plan.tag}</p>}
+              <h2 class="plan__name">{plan.name}</h2>
+              <p class="plan__pitch">{plan.pitch}</p>
+
+              {/* One coloured button on the row, on the plan most desks land
+                  on. Three identical accent buttons is three cards shouting the
+                  same thing and a reader picking on price they cannot see. */}
+              <p class="plan__cta">
+                <a
+                  class={`btn-os ${plan.tag ? 'btn-os--fill' : 'btn-os--accent'}`}
+                  href="/demo/"
+                >
+                  Talk to sales
+                  <Arrow />
+                </a>
+              </p>
+
+              <p class="plan__groupHead">Included</p>
+              <ul class="plan__list">
+                {plan.included.map((item) => (
+                  <li class={item.no ? 'plan__without' : undefined}>{item.text}</li>
+                ))}
+              </ul>
+
+              <p class="plan__groupHead">Features</p>
+              <ul class="plan__list">
+                {plan.from && (
+                  <li class="plan__from">
+                    Everything in <span class="plan__ref">{plan.from}</span>
+                  </li>
+                )}
+                {plan.features.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
             </li>
           ))
         }
-      </ol>
+      </ul>
+
+      <div class="creds">
+        <h2 class="creds__head">How the work on top is metered</h2>
+        <ul class="creds__list">
+          {
+            CREDITS.map((credit) => (
+              <li>
+                <strong>{credit.head}.</strong> {credit.body}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
       <div class="kit">
         <h3 class="kit__head">On every plan, at no extra charge</h3>
         <ul class="kit__list">
           {INCLUDED.map((item) => <li>{item}</li>)}
         </ul>
       </div>
-      <p class="kit__note">
-        The work itself is metered in credits on a monthly allowance, sized with
-        you against an average month rather than a peak. Unused credits roll
-        over, so a quiet month builds the balance that carries a busy one.
-      </p>
     </div>
   </section>
 
   <section class="pband pband--talk guides" aria-labelledby="who-you-will-be-talking-to">
     <div class="doc__inner doc__body pband__inner">
       <h2 id="who-you-will-be-talking-to">Who you will be talking to</h2>
-      <TeamGrid members={GTM_TEAM} quotes={false} />
-      <p class="doc__note">
-        Rather write first? <a href={pricingMail}>{SITE.email.sales}</a> reaches
-        the same three people.
+      <TeamGrid members={GTM_TEAM} quotes={false} sizes="52px" />
+      {/* A button, not a mail address. The three faces above are the answer to
+          "who will I be dealing with"; the next step after reading that is to
+          book time with them, which is the same step every other page ends on. */}
+      <p class="pband__act">
+        <a class="btn-os btn-os--accent" href="/demo/">
+          Talk to sales
+          <Arrow />
+        </a>
       </p>
     </div>
   </section>
@@ -166,7 +271,8 @@ const pricingMail = `mailto:${SITE.email.sales}?subject=Pricing`;
       <h2 id="desks-already-priced-this-way">Desks already priced this way</h2>
       <p>
         Three of them, at three very different volumes, writing into three
-        different systems. Each one was quoted on the four things above.
+        different systems. Each one was quoted on its own volume and the systems
+        it writes into.
       </p>
       <CaseRefs stories={stories} />
     </div>

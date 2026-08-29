@@ -2,6 +2,11 @@
 /**
  * Careers: how the team works, who is on it, and what is open.
  *
+ * Four bands rather than one column, because those are four different kinds of
+ * thing and stacked in a single container the page read as one undifferentiated
+ * scroll. Same band device the pricing and order processing pages use, so the
+ * rule between two sections is the site's own and not a line invented here.
+ *
  * The open roles link out to join.com, which is where applications are
  * actually handled. Each link says the role and the city, so the text
  * describes the destination on its own.
@@ -46,7 +51,6 @@ const VALUES = [
   accent="B2B operations runs on."
   trail={[{ label: 'Careers', href: '/careers/' }]}
   pageClass="page--careers"
-  wide={true}
   closer={false}
 >
   <p class="doc__cta">
@@ -56,56 +60,87 @@ const VALUES = [
     </a>
   </p>
 
-  <h2 id="how-we-work">How we work.</h2>
-  <ul class="doc__values">
-    {
-      VALUES.map((value) => (
-        <li>
-          <p class="doc__valueLabel">{value.label}</p>
-          <h3 class="doc__valueHead">{value.head}</h3>
-          <p>{value.body}</p>
-        </li>
-      ))
-    }
-  </ul>
+  {/* Four sections in four bands rather than four headings down one column.
+      The page carries four different kinds of thing -- how the team works, who
+      is on it, what being early means, and what is open -- and run together in
+      a single container they read as one long page about none of them in
+      particular. A band gives each its own ground and a rule across the full
+      width, which is the device the other landing pages on this site already
+      use. */}
+  <Fragment slot="bands">
+    <section class="pband guides" aria-labelledby="how-we-work">
+      <div class="doc__inner doc__body pband__inner">
+        <h2 id="how-we-work">How we work.</h2>
+        <ul class="doc__values">
+          {
+            VALUES.map((value) => (
+              <li>
+                <p class="doc__valueLabel">{value.label}</p>
+                <h3 class="doc__valueHead">{value.head}</h3>
+                <p>{value.body}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
 
-  <h2 id="meet-the-people-building-hoshii">Meet the people building Hoshii.</h2>
-  <TeamGrid members={TEAM} />
+    <section class="pband guides" aria-labelledby="meet-the-people-building-hoshii">
+      <div class="doc__inner doc__body pband__inner">
+        <h2 id="meet-the-people-building-hoshii">Meet the people building Hoshii.</h2>
+        <TeamGrid members={TEAM} />
+      </div>
+    </section>
 
-  <h2 id="join-early-enough-to-shape-it">Join early enough to shape it.</h2>
-  <p>
-    We are a small team in Zürich, and you would be early: your work genuinely
-    shapes the product, the culture, and the company. What we are building, and
-    why, is on the <a href="/about/">about page</a>.
-  </p>
+    <section class="pband guides" aria-labelledby="join-early-enough-to-shape-it">
+      <div class="doc__inner doc__body pband__inner">
+        <h2 id="join-early-enough-to-shape-it">Join early enough to shape it.</h2>
+        <p>
+          We are a small team in Zürich, and you would be early: your work
+          genuinely shapes the product, the culture, and the company. What we are
+          building, and why, is on the <a href="/about/">about page</a>.
+        </p>
+      </div>
+    </section>
 
-  <h2 id="find-your-role">Find your role.</h2>
-  <p>
-    Browse every open position and apply in a couple of clicks. New roles are
-    posted here as we grow.
-  </p>
-  <ul class="doc__jobs">
-    {
-      JOBS.map((job) => (
-        <li>
-          <a class="doc__job" href={job.url} target="_blank" rel="noopener">
-            <span class="doc__jobTitle">{job.title}</span>
-            <span class="doc__jobWhere">{job.location}</span>
-            <span class="doc__jobGo" aria-hidden="true">
-              →
-            </span>
+    <section class="pband guides" aria-labelledby="find-your-role">
+      <div class="doc__inner doc__body pband__inner">
+        <h2 id="find-your-role">Find your role.</h2>
+        <p>
+          Browse every open position and apply in a couple of clicks. New roles
+          are posted here as we grow.
+        </p>
+        <ul class="doc__jobs">
+          {
+            JOBS.map((job) => (
+              <li>
+                <a class="doc__job" href={job.url} target="_blank" rel="noopener">
+                  <span class="doc__jobTitle">{job.title}</span>
+                  <span class="doc__jobWhere">{job.location}</span>
+                  <span class="doc__jobGo" aria-hidden="true">
+                    →
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <section class="pband pband--end guides" aria-label="Write to us">
+      <div class="doc__inner doc__body pband__inner">
+        <aside class="docend">
+          <Pattern />
+          <p class="docend__head">
+            Nothing here fits, but you think you should be here anyway?
+          </p>
+          <a class="btn-os btn-os--fill btn-os--lg" href={`mailto:${SITE.email.jobs}`}>
+            Write to us
+            <Arrow />
           </a>
-        </li>
-      ))
-    }
-  </ul>
-
-  <aside class="docend">
-    <Pattern />
-    <p class="docend__head">Nothing here fits, but you think you should be here anyway?</p>
-    <a class="btn-os btn-os--fill btn-os--lg" href={`mailto:${SITE.email.jobs}`}>
-      Write to us
-      <Arrow />
-    </a>
-  </aside>
+        </aside>
+      </div>
+    </section>
+  </Fragment>
 </DocLayout>

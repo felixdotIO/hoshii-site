@@ -87,6 +87,11 @@ const schema = [
   </ul>
 
   <article class="art">
+    {/* The answer before the picture of it, which is the order the customer
+        stories use: a reader who wants the summary should not have to scroll a
+        photograph to reach it. */}
+    <p class="art__lede">{data.summary}</p>
+
     {/* An empty alt means decorative, not absent: the art still runs, it is
         simply not described to a reader who cannot see it. */}
     {
@@ -95,15 +100,13 @@ const schema = [
           <Image
             src={data.heroImage}
             alt={data.heroImageAlt ?? ''}
-            widths={[640, 1280]}
-            sizes="(min-width: 60em) 40rem, 100vw"
+            widths={[768, 1536]}
+            sizes="(min-width: 60em) 48rem, 100vw"
             loading="eager"
           />
         </figure>
       )
     }
-
-    <p class="art__lede">{data.summary}</p>
 
     <TableOfContents headings={headings} />
 
@@ -113,6 +116,9 @@ const schema = [
 
     <Sources sources={data.sources} />
     <AuthorCard author={author} />
-    <RelatedArticles current={article} />
   </article>
+
+  {/* Outside the reading column, as on a customer story: the cards are a grid
+      of objects, not part of the argument, and they get the band's full width. */}
+  <RelatedArticles current={article} />
 </DocLayout>
