@@ -10947,12 +10947,29 @@ ul.mailapps > li.mailapp {
   grid-column: 1 / -1;
 }
 
-/* How the work on top of the base rate is metered: three ruled lines where a
+/* How the variable work on top of the base rate is metered: three ruled lines where a
    six-line paragraph used to sit. Each is a claim and its consequence in one
    sentence, which is what the paragraph was hiding by running them together. */
 .creds {
   grid-column: 1;
   margin: 0;
+}
+
+/* The split between the two halves of the row, drawn as a rule down the middle
+   of the gap. It hangs off the left column rather than the right: the slab on
+   the right carries its own ground, and the padding that would centre a border
+   on that side would push its green out into the gap with it.
+
+   Stretched, so the rule runs the height of the row rather than the height of
+   three lines of text -- the slab is the taller of the two and the line has to
+   reach it to read as a division. */
+@media (min-width: 62em) {
+  .creds {
+    align-self: stretch;
+    margin-right: calc(clamp(2rem, 4vw, 4rem) / -2);
+    padding-right: calc(clamp(2rem, 4vw, 4rem) / 2);
+    border-right: 1px solid var(--rule);
+  }
 }
 
 .pband .doc__body .creds__head {

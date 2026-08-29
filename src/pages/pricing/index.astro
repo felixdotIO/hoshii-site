@@ -148,7 +148,7 @@ const CREDITS = [
 
 const INCLUDED = [
   'Read access to your ERP',
-  'Every shipped Skill',
+  'Agent and Skill builder',
   'The Outlook and Gmail add‑in',
   'EU hosting and email encryption',
   'Inbox analytics',
@@ -230,7 +230,7 @@ const INCLUDED = [
       </ul>
 
       <div class="creds">
-        <h2 class="creds__head">How the work on top is metered</h2>
+        <h2 class="creds__head">How the variable work is metered</h2>
         <ul class="creds__list">
           {
             CREDITS.map((credit) => (
@@ -267,17 +267,16 @@ const INCLUDED = [
     </div>
   </section>
 
-  <section class="pband pband--refs guides" aria-labelledby="desks-already-priced-this-way">
+  {/* The heading and the cards, with nothing between them. The paragraph that
+      sat here described the three cards -- three volumes, three systems -- to a
+      reader about to read the three cards, so it spent a sentence on what the
+      row underneath says on its own. */}
+  <section class="pband pband--refs guides" aria-labelledby="hoshii-in-practice">
     <div class="doc__inner doc__body pband__inner">
       <p class="doc__proofLabel">Quoted this way for 500+ B2B operations teams</p>
       <LogoBelt />
 
-      <h2 id="desks-already-priced-this-way">Desks already priced this way</h2>
-      <p>
-        Three of them, at three very different volumes, writing into three
-        different systems. Each one was quoted on its own volume and the systems
-        it writes into.
-      </p>
+      <h2 id="hoshii-in-practice">Read about how trusting Hoshii unfolds in practice</h2>
       <CaseRefs stories={stories} />
     </div>
   </section>
