@@ -82,11 +82,11 @@ type Plan = {
 const PLANS: Plan[] = [
   {
     name: 'Launch',
-    pitch: 'For one address, and one system behind it.',
+    pitch: 'For smaller teams with one shared inbox.',
     included: [
-      { text: 'One shared inbox, three in total' },
-      { text: 'A monthly credit allowance' },
-      { text: 'Unlimited users and Agents' },
+      { text: 'Connect one shared inbox and up to 2 personal inboxes' },
+      { text: 'A monthly credit allowance for basic agent work' },
+      { text: 'Unlimited read\u2011only users' },
       { text: 'No writing back into your systems', no: true },
     ],
     features: [
@@ -99,11 +99,13 @@ const PLANS: Plan[] = [
   {
     name: 'Team',
     tag: 'Most desks',
-    pitch: 'For a desk several people work on at once.',
+    pitch: 'For mid\u2011 to larger teams with advanced inbox operations.',
     included: [
-      { text: 'Shared and personal inboxes, uncapped' },
-      { text: 'A larger monthly allowance' },
-      { text: 'Unlimited users and Agents' },
+      { text: 'Connect two shared inboxes and up to 5 personal inboxes' },
+      {
+        text: 'A larger monthly credit allowance to delegate first individual workstreams',
+      },
+      { text: 'Unlimited read\u2011only users' },
       { text: 'No writing back into your systems', no: true },
     ],
     from: 'Launch',
@@ -113,9 +115,11 @@ const PLANS: Plan[] = [
     name: 'Automate',
     pitch: 'For a desk that wants the entry posted, not only prepared.',
     included: [
-      { text: 'Shared and personal inboxes, uncapped' },
-      { text: 'The largest monthly allowance' },
-      { text: 'Unlimited users and Agents' },
+      { text: 'Connect two shared inboxes and up to 5 personal inboxes' },
+      {
+        text: 'The largest monthly credit allowance for enabling teams to do advanced work',
+      },
+      { text: 'Unlimited read\u2011only users' },
       { text: 'Writes back into your systems' },
     ],
     from: 'Team',

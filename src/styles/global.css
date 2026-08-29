@@ -7477,6 +7477,51 @@ a.story__card:focus-visible .story__go {
   line-height: 1.45;
 }
 
+/* Row for row across the three cards.
+ *
+ * The lines are different lengths and some wrap where others do not, so the
+ * fourth `included` row -- the same fact on all three, and the point of the
+ * row -- drifted out of line the moment one card's allowance line fitted on one
+ * line and another's did not. Subgrid puts every card on the band's own rows,
+ * so a row is as tall as the tallest of the three and the two group heads, the
+ * crosses and the tick that answers them all sit on one ruler.
+ *
+ * Scoped to the width where there are actually three columns: below it the
+ * cards stack, and a card explicitly placed in rows 1-13 would then sit on top
+ * of the two under it. And behind @supports, because without subgrid the
+ * explicit rows would do the same damage -- the fallback is the cards as they
+ * were, each sized to its own content.
+ *
+ * The row gap goes to zero and the list spacing moves onto the items: with
+ * subgrid the parent's row gap falls between every one of the thirteen rows,
+ * not between the cards. */
+@media (min-width: 62em) {
+  @supports (grid-template-rows: subgrid) {
+    .doc__body .plans {
+      /* name, pitch, button, "Included", four, "Features", four. */
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-rows: repeat(13, auto);
+      row-gap: 0;
+    }
+
+    .doc__body .plan {
+      display: grid;
+      grid-row: 1 / -1;
+      grid-template-rows: subgrid;
+    }
+
+    .doc__body .plan .plan__list {
+      grid-row: span 4;
+      grid-template-rows: subgrid;
+      gap: 0;
+    }
+
+    .doc__body .plan .plan__list li + li {
+      margin-top: 0.5rem;
+    }
+  }
+}
+
 .plan__ref {
   display: inline-block;
   margin-left: 0.125rem;
