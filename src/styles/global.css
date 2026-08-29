@@ -5979,6 +5979,18 @@ p {
   padding: 0;
   max-width: none;
   list-style: none;
+  /* Top and bottom only, and the seams between the cells come from the gap
+     showing this ground through.
+
+     There is no border down the outside any more. The strip pulls out to the
+     guide *column*, and the page's vertical rules sit at `max(gutter, half the
+     column)` -- which is a few pixels inside that column at every width below
+     about 1456px. So a border around the cells drew a second hairline just
+     beside the first: a double frame, on nearly every screen. A horizontal rule
+     running past the guides is the site's own idiom, which is what every band's
+     `border-top` already does; a vertical one beside them is not. */
+  border-block: 1px solid var(--rule);
+  background: var(--rule);
 }
 
 @media (min-width: 52em) {
@@ -5995,9 +6007,9 @@ p {
   margin: 0;
   padding: clamp(1rem, 2vw, 1.375rem) clamp(1rem, 2vw, 1.375rem)
     clamp(1.125rem, 2.25vw, 1.5rem);
-  /* The rule is a shadow, so neighbours share the 1px channel and read as one
-     hairline rather than a double. */
-  box-shadow: 0 0 0 1px var(--rule);
+  /* The cell's own ground, so the only thing the list's ground shows through is
+     the 1px seam between two of them. */
+  background: var(--bone);
 }
 
 .figs__n {
@@ -7514,10 +7526,19 @@ a.story__card:focus-visible .story__go {
       grid-row: span 4;
       grid-template-rows: subgrid;
       gap: 0;
+      /* A row is as tall as the tallest of the three cards' lines, so a card
+         whose line does not wrap has spare height in it. Centred, that spare
+         height falls either side of the line and the rhythm stays even; left to
+         stretch it all fell underneath, and one card came out as two items, a
+         hole, then two more. */
+      align-items: center;
     }
 
-    .doc__body .plan .plan__list li + li {
-      margin-top: 0.5rem;
+    /* The gap goes on both ends rather than between: with the rows shared, a
+       `li + li` margin only pushes the line down inside its own row, which
+       makes the space above a line and the space below it different sizes. */
+    .doc__body .plan .plan__list li {
+      padding-block: 0.3125rem;
     }
   }
 }
