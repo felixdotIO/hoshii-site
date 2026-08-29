@@ -7404,7 +7404,7 @@ a.story__card:focus-visible .story__go {
 
 .doc__body .plan__list {
   display: grid;
-  gap: 0.5rem;
+  gap: 0;
   margin: 0;
   padding: 0;
   max-width: none;
@@ -7416,8 +7416,18 @@ a.story__card:focus-visible .story__go {
   position: relative;
   max-width: none;
   margin: 0;
-  padding-left: 1.5rem;
+  /* The space between rows is the rows' own padding rather than a gap on the
+     list, so it is inside the box the marks are positioned against and cannot
+     shift them. */
+  padding: 0.3125rem 0 0.3125rem 1.5rem;
   line-height: 1.45;
+  /* The middle of the first line, measured from the top of the row. Every mark
+     hangs off this rather than off the top edge, so a change to the row's
+     padding moves the marks with the text. It did not, once: the rows gained
+     padding for the shared-row spacing and the ticks stayed where they were,
+     which left every one of them sitting a third of a line high -- and the tick
+     and the cross, being different sizes, high by different amounts. */
+  --mark-mid: calc(0.3125rem + 0.725em);
 }
 
 /* Drawn tick, same as the demo checklist, so the two pages agree. */
@@ -7425,7 +7435,8 @@ a.story__card:focus-visible .story__go {
   content: '';
   position: absolute;
   left: 0.125rem;
-  top: 0.45em;
+  /* Less half the box, so the box straddles the line's middle. */
+  top: calc(var(--mark-mid) - 0.15625rem);
   width: 0.6875rem;
   height: 0.3125rem;
   border-left: 2px solid var(--accent);
@@ -7453,7 +7464,9 @@ a.story__card:focus-visible .story__go {
   content: '';
   position: absolute;
   left: 0.0625rem;
-  top: 0.72em;
+  /* Less half the stroke: the cross is two lines, so its middle is the stroke's
+     own middle rather than a box's. */
+  top: calc(var(--mark-mid) - 0.875px);
   width: 0.6875rem;
   height: 0;
   border: 0;
@@ -7479,7 +7492,9 @@ a.story__card:focus-visible .story__go {
   content: '←';
   position: absolute;
   left: 0;
-  top: 0;
+  /* A glyph on the same line-height as the text, so it only needs the row's own
+     top padding to sit on the first line. */
+  top: 0.3125rem;
   width: auto;
   height: auto;
   border: 0;
@@ -7525,20 +7540,12 @@ a.story__card:focus-visible .story__go {
     .doc__body .plan .plan__list {
       grid-row: span 4;
       grid-template-rows: subgrid;
-      gap: 0;
       /* A row is as tall as the tallest of the three cards' lines, so a card
          whose line does not wrap has spare height in it. Centred, that spare
          height falls either side of the line and the rhythm stays even; left to
          stretch it all fell underneath, and one card came out as two items, a
          hole, then two more. */
       align-items: center;
-    }
-
-    /* The gap goes on both ends rather than between: with the rows shared, a
-       `li + li` margin only pushes the line down inside its own row, which
-       makes the space above a line and the space below it different sizes. */
-    .doc__body .plan .plan__list li {
-      padding-block: 0.3125rem;
     }
   }
 }
